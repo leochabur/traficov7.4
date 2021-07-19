@@ -1,0 +1,49 @@
+SELECT date_format(fservicio, '%d/%m/%Y') as Fecha,
+       upper(ts.tipo) as Tipo,
+       upper(o.nombre) as Servicio,
+       if (i_v = 'i', 'Entrada a Planta', 'Salida de Planta'),
+        upper(ori.ciudad) as Salida_de,
+        upper(des.ciudad) as Llegada_a,
+        interno,
+        cantasientos as Capacidad,
+        cantpax as Pasajeros,
+        round((cantpax/cantasientos)*100, 2) as Eficiencia,
+        if(i_v = 'i', s.hllegada, '  ') as Hora_Diagramada_Llegada_Planta,
+        if(i_v = 'i', o.hllegada, '  ') as Hora_Real_Llegada_Planta,
+        if(i_v = 'v', s.hsalida, '  ') as Hora_Diagramada_Salida_Planta,
+        if(i_v = 'v', o.hsalida, '  ') as Hora_Real_Salida_Planta,
+        round((if(i_v = 'i',
+        if (o.hllegada <= s.hllegada,1,
+                               if(
+                                   (time_to_sec(timediff(o.hllegada, s.hllegada))/60) <= 5,
+                                       (1-(time_to_sec(timediff(o.hllegada, s.hllegada))/60)*0.02),
+                               if(
+                                   (time_to_sec(timediff(o.hllegada, s.hllegada))/60) < 20,
+                                       (0.9-((time_to_sec(timediff(o.hllegada, s.hllegada))/60)-5)*0.06),
+                               0))),
+        if (o.hsalida <= s.hsalida,1,
+                               if(
+                                   (time_to_sec(timediff(o.hsalida, s.hsalida))/60) <= 5,
+                                       (1-(time_to_sec(timediff(o.hsalida, s.hsalida))/60)*0.02),
+                               if(
+                                   (time_to_sec(timediff(o.hsalida, s.hsalida))/60) < 20,
+                                       (0.9-((time_to_sec(timediff(o.hsalida, s.hsalida))/60)-5)*0.06),
+                               0))))*100),2) as Eficiencia,
+                                        os.comentario as Comentario,
+          c.km
+
+
+
+from ordenes o
+inner join servicios s on s.id = o.id_servicio and s.id_estructura = o.id_estructura_servicio
+inner join (select * from tiposervicio where id in (1,2))ts on ts.id = s.id_tipoServicio and ts.id_estructura = s.id_estructura_tipoServicio
+inner join cronogramas c on s.id_cronograma = c.id and s.id_estructura_cronograma = c.id_estructura
+inner join ciudades ori on ori.id = c.ciudades_id_origen and ori.id_estructura = c.ciudades_id_estructura_origen
+inner join ciudades des on des.id = c.ciudades_id_destino and des.id_estructura = c.ciudades_id_estructura_destino
+left join unidades u on u.id = o.id_micro
+left join empleados c1 on c1.id_empleado = o.id_chofer_1 and c1.id_estructura = o.id_estructura_chofer1
+left join empleados c2 on c2.id_empleado = o.id_chofer_2 and c2.id_estructura = o.id_estructura_chofer1
+inner join turnos tu on tu.id = s.id_turno and tu.id_estructura = s.id_estructura_turno
+left join obsSupervisores os ON os.id_orden = o.id
+where fservicio between '2015-06-01' and '2015-06-30' and not borrada and not suspendida and o.id_cliente = 10 and o.id_estructura = 1
+order by fservicio, c.nombre

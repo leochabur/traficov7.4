@@ -1,0 +1,40 @@
+.table {
+    border: solid 1px #DDEEEE;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 10px;
+}
+.table thead th {
+    background-color: #D50000;
+    border: solid 1px #DDEEEE;
+    color: #FFFFFF;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #FFFFFF;
+}
+.table tbody td {
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+}
+.table-zebra tbody tr:nth-child(odd) {
+    background-color: #fff;
+}
+.table-zebra tbody tr:nth-child(even) {
+    background-color: #EEF7EE;
+}
+
+.table-zebra tbody tr:hover {
+  background-color: #D0D0D0;
+  cursor: pointer;
+}
+
+.sizeselect{
+	    font-size: 5px;
+}
+
+.cursor {cursor: pointer} 
+
+.estilo-1{ font-size: 75%;}

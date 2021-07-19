@@ -1,0 +1,61 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Unidad" table="unidades">
+        <id name="id" type="integer" column="id">
+            <options>
+                <option name="unsigned">true</option>
+            </options>            
+            <generator strategy="AUTO" />
+        </id>
+        <field name="interno" column="interno" type="integer" />
+        <field name="dominio" column="patente" type="string" />  
+        <field name="marca" column="marca" type="string" length="50" nullable="true"/>  
+        <field name="modelo" column="modelo" type="string" length="50" nullable="true"/>   
+        <field name="capacidad" column="cantasientos" type="integer" nullable="true"/>       
+        <field name="pase" column="id_pase" type="string" length="30" nullable="true"/>    
+        <field name="marca_motor" column="marca_motor" type="string" length="85" nullable="true"/>           
+        <field name="banio" column="banio" type="boolean" nullable="true"/>    
+        <field name="video" column="video" type="boolean" nullable="true"/>     
+        <field name="bar" column="bar" type="boolean" nullable="true"/>      
+        <field name="activo" column="activo" type="boolean" />   
+        <field name="procesado" column="procesado" type="boolean" />           
+        <field name="anio" column="anio" type="integer" />        
+        <many-to-one field="estructura" target-entity="Estructura">
+            <join-column name="id_estructura" referenced-column-name="id" />
+        </many-to-one>                                               
+        <many-to-one field="marcaChasis" target-entity="MarcaParteVehiculo">
+            <join-column name="id_marca_chasis" referenced-column-name="id" />
+        </many-to-one>   
+        <many-to-one field="marcaMotor" target-entity="MarcaParteVehiculo">
+            <join-column name="id_marca_motor" referenced-column-name="id" />
+        </many-to-one>           
+
+        <many-to-one field="calidad" target-entity="CalidadCoche">
+            <join-columns>
+                <join-column name="id_calidadcoche" referenced-column-name="id" nullable="false"/>
+                <join-column name="id_estructura_calidad_coche" referenced-column-name="id_estructura" nullable="false"/>          
+            </join-columns>               
+        </many-to-one>     
+
+        <many-to-one field="tipoUnidad" target-entity="TipoVehiculo">
+            <join-columns>
+                <join-column name="id_tipounidad" referenced-column-name="id" nullable="false"/>
+                <join-column name="id_estructura_tipounidad" referenced-column-name="id_estructura" nullable="false"/>          
+            </join-columns>  
+        </many-to-one>    
+        <many-to-one field="propietario" target-entity="Propietario">
+            <join-columns>
+                <join-column name="id_propietario" referenced-column-name="id" nullable="true"/>
+                <join-column name="id_estructura_propietario" referenced-column-name="id_estructura" nullable="true"/>          
+            </join-columns>  
+        </many-to-one>          
+
+        <field name="nuevoDominio" column="nueva_patente" type="string" length="9" nullable="true"/>          
+		<field name="capacidadTanque" column="capacidad_tanque" type="integer"/>
+		<field name="consumo" column="km_x_litro" type="float"/>
+        <one-to-many field="acciones" target-entity="AccionUnidad" mapped-by="unidad" />
+    </entity>
+</doctrine-mapping>

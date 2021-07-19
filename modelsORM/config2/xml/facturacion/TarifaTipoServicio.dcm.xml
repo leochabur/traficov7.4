@@ -1,0 +1,29 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="TarifaTipoServicio" table="fact_tarifa_tipo_servicio">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="importe" type="float" nullable="true"/>
+        <field name="defecto" type="boolean"/>
+
+        <many-to-one field="tipo" target-entity="TipoVehiculo">
+            <join-columns>
+                <join-column name="id_tipo_servicio" referenced-column-name="id" nullable="false"/>
+                <join-column name="id_estructura_tipo_servicio" referenced-column-name="id_estructura" nullable="false"/>          
+            </join-columns>  
+        </many-to-one>    
+
+        <many-to-one field="articulo" target-entity="ArticuloCliente">
+            <join-column name="id_articulo" referenced-column-name="id" />
+        </many-to-one>        
+
+        <many-to-one field="tarifaServicio" target-entity="TarifaServicio" inversed-by="tarifasTipoVehiculo">
+            <join-column name="id_tarifa_servicio" referenced-column-name="id" />
+        </many-to-one>               
+
+    </entity>
+</doctrine-mapping>

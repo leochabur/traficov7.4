@@ -1,0 +1,35 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="OrdenFacturada" table="fact_ordenes_facturadas">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="importeUnitario" type="float" nullable="true"/>                     
+        <field name="cantidad" type="integer" nullable="true"/>  
+        <field name="fechaAlta" column="fechaalta" type="datetime" />
+        <many-to-one field="articulo" target-entity="ArticuloCliente">
+            <join-column name="id_articulo" referenced-column-name="id" />
+        </many-to-one>
+
+        <many-to-many field="ordenes" target-entity="Orden">
+            <join-table name="fact_ordenes_por_orden_facturada">
+                <join-columns>
+                    <join-column name="id_orden_facturada" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="id_orden" referenced-column-name="id" unique="true" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <many-to-one field="facturaVenta" target-entity="FacturaVenta" inversed-by="ordenesFacturadas">
+            <join-column name="id_factuta_venta" referenced-column-name="id" />
+        </many-to-one>
+
+
+
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,23 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Unidad" table="unidades">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="interno" column="interno" type="integer" />
+        <field name="dominio" column="patente" type="string" />  
+        <field name="nuevoDominio" column="nueva_patente" type="string" />          
+        <field name="banio" column="banio" type="boolean" />        
+        <field name="activo" column="activo" type="boolean" />     
+
+        <one-to-many field="acciones" target-entity="AccionUnidad" mapped-by="unidad" />
+
+        <many-to-one field="propietario" target-entity="Propietario">
+            <join-column name="id_propietario" referenced-column-name="id" />
+        </many-to-one>            
+
+    </entity>
+</doctrine-mapping>

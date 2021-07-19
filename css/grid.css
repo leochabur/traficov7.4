@@ -1,0 +1,210 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 12/05/2015, 02:53:12
+    Author     : Nicolás Adrián Vicente
+*/
+
+@media only screen and (min-width: 0px) and (max-width: 650px)  {
+
+    #primary-left, #primary-right {width: 100%;margin-right: 0}
+      #sidebar {width: 100%; float: left; margin-top:15px }
+}
+
+
+@media only screen and (min-width: 650px) and (max-width: 768px) {
+    #primary-left, #primary-right {width: 100%;margin-right: 0}
+    
+    #sidebar {width: 25%; float: left; margin-top:15px }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 923px) {
+    #primary-left, #primary-right {width: 100%;margin-right: 0}
+    
+    #sidebar {width: 100%; float: left; margin-top:15px }
+}
+
+@media only screen and (min-width: 1024px)  {
+    #primary-left, #primary-right {width: 100%;margin-right: 0}
+    
+    #sidebar {width: 25%; float: left; margin-top:15px }
+}
+
+
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+/* ==========================================================================
+   Header
+   ========================================================================== */
+#header {height: auto}
+/* ==========================================================================
+   Responsive navigation
+   ========================================================================== */
+.primary-navigation {display: none}
+.click-to-open-menu, .menu-mobile {display: block !important}
+/* ==========================================================================
+   Search box
+   ========================================================================== */
+#search-box {padding: 15px;float: none;margin: 0}
+#search-box .search-field {width: 100%}
+#search-box a {right: 25px;top: 23px;}
+
+
+#primary-left, #primary-right {width: 100%;margin-right: 0}
+ #sidebar{width: 25%;margin-right: 0; float: left;}
+/* ==========================================================================
+}
+
+
+
+
+
+
+@media only screen and (max-width:1024px) {
+/* ==========================================================================
+   Header
+   ========================================================================== */
+#header {height: auto}
+/* ==========================================================================
+   Responsive navigation
+   ========================================================================== */
+.primary-navigation {display: none}
+.click-to-open-menu, .menu-mobile {display: block !important}
+/* ==========================================================================
+   Search box
+   ========================================================================== */
+#search-box {padding: 15px;float: none;margin: 0}
+#search-box .search-field {width: 100%}
+#search-box a {right: 25px;top: 23px;}
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+/* ==========================================================================
+   Slider
+   ========================================================================== */
+#featured-slider-pager {width: 280px}
+#featured-slider-pager .entry-meta .description-em {float: none}
+#featured-slider-pager .entry-meta {width:auto; float:none}
+/* ==========================================================================
+   Calendar
+   ========================================================================== */
+#wp-calendar td {padding:0}
+}
+
+@media only screen and (max-width:768px) {
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6 {line-height: 140%;}
+h1 {font-size: 3.5em;margin: 10px 0 10px 0;}
+h2 {font-size: 3em;margin: 10px 0 10px 0;}
+h3 {font-size: 2.5em;margin: 10px 0 10px 0;line-height: 130%;}
+h4 {font-size: 2em;margin: 10px 0 10px 0;}
+h5 {font-size: 1.5em;margin: 10px 0 10px 0;}
+h6 {font-size: 1.2em;margin: 10px 0 5px 0;}
+/* ==========================================================================
+   Top bar
+   ========================================================================== */
+#top-bar ul.top-menu, #top-bar ul.social-icons { float:none; text-align:center}
+#top-bar ul.top-menu li, #top-bar ul.social-icons li { display: inline-table; float:none}
+#top-bar ul.top-menu li:last-child {margin-right:0}
+#top-bar ul.social-icons li:first-child { margin-left:0}
+#top-bar ul.top-menu{margin-bottom:10px}
+/* ==========================================================================
+   Slider
+   ========================================================================== */
+#slider-container .bx-viewport {height: auto !important}
+#featured-slider-pager {overflow: hidden;width: 100%;position: inherit}
+#featured-slider-pager a {text-align: center;height: auto;float: left;width: 20%;margin: 0}
+#featured-slider-pager h3, #featured-slider-pager .entry-meta, #featured-slider-pager .entry-review {display: none}
+#featured-slider-pager img {margin: 0;float: none;width: auto;height: auto}
+.bx-caption {font-size: 1em;line-height: 130%;padding: 5px}
+.bx-wrapper img { width:100%; max-width:100%;}
+/* ==========================================================================
+   Main carousel
+   ========================================================================== */
+#carousel-container .bx-controls a.bx-prev {left:0px}
+#carousel-container .bx-controls a.bx-next {right:18px}
+#carousel-container .bx-wrapper {padding-left:17px}
+/* ==========================================================================
+   Colummns
+   ========================================================================== */
+.col1, .col2, .col3, .col4, .col5, .col5-of-5, .col6, .col7, .col7-of-7, .col8, .col8-of-8, .col9, .col9-of-9, .col10, .col10-of-10, .col11, .col11-of-11, .col12 
+{float: none;width: auto;clear: both;display: block;margin-left: 0;margin-right: 0;width: 100%;}
+/* ==========================================================================
+   Main and sidebar
+   ========================================================================== */
+
+/* ==========================================================================
+   Posts
+   ========================================================================== */
+.entry-content { float:none; margin-left:0 !important}
+.post-image {float:none !important}
+.post-image img {width:100% !important; max-width:100%;}
+h1.entry-title:before 
+{border-top-color: transparent;border-right-color: transparent;border-bottom-color: #fff;border-left-color: transparent;top: -36px;left: 0px;}
+.single-post-container h1.entry-title {font-size: 1.4em;}
+.article-standard .post-video {width:auto; float:none}
+/* ==========================================================================
+   Multiple posts
+   ========================================================================== */
+.multiple > .article-vertical, .multiple-posts {width:100%}
+.multiple-posts ul li img {display:none}
+/* ==========================================================================
+   Share it buttons
+   ========================================================================== */
+#share-this-article .share-text { float:none; display:block; margin-right:0; border-right:0;border-bottom: 1px solid #ddd;}
+#share-this-article ul.social-icons {margin:0; padding:20px 20px 15px 20px}
+/* ==========================================================================
+   Post controls
+   ========================================================================== */
+#post-controls a p {display:none;height:0px}
+#post-controls, #post-controls a {height:68px}
+/* ==========================================================================
+   Rating overview
+   ========================================================================== */
+#rating-overview .rating-score {height:auto;overflow:hidden}
+#rating-overview .rating-score strong {float:none;display:block;text-align:center;line-height:30px}
+#rating-overview .total-score {padding:10px 0;border-top:1px solid #3c3c3c;float:none;border-left: none}
+#rating-overview .total-score strong {display:block;text-align:center;padding:0 20px; line-height:20px;}
+#rating-overview .total-score strong.result {text-shadow:none}
+/* ==========================================================================
+   Comments
+   ========================================================================== */
+.comment-avatar { display:none}
+.comment-meta, .comment-content {margin-left:0}
+.comment-meta .by-author {display:block}
+ul.children article {padding-left:40px}
+ul.children ul article {padding-left:60px}
+ul.children ul ul article {padding-left:80px}
+/* ==========================================================================
+   Pagination
+   ========================================================================== */
+ul.pagination li {display:none}
+ul.pagination {position:relative}
+ul.pagination li.prev, ul.pagination li.next { display:inherit !important}
+ul.pagination li.next {position:absolute; right:0; margin-right:0}
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+#footer .widget {margin-bottom:30px;}
+/* ==========================================================================
+   Shortcodes
+   ========================================================================== */
+.pullquote-left, .pullquote-right {width:100%; display:block; text-align:center}
+.tab {margin-right: 0px;float: none}
+/* ==========================================================================
+   Contact form
+   ========================================================================== */
+#contact-human p { width:100%; float:none; margin:0 0 10px 0}
+#contact-human div {float: none;width: 100%; margin-bottom:15px}
+/* ==========================================================================
+   Demo changer
+   ========================================================================== */
+#changer-for-style {display:none !important}
+}
+
+

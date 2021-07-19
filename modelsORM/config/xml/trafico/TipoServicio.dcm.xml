@@ -1,0 +1,18 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="TipoServicio" table="tiposervicio">  
+        <id name="id" type="integer" column="id"/>
+        <id name="estructura" association-key="true"/>     
+
+        <field name="tipo" column="tipo" />   
+
+        <many-to-one field="estructura" target-entity="Estructura">
+                <join-column name="id_estructura" referenced-column-name="id" />
+        </many-to-one>
+         
+
+    </entity>
+</doctrine-mapping>

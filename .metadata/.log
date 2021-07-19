@@ -1,0 +1,20 @@
+!SESSION 2017-06-28 18:59:28.126 -----------------------------------------------
+eclipse.buildId=4.6.2.M20161124-1400
+java.version=1.8.0_121
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=es_AR
+Framework arguments:  -product org.eclipse.epp.package.php.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.php.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2017-06-28 19:00:40.473
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Leo'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.equinox.p2.touchpoint.natives 2 0 2017-06-28 19:01:47.065
+!MESSAGE Could not remove temporary backup directory (it is safe to manually delete it and its contents): C:\Users\Leo\AppData\Local\Temp\C__Users_Leo_eclipse_php-neon_eclipse_2b9e172f1460_c0a80123dfcb
+
+!ENTRY org.eclipse.oomph.setup.ui 1 0 2017-06-28 19:01:47.932
+!MESSAGE Setup tasks were performed during startup. See 'C:\Users\Leo\eclipse\php-neon\eclipse\configuration\org.eclipse.oomph.setup\setup.log' for details

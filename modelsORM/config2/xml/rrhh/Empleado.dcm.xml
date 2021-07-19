@@ -1,0 +1,26 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Empleado" table="empleados">
+        <id name="id" type="bigint" column="id_empleado">
+            <generator strategy="AUTO" />
+            <options>
+                <option name="unsigned">true</option>
+            </options>                 
+        </id>
+        <field name="apellido" column="apellido" />
+        <field name="nombre" column="nombre" /> 
+        <field name="legajo" column="legajo" type="integer" />    
+        <field name="activo" column="activo" type="boolean" />  
+        <field name="borrado" column="borrado" type="boolean" />          
+        <field name="dni" column="nrodoc"/>  
+        <field name="procesado" column="procesado" type="boolean"/>  
+        <field name="estructura" column="id_estructura" type="integer"/>           
+
+        <many-to-one field="categoria" target-entity="Categoria">
+            <join-column name="id_cargo" referenced-column-name="id" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

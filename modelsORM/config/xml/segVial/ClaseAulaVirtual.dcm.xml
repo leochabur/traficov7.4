@@ -1,0 +1,39 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="ClaseAulaVirtual" table="av_clases_curso">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+            
+        <field name="codigo" nullable="true"/>
+        <field name="titulo" nullable="true"/>         
+        <field name="orden" type="float"/>    
+        <field name="recurso" nullable="true"/>
+        <field name="esEvaluacion" type="boolean"/>    
+        <field name="eliminada" type="boolean"/>  
+
+        <many-to-one field="curso" target-entity="Curso" inversed-by="clases">
+            <join-column name="id_curso" referenced-column-name="id" />
+        </many-to-one>    
+
+        <one-to-many field="lineas" target-entity="LineaDescripcionClase" mapped-by="clase" >
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+
+        <many-to-one field="anterior" target-entity="ClaseAulaVirtual">
+            <join-column name="clase_predecesora" referenced-column-name="id" />
+        </many-to-one>   
+
+        <one-to-many field="preguntas" target-entity="PreguntaEvaluacion" mapped-by="clase" >
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+
+    </entity>
+</doctrine-mapping>

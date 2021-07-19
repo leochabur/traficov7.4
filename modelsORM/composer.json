@@ -1,0 +1,11 @@
+{
+    "require": {
+        "doctrine/orm": "~2.2,>=2.2.3,<2.5",
+        "doctrine/dbal": "<2.5",
+        "doctrine/doctrine-bundle": "~1.4",
+        "beberlei/doctrineextensions": "^1.1"
+    },
+    "autoload": {
+        "psr-0": {"": ["src/", "src/lavadero", "src/rrhh", "src/turismo", "src/facturacion", "src/trafico"]}
+    }
+}

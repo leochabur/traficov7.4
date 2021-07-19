@@ -1,0 +1,22 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="LugarSalida" table="trf_lyt_lugares_salida">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="codigo"/>  
+
+        <many-to-one field="primario" target-entity="ServicioInstancia">
+            <join-column name="id_servicio_primario" referenced-column-name="id" nullable="true"/>               
+        </many-to-one> 
+
+        <many-to-one field="secundario" target-entity="ServicioInstancia">
+            <join-column name="id_servicio_secundario" referenced-column-name="id" nullable="true"/>               
+        </many-to-one> 
+
+    </entity>
+</doctrine-mapping>

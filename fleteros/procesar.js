@@ -1,0 +1,20 @@
+$(document).ready(function(){		
+		$("#empleado").change(function(){
+			if($(this).val()!=""){
+				var dato=$(this).val();
+				$("#imgciudad").show();
+				$.ajax({
+					type:"POST",
+					dataType:"html",
+					url:"action.php",
+					data:"conductor="+dato+"&tarea=listDiagrama",
+					success:function(msg){
+						$("#diagrama").empty().removeAttr("disabled").append(msg);
+						$("#imgciudad").hide();
+					}
+				});
+			}else{
+				$("#diagrama").empty().attr("disabled","disabled");
+			}	
+		});
+	});

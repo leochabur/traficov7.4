@@ -1,0 +1,26 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Darsena" table="trf_lyt_darsenas">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="posicion" type="integer"/>  
+
+        <many-to-one field="inferior" target-entity="LugarSalida">
+            <join-column name="id_lugar_inferior" referenced-column-name="id" nullable="true"/>               
+        </many-to-one> 
+
+        <many-to-one field="superior" target-entity="LugarSalida">
+            <join-column name="id_lugar_superior" referenced-column-name="id" nullable="true"/>               
+        </many-to-one> 
+
+        <many-to-one field="layout" target-entity="Layout">
+            <join-column name="id_layout" referenced-column-name="id"/>               
+        </many-to-one> 
+
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,67 @@
+DROP TABLE IF EXISTS hechos_vandalicos
+;
+DROP TABLE IF EXISTS unidades
+;
+
+
+
+CREATE TABLE hechos_vandalicos
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	fecha DATE,
+	hora TIME,
+	lugar_incidente INTEGER,
+	id_micro INTEGER,
+	id_empleado INTEGER,
+	id_orden INTEGER,
+	id_estructura_orden INTEGER,
+	heridos INTEGER,
+	id_organismo_interviniente INTEGER,
+	descripcion_hecho TEXT,
+	id_usuario INTEGER,
+	fecha_alta DATETIME,
+	PRIMARY KEY (id),
+	KEY (lugar_incidente),
+	KEY (id_empleado),
+	KEY (id_orden, id_estructura_orden),
+	KEY (id_organismo_interviniente),
+	KEY (id_micro),
+	KEY (id_usuario)
+) 
+;
+
+
+CREATE TABLE unidades
+(
+	id INTEGER NOT NULL,
+	PRIMARY KEY (id)
+) 
+;
+
+
+
+
+
+ALTER TABLE hechos_vandalicos ADD CONSTRAINT FK_hechos_vandalicos_ciudades 
+	FOREIGN KEY (lugar_incidente) REFERENCES ciudades (id)
+;
+
+ALTER TABLE hechos_vandalicos ADD CONSTRAINT FK_hechos_vandalicos_empleados 
+	FOREIGN KEY (id_empleado) REFERENCES empleados (id_empleados)
+;
+
+ALTER TABLE hechos_vandalicos ADD CONSTRAINT FK_hechos_vandalicos_Ordenes 
+	FOREIGN KEY (id_orden, id_estructura_orden) REFERENCES Ordenes (id, id_estructura)
+;
+
+ALTER TABLE hechos_vandalicos ADD CONSTRAINT FK_hechos_vandalicos_organismos_intervinientes_h_v 
+	FOREIGN KEY (id_organismo_interviniente) REFERENCES organismos_intervinientes_h_v (id)
+;
+
+ALTER TABLE hechos_vandalicos ADD CONSTRAINT FK_hechos_vandalicos_unidades 
+	FOREIGN KEY (id_micro) REFERENCES unidades (id)
+;
+
+ALTER TABLE hechos_vandalicos ADD CONSTRAINT FK_hechos_vandalicos_Usuarios 
+	FOREIGN KEY (id_usuario) REFERENCES Usuarios (id)
+;

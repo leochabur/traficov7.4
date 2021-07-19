@@ -1,0 +1,20 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="ServicioInstancia" table="trf_lyt_servicio_instancia">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="instancia"/>  
+        
+        <many-to-one field="servicio" target-entity="Servicio">
+            <join-columns>
+                <join-column name="id_servicio" referenced-column-name="id" nullable="true"/>
+                <join-column name="id_estructura_servicio" referenced-column-name="id_estructura" nullable="true"/>          
+            </join-columns>               
+        </many-to-one> 
+    </entity>
+</doctrine-mapping>

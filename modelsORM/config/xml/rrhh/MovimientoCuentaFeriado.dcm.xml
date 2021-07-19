@@ -1,0 +1,53 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="MovimientoCuentaFeriado" inheritance-type="JOINED" table="rrhh_movimiento_cuenta_feriado">    
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>            
+        <discriminator-map>
+          <discriminator-mapping class="MovimientoCuentaFeriado" value="base"/>         
+          <discriminator-mapping class="MovimientoCreditoFeriado" value="credito"/>   
+          <discriminator-mapping class="MovimientoDebitoFeriado" value="debito"/>      
+        </discriminator-map>
+
+        <field name="fecha" column="fecha" type="date"/>      
+        <field name="fechaCarga" column="fechaCarga" type="datetime"/>          
+        <field name="periodoMes" type="integer"/>   
+        <field name="periodoAnio" type="integer"/>         
+        <field name="cantidad" type="integer"/>
+        <field name="descripcion" nullable="true"/>   
+        <field name="activo" type="boolean"/>
+
+        <field name="compensable" type="boolean" nullable="false">
+            <options>
+                <option name="default">false</option>
+            </options>
+        </field>
+
+        <field name="compensado" type="boolean" nullable="false">
+            <options>
+                <option name="default">false</option>
+            </options>
+        </field>
+
+        <field name="aplicado" type="boolean" nullable="false">
+            <options>
+                <option name="default">false</option>
+            </options>
+        </field>
+
+        <many-to-one field="estructura" target-entity="Estructura">
+            <join-column name="id_estructura" referenced-column-name="id" />
+        </many-to-one>
+
+        <many-to-one field="feriadoAsociado" target-entity="Feriado">
+            <join-column name="id_feriado" referenced-column-name="id" nullable="true"/>
+        </many-to-one>
+        <many-to-one field="ctacte" target-entity="CtaCteFeriado" inversed-by="movimientos">
+            <join-column name="id_ctacte" referenced-column-name="id" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

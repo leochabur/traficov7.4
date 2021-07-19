@@ -1,0 +1,25 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="RespuestaPregunta" table="av_respuestas_preguntas">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="respuesta" type="text"/>  
+            
+        <field name="correcta" type="boolean" nullable="false">
+            <options>
+                <option name="default">false</option>
+            </options>
+        </field>
+
+        <many-to-one field="pregunta" target-entity="PreguntaEvaluacion" inversed-by="respuestas">
+            <join-column name="id_pregunta" referenced-column-name="id" />
+        </many-to-one>      
+
+    </entity>
+
+</doctrine-mapping>

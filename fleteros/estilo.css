@@ -1,0 +1,102 @@
+body {
+	font-size: 12px;
+	font-family: Tahoma;
+}
+
+td {
+	font-family: Verdana, Geneva, Arial, helvetica, sans-serif;
+}
+
+th {
+	font-family: Verdana, Geneva, Arial, helvetica, sans-serif;
+}
+
+.tgrande {
+	color:#999999;
+	font-family: "Trebuchet MS";
+	font-size:24px;
+	font-weight: bolder;
+}
+.tenorme {
+
+	color:#999999;
+	font-family: "Trebuchet MS";
+	font-size:36px;
+	font-weight: bolder;
+}
+a:link {
+	font-style: normal;
+	text-decoration: none;
+	color: #999999;
+}
+a:hover {
+	font-weight: bold;
+	color: #0099FF;
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: none;
+}
+.alerta {
+	font-family: Tahoma;
+	font-size: 12px;
+	color: #FFFFFF;
+	text-decoration: none;
+	border: 1px solid #FF0000;
+	text-align: center;
+	width: auto;
+	background-color: #FF0000;
+	font-weight: bold;
+}
+.tmediano {
+
+	color:#999999;
+	font-family: "Trebuchet MS";
+	font-size:16px;
+	font-weight: bolder;
+}
+.tchico {
+
+
+	color:#999999;
+	font-family: "Trebuchet MS";
+	font-size:12px;
+	font-weight: bolder;
+}
+.aviso {
+	font-family: Tahoma;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+	border: 1px solid #FFCC00;
+	text-align: center;
+	background-color: #FFCC00;
+	font-weight: bold;
+}
+.celeste {
+	color: #0099FF;
+}
+.mensaje {
+	font-family: Tahoma;
+	font-size: 12px;
+	color: #FFFFFF;
+	text-decoration: none;
+	border: 1px solid #8080FF;
+	text-align: left;
+	width: 100%;
+	background-color: #0099FF;
+	font-weight: bold;
+}
+.blanco {
+	color: #FFFFFF;
+	font-weight: bold;
+}
+.diminuto {
+	color: #333333;
+	font-weight: normal;
+	font-family: Tahoma;
+	font-size: 9px;
+}
+.barras {font-family: "3 of 9 Barcode"; font-size: 24px;}
+

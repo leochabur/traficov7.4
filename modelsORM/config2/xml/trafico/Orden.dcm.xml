@@ -1,0 +1,18 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Orden" table="ordenes">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="nombre"/>
+        <field name="fservicio" type="date"/>         
+        <field name="hcitacion" column="hcitacion" type="time" nullable="true"/>         
+        <field name="hsalida" column="hsalida" type="time" nullable="true"/>      
+        <field name="hllegada" column="hllegada" type="time" nullable="true"/>      
+        <field name="hfina" column="hfinservicio" type="time" nullable="true"/>                         
+        <many-to-many field="viajes" mapped-by="ordenes" target-entity="Viaje"/>
+    </entity>
+</doctrine-mapping>

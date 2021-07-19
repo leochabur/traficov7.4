@@ -1,0 +1,119 @@
+<?
+  session_start();
+  include ('../../controlador/bdadmin.php');
+  include_once ('../../controlador/ejecutar_sql.php');
+  include ('../../modelo/utils/dateutils.php');
+  include ('../../modelo/enviomail/sendordbjafn.php');
+
+
+
+  $id = $_POST['nroorden'];
+  $fecha = dateToMysql($_POST['fservicio'], '/');
+  $conn = conexcion();
+  if (isset($_POST['borrada'])){
+      $sql = "SELECT * FROM estadoDiagramasDiarios e where fecha = '$fecha' and id_estado = 1";
+     // die($sql);
+      $result = mysql_query($sql, $conn);
+    //  mysql_close($conn);
+      if ($data = mysql_fetch_array($result)){
+         $_SESSION['senmail'] = 1;
+      }
+      else{
+          $_SESSION['senmail'] = 0;
+      }
+  }
+  
+  
+  $nombre = $_POST['nombre'];
+  $hcitacion = $_POST['hcitacion'];
+  $hsalida = $_POST['hsalida'];
+  $hllegada = $_POST['hllegada'];
+  $hfinserv = $_POST['hfinserv'];
+  $km = $_POST['km'];
+  $chofer1 = ($_POST['chofer1']) ? $_POST['chofer1'] : 'NULL';
+  $chofer2 = ($_POST['chofer2']) ? $_POST['chofer2'] : 'NULL';
+  $interno = ($_POST['interno']) ? $_POST['interno'] : 'NULL';
+  $clivacio = ($_POST['clivac']) ? $_POST['clivac'] : 'NULL';
+  if (isset($_POST['clivac'])){
+  if ($_POST['clivac']){
+     $sql_cli = "SELECT razon_social FROM clientes c where id = $_POST[clivac] and id_estructura = $_SESSION[structure]";
+    // $conn = conexcion();
+     $result_cli = mysql_query($sql_cli, $conn);
+    // mysql_close($conn);
+     $data_cli = mysql_fetch_array($result_cli);
+     $nom_cliente = $data_cli['razon_social'];
+     $pos = strpos($nombre, '~');
+     if ($pos){
+        $nombre=substr_replace($nombre, "($nom_cliente)", ($pos+1), strlen($nombre));
+     }
+     else{
+          $nombre.= "~($nom_cliente)";
+     }
+  }
+  else{
+       $pos = strpos($nombre,'~');
+       if ($pos){
+          $nombre = substr($nombre, 0, ($pos));
+       }
+  }
+  }
+  //$nombre = htmlentities($nombre);
+  $final = isset($_POST['finalizada']) ? 1 : 0;
+  $borra = isset($_POST['borrada']) ? 1 : 0;
+
+  $campos = "id_user, fecha_accion, fservicio, nombre, hcitacion, hsalida, hllegada, hfinservicio, km, id_chofer_1, id_chofer_2, id_micro, id_cliente_vacio, finalizada, borrada";
+  $values = "$_SESSION[userid], now(), '$fecha', '".$nombre."', '$hcitacion', '$hsalida', '$hllegada', '$hfinserv', $km, $chofer1, $chofer2, $interno, $clivacio, $final, $borra";
+
+  backup('ordenes', 'ordenes_modificadas', "(id = $id) and (id_estructura = $_SESSION[structure])", $conn);
+  $res = update("ordenes", $campos, $values, "(id = $id) and (id_estructura = $_SESSION[structure])", $conn);
+
+  $sql = "SELECT id_orden_vacio FROM ordenesasocvacios where id_orden = $id and id_estructura_orden = $_SESSION[structure]";  ///recupera todas las ordenes de vacios asociadas
+  $result = ejecutarSQL($sql, $conn);
+  $ordenes_vacios = "";
+  while ($row = mysql_fetch_array($result)){
+        if ($ordenes_vacios){
+           $ordenes_vacios.= ",$row[0]";
+        }
+        else{
+             $ordenes_vacios = "$row[0]";
+        }
+  }
+  
+  if ($ordenes_vacios){  ///significa que al menos tiene una orden asociada
+     $campos = "id_user, fecha_accion, id_chofer_1, id_chofer_2, id_micro, borrada";
+     $values = "$_SESSION[userid], now(), $chofer1, $chofer2, $interno, $borra";
+     backup('ordenes', 'ordenes_modificadas', "(id in ($ordenes_vacios)) and (id_estructura = $_SESSION[structure])", $conn);
+     $res = update("ordenes", $campos, $values, "(id in ($ordenes_vacios)) and (id_estructura = $_SESSION[structure])", $conn);
+  }
+
+
+  if ($_POST['asocia']){
+     //$conn = conexcion();
+     $sql = "SELECT o.id, o.id_estructura
+             FROM ordenes_asocioadas oa
+             INNER JOIN ordenes o ON o.id = oa.id_orden_asociada and o.id_estructura = oa.id_esructura_orden_asociada
+             WHERE id_orden = $id and id_estructura_orden = $_SESSION[structure]";
+     try{
+        // begin($conn);
+         $campos = "id_chofer_1, id_chofer_2, id_micro";
+         $values = "$chofer1, $chofer2, $interno";
+         $result = ejecutarSQL($sql, $conn);
+         while ($row = mysql_fetch_array($result)){
+               backup('ordenes', 'ordenes_modificadas', "(id = $row[id]) and (id_estructura = $row[id_estructura])", $conn);
+               update("ordenes", $campos, $values, "(id = $row[id]) and (id_estructura = $row[id_estructura])", $conn);
+         }
+       //  commit($conn);
+     }catch (Exception $e) {
+                          //  roolback($conn);
+                           }
+
+  }
+
+       cerrarconexcion($conn);
+  if ($borra && $res){
+     sentMail($id);
+  }
+  
+  print $res;
+?>
+

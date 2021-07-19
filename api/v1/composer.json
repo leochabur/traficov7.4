@@ -1,0 +1,8 @@
+{
+    "require": {
+        "php": ">=5.3.9",
+        "mockery/mockery": "~0.9.1",
+        "symfony/phpunit-bridge": "~3.2",
+        "swiftmailer/swiftmailer" : "5.4.9"
+    }
+}

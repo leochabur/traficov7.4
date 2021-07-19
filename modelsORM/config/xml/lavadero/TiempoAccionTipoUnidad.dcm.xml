@@ -1,0 +1,25 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="TiempoAccionTipoUnidad" table="tiempo_accion_tipo_unidad">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="tiempo" column="tiempo" type="time" />     
+
+
+        <many-to-one field="tipo" target-entity="TipoVehiculo">
+            <join-columns>
+                <join-column name="id_tipounidad" referenced-column-name="id" nullable="false"/>
+                <join-column name="id_estructura_tipounidad" referenced-column-name="id_estructura" nullable="false"/>          
+            </join-columns>  
+        </many-to-one>    
+
+        <many-to-one field="tipoAccion" target-entity="TipoAccionUnidad">
+            <join-column name="id_tipo_accion" referenced-column-name="id" />
+        </many-to-one>    
+     
+    </entity>
+</doctrine-mapping>

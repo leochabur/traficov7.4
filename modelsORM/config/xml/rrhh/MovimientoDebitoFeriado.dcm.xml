@@ -1,0 +1,22 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="MovimientoDebitoFeriado" extends="MovimientoCuentaFeriado" table="rrhh_movimiento_debito_feriado"> 		            	
+		
+        <many-to-one field="novedad" target-entity="Novedad">
+            <join-columns>
+                <join-column name="id_novedad" referenced-column-name="id"/>
+                <join-column name="id_estructura_novedad" referenced-column-name="id_estructura"/>          
+            </join-columns>  
+        </many-to-one>      
+
+        <many-to-one field="debitoOrigen" target-entity="MovimientoDebitoFeriado">
+            <join-columns>
+                <join-column name="id_debito" referenced-column-name="id" nullable="true"/>      
+            </join-columns>  
+        </many-to-one>  
+
+    </entity>
+</doctrine-mapping>

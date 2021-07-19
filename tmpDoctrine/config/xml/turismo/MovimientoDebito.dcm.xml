@@ -1,0 +1,14 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="MovimientoDebito" extends="MovimientoCuenta"> 		            	
+
+		<one-to-many field="pagos" target-entity="MovimientoCredito" mapped-by="debito" />
+		
+        <many-to-one field="presupuesto" target-entity="Presupuesto">
+            <join-column name="id_presupuesto" referenced-column-name="id" />
+        </many-to-one>                
+    </entity>
+</doctrine-mapping>

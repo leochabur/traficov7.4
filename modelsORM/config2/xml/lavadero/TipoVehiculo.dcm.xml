@@ -1,0 +1,23 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="TipoVehiculo" table="tipounidad">  
+        <id name="id" type="integer" column="id"/>
+        <id name="estructura" association-key="true"/>     
+
+        <field name="tipo" column="tipo" />   
+        <field name="orden" column="orden_capacidad" type="integer">
+            <options>
+                <option name="unsigned">true</option>
+            </options>   
+        </field>
+
+        <many-to-one field="estructura" target-entity="Estructura">
+                <join-column name="id_estructura" referenced-column-name="id" />
+        </many-to-one>
+         
+
+    </entity>
+</doctrine-mapping>

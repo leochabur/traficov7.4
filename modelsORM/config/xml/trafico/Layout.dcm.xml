@@ -1,0 +1,20 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Layout" table="trf_lyt_layouts">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="fecha" type="date"/>  
+
+        <many-to-one field="cliente" target-entity="Cliente">
+            <join-columns>
+                <join-column name="id_cliente" referenced-column-name="id" nullable="true"/>
+                <join-column name="id_estructura_cliente" referenced-column-name="id_estructura" nullable="true"/>          
+            </join-columns>               
+        </many-to-one>   
+    </entity>
+</doctrine-mapping>

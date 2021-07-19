@@ -1,0 +1,23 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="RespuestaPreguntaRealizada" table="av_respuestas_preguntas_realizadas">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="fecha" column="fecha" type="datetime" />
+            
+        <many-to-one field="claseRealizada" target-entity="ClaseRealizada" inversed-by="respuestas">
+            <join-column name="id_clase_realizada" referenced-column-name="id" />
+        </many-to-one>   
+
+        <many-to-one field="respuesta" target-entity="RespuestaPregunta">
+            <join-column name="id_respuesta" referenced-column-name="id" />
+        </many-to-one>      
+
+    </entity>
+
+</doctrine-mapping>

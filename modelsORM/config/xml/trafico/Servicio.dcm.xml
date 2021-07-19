@@ -1,0 +1,43 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Servicio" table="servicios">
+        <id name="id" type="integer" column="id"/>
+        <id name="estructura" association-key="true"/>  
+
+        <many-to-one field="estructura" target-entity="Estructura">
+                <join-column name="id_estructura" referenced-column-name="id" />
+        </many-to-one>
+
+        <many-to-one field="cronograma" target-entity="Cronograma" inversed-by="servicios">
+            <join-columns>
+                <join-column name="id_cronograma" referenced-column-name="id" nullable="false"/>
+                <join-column name="id_estructura_cronograma" referenced-column-name="id_estructura" nullable="false"/>          
+            </join-columns>   
+        </many-to-one>
+
+        <field name="citacion" column="hcitacion" type="time" nullable="true"/>         
+        <field name="salida" column="hsalida" type="time" nullable="true"/>      
+        <field name="llegada" column="hllegada" type="time" nullable="true"/>      
+        <field name="finServicio" column="hfinserv" type="time" nullable="true"/>                         
+        <field name="idaVelta" column="i_v"/>
+
+        <many-to-one field="turno" target-entity="TurnoServicio">
+            <join-columns>
+                <join-column name="id_turno" referenced-column-name="id" nullable="false"/>
+                <join-column name="id_estructura_turno" referenced-column-name="id_estructura" nullable="false"/>          
+            </join-columns>   
+        </many-to-one>
+
+        <many-to-one field="tipo" target-entity="TipoServicio">
+            <join-columns>
+                <join-column name="id_TipoServicio" referenced-column-name="id" nullable="false"/>
+                <join-column name="id_estructura_TipoServicio" referenced-column-name="id_estructura" nullable="false"/>          
+            </join-columns>   
+        </many-to-one>   
+
+        <field name="activo" column="activo" type="boolean" nullable="true"/>       
+    </entity>
+</doctrine-mapping>

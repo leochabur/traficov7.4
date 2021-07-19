@@ -1,0 +1,174 @@
+<?php
+
+
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TacografoUnidad
+ */
+class TacografoUnidad
+{
+    /**
+     * @var \DateTime
+     */
+    private $vencimiento;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechacambio;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaAlta;
+
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var \Unidad
+     */
+    private $unidad;
+
+    /**
+     * @var \Tacografo
+     */
+    private $tacografo;
+
+
+    /**
+     * Set vencimiento
+     *
+     * @param \DateTime $vencimiento
+     * @return TacografoUnidad
+     */
+    public function setVencimiento($vencimiento)
+    {
+        $this->vencimiento = $vencimiento;
+
+        return $this;
+    }
+
+    /**
+     * Get vencimiento
+     *
+     * @return \DateTime 
+     */
+    public function getVencimiento()
+    {
+        return $this->vencimiento;
+    }
+
+    /**
+     * Set fechacambio
+     *
+     * @param \DateTime $fechacambio
+     * @return TacografoUnidad
+     */
+    public function setFechacambio($fechacambio)
+    {
+        $this->fechacambio = $fechacambio;
+
+        return $this;
+    }
+
+    /**
+     * Get fechacambio
+     *
+     * @return \DateTime 
+     */
+    public function getFechacambio()
+    {
+        return $this->fechacambio;
+    }
+
+    /**
+     * Set fechaAlta
+     *
+     * @param \DateTime $fechaAlta
+     * @return TacografoUnidad
+     */
+    public function setFechaAlta($fechaAlta)
+    {
+        $this->fechaAlta = $fechaAlta;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaAlta
+     *
+     * @return \DateTime 
+     */
+    public function getFechaAlta()
+    {
+        return $this->fechaAlta;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set unidad
+     *
+     * @param \Unidad $unidad
+     * @return TacografoUnidad
+     */
+    public function setUnidad(\Unidad $unidad = null)
+    {
+        $this->unidad = $unidad;
+
+        return $this;
+    }
+
+    /**
+     * Get unidad
+     *
+     * @return \Unidad 
+     */
+    public function getUnidad()
+    {
+        return $this->unidad;
+    }
+
+    /**
+     * Set tacografo
+     *
+     * @param \Tacografo $tacografo
+     * @return TacografoUnidad
+     */
+    public function setTacografo(\Tacografo $tacografo = null)
+    {
+        $this->tacografo = $tacografo;
+
+        return $this;
+    }
+
+    /**
+     * Get tacografo
+     *
+     * @return \Tacografo 
+     */
+    public function getTacografo()
+    {
+        return $this->tacografo;
+    }
+    /**
+     * @ORM\PrePersist
+     */
+    public function actualizarHorario()
+    {
+        // Add your code here
+    }
+}

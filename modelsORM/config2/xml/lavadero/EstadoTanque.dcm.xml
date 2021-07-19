@@ -1,0 +1,16 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="EstadoTanque" table="estados_tanques_combustible">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="disponible" column="km_disponibles" type="integer" />
+        <field name="mostrar" column="mostrar" type="boolean" />        
+        <many-to-one field="unidad" target-entity="Unidad" inversedBy="acciones">
+            <join-column name="id_unidad" referenced-column-name="id" />
+        </many-to-one>      
+    </entity>
+</doctrine-mapping>

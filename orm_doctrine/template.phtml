@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML  1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta  http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2>Añadir  comentario</h2>
+<?if($tpl['error']):?><p>Por  favor, rellena las cajas marcadas con asterisco  (*)</p><?endif?>
+<form action="index.php"  method="post">
+<label>Dirección e-mail  *</label><br/>
+<input type="text"  name="email"/><br/>
+<label>Nombre</label><br/>
+<input  type="text" name="name"/><br/>
+<label>Comentario *</label><br/>
+<textarea  name="text" cols="80" rows="5"></textarea><br/>
+<input  type="submit" name="create_comment" value="Enviar"/>
+</form>
+<h2>Comentarios de los usuarios</h2>
+<ul>
+<?foreach($tpl['comments'] as $comment):?>
+<li><a  href="mailto:<?=$comment->Users->email?>"><?=$comment->Users->getName()?></a>  - <?=$comment->text?></li>
+<?endforeach?>
+</ul>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Telefono" table="segVial_telefonos">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="numero" type="integer"/>
+        <field name="alias"/>
+        <field name="usuario"/>
+        <field name="ubicacion"/>
+        <field name="tipo"/>
+        <field name="servicio"/>
+        <field name="ultimoModelo"/>
+        <field name="imei"/>
+        <field name="eliminado" type="boolean"/>
+        <many-to-one field="ubicacionTelefono" target-entity="UbicacionTelefono">
+            <join-column name="id_ubicacion" referenced-column-name="id" />
+        </many-to-one>
+        <many-to-one field="estado" target-entity="EstadoTelefono">
+            <join-column name="id_estado" referenced-column-name="id" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,21 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="TipoAccionUnidad" table="tipoaccionunidad">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="tipo" column="tipo" type="string" length="100" />
+        <field name="prioritaria" column="prioritaria" type="boolean" />     
+        <field name="banio" column="banio" type="boolean" />        
+        <field name="comenta" column="comenta" type="boolean" />                   
+        <field name="edilicio" column="edilicio" type="boolean" />     
+    </entity>
+</doctrine-mapping>
+
+
+
+
+

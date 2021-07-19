@@ -1,0 +1,18 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="LineaDescripcionClase" table="av_linea_descripcion_clase">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="descripcion"/>
+
+        <field name="orden" type="float"/>
+
+        <many-to-one field="clase" target-entity="ClaseAulaVirtual" inversed-by="lineas">
+            <join-column name="id_clase" referenced-column-name="id" />
+        </many-to-one>   
+    </entity>
+</doctrine-mapping>

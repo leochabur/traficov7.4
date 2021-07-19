@@ -1,0 +1,89 @@
+DROP TABLE IF EXISTS respuestas_chequeo
+;
+DROP TABLE IF EXISTS chequeo_ordenes
+;
+DROP TABLE IF EXISTS Usuarios
+;
+DROP TABLE IF EXISTS preguntas_chequeo
+;
+DROP TABLE IF EXISTS Ordenes
+;
+
+
+
+CREATE TABLE respuestas_chequeo
+(
+	id INTEGER NOT NULL,
+	valor TINYINT NOT NULL,
+	observaciones VARCHAR(254),
+	id_pregunta INTEGER NOT NULL,
+	id_chequeo INTEGER NOT NULL,
+	PRIMARY KEY (id),
+	KEY (id_chequeo),
+	KEY (id_pregunta)
+) 
+;
+
+
+CREATE TABLE chequeo_ordenes
+(
+	id INTEGER NOT NULL,
+	hora_chequeo DATETIME,
+	id_user INTEGER,
+	latitud INTEGER,
+	longitud INTEGER,
+	id_orden INTEGER,
+	id_estructura_orden INTEGER,
+	PRIMARY KEY (id),
+	KEY (id_orden, id_estructura_orden),
+	KEY (id_user)
+) 
+;
+
+
+CREATE TABLE Usuarios
+(
+	id INTEGER NOT NULL,
+	PRIMARY KEY (id)
+) 
+;
+
+
+CREATE TABLE preguntas_chequeo
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	pregunta VARCHAR(254) NOT NULL,
+	PRIMARY KEY (id)
+) 
+;
+
+
+CREATE TABLE Ordenes
+(
+	id INTEGER NOT NULL,
+	id_estructura INTEGER NOT NULL,
+	PRIMARY KEY (id, id_estructura)
+) 
+;
+
+
+
+
+
+ALTER TABLE respuestas_chequeo ADD CONSTRAINT FK_respuestas_chequeo_chequeo_ordenes 
+	FOREIGN KEY (id_chequeo) REFERENCES chequeo_ordenes (id)
+	ON DELETE CASCADE
+;
+
+ALTER TABLE respuestas_chequeo ADD CONSTRAINT FK_respuestas_chequeo_preguntas_chequeo 
+	FOREIGN KEY (id_pregunta) REFERENCES preguntas_chequeo (id)
+	ON DELETE CASCADE
+;
+
+ALTER TABLE chequeo_ordenes ADD CONSTRAINT FK_chequeo_ordenes_Ordenes 
+	FOREIGN KEY (id_orden, id_estructura_orden) REFERENCES Ordenes (id, id_estructura)
+;
+
+ALTER TABLE chequeo_ordenes ADD CONSTRAINT FK_chequeo_ordenes_Usuarios 
+	FOREIGN KEY (id_user) REFERENCES Usuarios (id)
+;

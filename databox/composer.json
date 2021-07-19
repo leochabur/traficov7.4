@@ -1,0 +1,6 @@
+{
+    "require": {
+        "doctrine/orm": "*",
+        "databox/databox": "^2.0"
+    }
+}

@@ -1,0 +1,51 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Viaje" table="viajepresupuesto">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="lugarSalida" column="lsalida"/>          
+        <field name="lugarLlegada" column="lllegada"/>
+        <field name="hSalida" column="hsalida" type="time"/>          
+        <field name="hLlegada" column="hllegada" type="time"/> 
+        <field name="pax" column="pasajeros" type="integer"/> 
+        <field name="km" column="km" type="integer"/> 
+        <field name="observaciones" column="observaciones" type="text" nullable="true"/>        
+        <field name="hSalidaRegreso" column="hsalidaregreso" type="time" nullable="true"/>          
+        <field name="hLlegadaRegreso" column="hllegadaregreso" type="time" nullable="true"/> 
+        <field name="fSalida" column="fecha_salida" type="date" />          
+        <field name="fRegreso" column="fecha_regreso" type="date" nullable="true"/>    
+        <field name="eliminado" type="boolean"/>      
+
+        <many-to-one field="origen" target-entity="Ciudad">
+            <join-column name="id_origen" referenced-column-name="id" />
+        </many-to-one>
+
+        <many-to-one field="destino" target-entity="Ciudad">
+            <join-column name="id_destino" referenced-column-name="id" />
+        </many-to-one>
+
+        <many-to-one field="presupuesto" target-entity="Presupuesto" inversed-by="viajes">
+            <join-column name="id_presupuesto" referenced-column-name="id" />
+        </many-to-one>        
+
+
+        <many-to-many field="servicios" target-entity="ServicioViaje">
+            <join-table name="serviciosporpresupesto">
+                <join-columns>
+                    <join-column name="id_viaje" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="id_servicio" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>     
+
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setPreUpdateAction"/>
+        </lifecycle-callbacks>                    
+    </entity>
+</doctrine-mapping>

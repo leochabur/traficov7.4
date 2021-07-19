@@ -1,0 +1,35 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="NovedadTexto" table="cod_novedades">
+        <id name="id" type="bigint" column="id">
+            <options>
+                <option name="unsigned">true</option>
+            </options>                 
+        </id>
+         
+        <field name="texto" column="nov_text" type="string" nullable="true"/>    
+        <field name="disponibilidad" column="disponibilidad" type="string" nullable="true"/>    
+        <field name="variable" column="nombreVariable" type="string" nullable="true"/>  
+        <field name="puntaje" type="float" nullable="true"/>  
+        <field name="descripcion" type="string" nullable="true"/>  
+        <field name="activa" type="boolean"/>  
+
+        <field name="isFeriado" type="boolean"/>  
+        <field name="isFranco" type="boolean"/>  
+        <field name="compensatorio" type="boolean"/> 
+
+
+        <many-to-one field="estructura" target-entity="Estructura">
+            <join-column name="id_estructura" referenced-column-name="id" />
+        </many-to-one>    
+
+        <field name="afecta_diagrama" type="boolean"/>  
+        <field name="codOrigen" column="cod_origen" type="boolean"/>  
+        <field name="codDestino" column="cod_destino" type="boolean"/>  
+        <field name="afecta_incentivo" type="boolean"/>  
+
+    </entity>
+</doctrine-mapping>

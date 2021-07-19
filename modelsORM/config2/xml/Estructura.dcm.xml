@@ -1,0 +1,19 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Estructura" table="estructuras">
+        <id name="id" type="integer" column="id">	
+            <generator strategy="AUTO" />          
+        </id>
+        <field name="nombre"/>
+        <field name="direccion" nullable="true"/>
+        <field name="tripulacion" column="cant_cond" type="integer" nullable="true">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>              
+
+    </entity>
+</doctrine-mapping>

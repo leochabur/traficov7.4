@@ -1,0 +1,25 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Cliente" table="clientes">
+        <id name="id" type="integer" column="id"/>
+        <id name="estructura" association-key="true"/>  
+
+        <field name="razonSocial" column="razon_social" type="string" length="256" />
+        <field name="telefono" column="telefono" type="string" length="256" />
+        <field name="direccion" column="direccion" type="string" length="256" />                
+        <field name="cuit" column="cuit" type="string" /> 
+        <field name="activo" column="activo" type="boolean" /> 
+
+        <many-to-one field="responsabilidad" target-entity="ResponsabilidadIVA">
+            <join-column name="id_responsabilidadIva" referenced-column-name="id" />
+        </many-to-one>   
+
+        <many-to-one field="estructura" target-entity="Estructura">
+            <join-column name="id_estructura" referenced-column-name="id" />
+        </many-to-one>                         
+
+    </entity>
+</doctrine-mapping>

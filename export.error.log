@@ -1,0 +1,35 @@
+[Thu May 14 18:27:29.187776 2020] [:error] [pid 7016:tid 1480] [client 127.0.0.1:62584] script 'E:/proyectos/export/actualizarnombre.php' not found or unable to stat
+[Mon Jun 15 16:36:06.681668 2020] [:error] [pid 7132:tid 1476] [client 127.0.0.1:58212] script 'E:/proyectos/export/actulizarpeajes.php' not found or unable to stat
+[Sat Jul 04 19:42:15.532964 2020] [:error] [pid 2964:tid 1472] [client 127.0.0.1:64935] script 'E:/proyectos/export/vista/segvial/submit.php' not found or unable to stat, referer: http://master.local/vista/segvial/adminav.php
+[Sun Jul 05 10:33:37.491063 2020] [:error] [pid 2964:tid 1484] [client 127.0.0.1:56712] script 'E:/proyectos/export/diagramav2/readadav.php' not found or unable to stat, referer: http://master.local/diagramav2/avirtualOrm.php?v=3&c=44
+[Sun Jul 05 10:35:25.689386 2020] [:error] [pid 2964:tid 1484] [client 127.0.0.1:56781] script 'E:/proyectos/export/diagramav2/readadav.php' not found or unable to stat, referer: http://master.local/diagramav2/avirtualOrm.php?v=3&c=44
+[Mon Jul 06 12:35:21.159775 2020] [:error] [pid 2964:tid 1476] [client 192.168.0.3:41350] script 'E:/proyectos/export/diagramav2/avirtualOrm.php' not found or unable to stat, referer: http://192.168.0.103/diagramav2/avirtual.php
+[Mon Jul 06 12:35:45.131662 2020] [:error] [pid 2964:tid 1468] [client 192.168.0.3:41353] script 'E:/proyectos/export/diagramav2/avirtualOrm.php' not found or unable to stat, referer: http://192.168.0.103/diagramav2/avirtual.php
+[Mon Jul 06 12:35:47.922853 2020] [:error] [pid 2964:tid 1468] [client 192.168.0.3:41353] script 'E:/proyectos/export/diagramav2/avirtualOrm.php' not found or unable to stat, referer: http://192.168.0.103/diagramav2/avirtual.php
+[Mon Jul 06 12:39:29.814795 2020] [:error] [pid 2964:tid 1484] [client 127.0.0.1:49186] script 'E:/proyectos/export/diagramav2/avirtualOrm.php' not found or unable to stat, referer: http://master.local/diagramav2/avirtual.php
+[Tue Jul 28 20:30:29.871957 2020] [:error] [pid 1716:tid 1500] [client 127.0.0.1:62195] script 'E:/proyectos/export/actualizarnombre.php.php' not found or unable to stat
+[Thu Jul 30 12:05:56.225484 2020] [:error] [pid 1716:tid 1492] [client 127.0.0.1:53356] script 'E:/proyectos/export/modelo/rrhh/fdodef.php' not found or unable to stat, referer: http://master.local/vista/ordenes/fdodef.php
+[Fri Aug 28 16:21:07.728292 2020] [:error] [pid 24036:tid 1456] [client 127.0.0.1:52044] script 'E:/proyectos/export/leer.csv.php' not found or unable to stat
+[Mon Aug 31 20:36:56.071164 2020] [:error] [pid 24036:tid 1464] [client 127.0.0.1:53862] script 'E:/proyectos/export/generaterondinesautomatico.php' not found or unable to stat
+[Fri Sep 11 09:30:25.875649 2020] [:error] [pid 656:tid 1488] [client 127.0.0.1:57703] script 'E:/proyectos/export/vista/ordenes/moordresurv2.php' not found or unable to stat
+[Fri Sep 11 11:04:50.250756 2020] [:error] [pid 656:tid 1472] [client 127.0.0.1:58433] script 'E:/proyectos/export/modelo/segvial/srvchrmv.php' not found or unable to stat, referer: http://master.local/vista/ordenes/srvchrmv.php
+[Fri Sep 11 11:09:12.070088 2020] [:error] [pid 656:tid 1472] [client 127.0.0.1:58573] script 'E:/proyectos/export/modelo/segvial/srvchrmv.php' not found or unable to stat, referer: http://master.local/vista/ordenes/srvchrmv.php
+[Fri Sep 11 11:09:34.335622 2020] [:error] [pid 656:tid 1468] [client 127.0.0.1:58579] script 'E:/proyectos/export/modelo/segvial/srvchrmv.php' not found or unable to stat, referer: http://master.local/vista/ordenes/srvchrmv.php
+[Fri Sep 11 11:11:45.666832 2020] [:error] [pid 656:tid 1472] [client 127.0.0.1:58654] script 'E:/proyectos/export/modelo/segvial/srvchrmv.php' not found or unable to stat, referer: http://master.local/vista/ordenes/srvchrmv.php
+[Fri Sep 11 11:12:49.593525 2020] [:error] [pid 656:tid 1472] [client 127.0.0.1:58710] script 'E:/proyectos/export/modelo/segvial/srvchrmv.php' not found or unable to stat, referer: http://master.local/vista/ordenes/srvchrmv.php
+[Fri Sep 11 11:13:07.054183 2020] [:error] [pid 656:tid 1468] [client 127.0.0.1:58712] script 'E:/proyectos/export/modelo/segvial/srvchrmv.php' not found or unable to stat, referer: http://master.local/vista/ordenes/srvchrmv.php
+[Wed Sep 30 17:04:24.590846 2020] [:error] [pid 8916:tid 1404] [client 127.0.0.1:50561] script 'E:/proyectos/export/vista/rrhh/stctactffc.php' not found or unable to stat
+[Thu Oct 01 19:44:58.955643 2020] [:error] [pid 8916:tid 1396] [client 127.0.0.1:54671] script 'E:/proyectos/export/deleterondines.php' not found or unable to stat
+[Tue Oct 06 21:11:36.483237 2020] [:error] [pid 6232:tid 1400] [client 127.0.0.1:60742] script 'E:/proyectos/export/posta.php' not found or unable to stat
+[Wed Oct 07 20:12:53.279809 2020] [:error] [pid 6232:tid 1400] [client 127.0.0.1:63375] script 'E:/proyectos/export/api/v1/index.php' not found or unable to stat
+[Wed Dec 16 20:56:36.382521 2020] [:error] [pid 6532:tid 1408] [client 127.0.0.1:57139] script 'E:/proyectos/export/generate_francos.php' not found or unable to stat
+[Sat Feb 13 09:48:06.915850 2021] [:error] [pid 8124:tid 1380] [client 127.0.0.1:55295] script 'E:/proyectos/export/vista/segvial/submit.php' not found or unable to stat, referer: http://master.local/vista/segvial/layout.php?file=transferencia+%2818%29+%281%29.pdf&submit=Enviar
+[Thu Feb 18 15:37:54.732858 2021] [:error] [pid 14416:tid 1408] [client 127.0.0.1:55266] script 'E:/proyectos/export/updateff.php' not found or unable to stat
+[Thu Feb 18 15:48:05.800490 2021] [:error] [pid 14416:tid 1416] [client 127.0.0.1:60912] script 'E:/proyectos/export/updateff.php' not found or unable to stat
+[Fri Feb 26 21:16:24.910128 2021] [:error] [pid 14416:tid 1416] [client 127.0.0.1:52935] script 'E:/proyectos/export/toyota/reanom.php' not found or unable to stat, referer: http://master.local/toyota/drawgraph.php
+[Fri Apr 16 08:45:08.128263 2021] [:error] [pid 17760:tid 1404] [client 127.0.0.1:60226] script 'E:/proyectos/export/actualizar_peajes.php' not found or unable to stat
+[Sat Jul 10 20:23:52.435252 2021] [:error] [pid 1084:tid 1444] [client 127.0.0.1:51055] script 'E:/proyectos/export/vista/udate_periodo_francos.php' not found or unable to stat
+[Sun Jul 11 12:34:53.669939 2021] [:error] [pid 8136:tid 1444] [client 127.0.0.1:61940] script 'E:/proyectos/export/vista/rrhh/stctacteff.php' not found or unable to stat, referer: http://master.local/vista/rrhh/diagfer.php
+[Sun Jul 11 12:34:55.934323 2021] [:error] [pid 8136:tid 1444] [client 127.0.0.1:61940] script 'E:/proyectos/export/vista/rrhh/stctacteff.php' not found or unable to stat, referer: http://master.local/vista/rrhh/diagfer.php
+[Sun Jul 11 12:36:19.879203 2021] [:error] [pid 8136:tid 1444] [client 127.0.0.1:59622] script 'E:/proyectos/export/vista/rrhh/stctacteff.php' not found or unable to stat, referer: http://master.local/vista/rrhh/diagfer.php
+[Sun Jul 11 12:37:26.908663 2021] [:error] [pid 8136:tid 1440] [client 127.0.0.1:51452] script 'E:/proyectos/export/vista/rrhh/stctacteff.php' not found or unable to stat, referer: http://master.local/vista/index.php?v=1&s=Operacion%20Campana&t=17&n=chabur%20leonardo&pm=10&ma=1

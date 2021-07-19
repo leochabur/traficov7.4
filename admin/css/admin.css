@@ -1,0 +1,164 @@
+/* estilos personalizados */
+body {
+    margin-top: 100px;
+    background-color: #FFFFFF;
+}
+
+
+@media(min-width:768px) {
+    body {
+        margin-top: 50px;
+    }
+}
+
+#contenedor {
+    padding-left: 0;
+}
+
+.panel-verde {
+    border-color: #5cb85c;
+}
+
+.panel-verde .panel-heading {
+    border-color: #5cb85c;
+    color: #fff;
+    background-color: #5cb85c;
+}
+
+.panel-verde a {
+    color: #5cb85c;
+}
+
+.panel-verde a:hover {
+    color: #3d8b3d;
+}
+
+.panel-azul {
+  border-color: #5cb85c;
+}
+
+.huge {
+    font-size: 50px;
+    line-height: normal;
+}
+
+#adminpanel {
+    width: 100%;   
+    padding: 0;
+    background-color: #FFFFFF;
+}
+
+.logo{
+	 //position: absolute;
+	 //z-index: 999;
+}
+ 
+ 
+
+@media(min-width:768px) {
+    #contenedor {
+        padding-left: 225px;
+    }
+     #adminpanel  {
+        padding: 10px;
+    }
+ 
+}
+
+thead th{
+	//text-align: center;
+}
+.table-responsive {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+/* Top Navigation */
+
+.top-nav {
+    padding: 0 15px;
+}
+
+.top-nav>li {
+    display: inline-block;
+    float: left;
+}
+
+.top-nav>li>a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    line-height: 20px;
+     color: #202020;
+      
+}
+
+.top-nav>li>a:hover,
+.top-nav>li>a:focus,
+.top-nav>.open>a,
+.top-nav>.open>a:hover,
+.top-nav>.open>a:focus {
+    color: #FFFFFF;
+  	background: #ae0000;
+}
+
+.top-nav>.open>.dropdown-menu {
+    float: left;
+    position: absolute;
+    margin-top: 0;
+    border: 1px solid rgba(0,0,0,.15);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    background-color: #fff;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.top-nav>.open>.dropdown-menu>li>a {
+    white-space: normal;
+}
+
+/* Side Navigation */
+
+@media(min-width:768px) {
+    .side-nav {
+        position: fixed;
+        height: 100%;
+        top: 51px;
+        left: 225px;
+        width: 200px;
+		margin-top: 30px;
+        margin-left: -225px;
+        border: none;
+        border-radius: 0;
+        overflow-y: auto;
+        background-color: #000000;
+    }
+
+    .side-nav>li>a {
+        width: 225px;
+        color: #FFFFFF;
+    }
+
+    .side-nav li a:hover,
+    .side-nav li a:focus {
+        outline: none;
+         color: #FFFFFF;
+  		background: #ae0000;
+    }
+}
+
+.side-nav>li>ul {
+    padding: 0;
+}
+
+.side-nav>li>ul>li>a {
+    display: block;
+    padding: 10px 15px 10px 38px;
+    text-decoration: none;
+    color: #999;
+}
+
+.side-nav>li>ul>li>a:hover {
+    color: #fff;
+}
+

@@ -1,0 +1,84 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Empleado" table="empleados">
+        <id name="id" type="bigint" column="id_empleado">
+            <generator strategy="AUTO" />
+            <options>
+                <option name="unsigned">true</option>
+            </options>                 
+        </id>
+        <field name="legajo" column="legajo" type="integer" />           
+        <field name="domicilio" column="domicilio" />     
+
+        <many-to-one field="ciudad" target-entity="Ciudad">
+            <join-columns>
+                <join-column name="id_ciudad" referenced-column-name="id" nullable="true"/>
+                <join-column name="id_estructura_ciudad" referenced-column-name="id_estructura" nullable="true"/>          
+            </join-columns>   
+        </many-to-one>      
+
+        <field name="telefono" column="telefono" />  
+        <field name="nacionalidad" column="id_nacionalidad" type="bigint"/>     
+        <field name="sexo" column="sexo" />      
+        <field name="fechaNac" column="fechanac" type="date"/>
+        <field name="tipoDocumento" column="tipodoc" />
+        <field name="numeroDocumento" column="nrodoc" /> 
+        <field name="cuil" column="cuil" />
+        <field name="activo" column="activo" type="boolean" />                                           
+
+        <many-to-one field="categoria" target-entity="Categoria">
+            <join-columns>
+                <join-column name="id_cargo" referenced-column-name="id" nullable="true"/>
+                <join-column name="id_estructura_cargo" referenced-column-name="id_estructura" nullable="true"/>          
+            </join-columns>   
+        </many-to-one>      
+
+        <many-to-one field="empleador" target-entity="Propietario">
+            <join-columns>
+                <join-column name="id_empleador" referenced-column-name="id" nullable="true"/>
+                <join-column name="id_estructura_empleador" referenced-column-name="id_estructura" nullable="true"/>          
+            </join-columns>  
+        </many-to-one>          
+
+        <field name="fechaInicio" column="inicio_relacion_laboral" type="date" nullable="true"/>
+        <field name="apellido" column="apellido" />
+        <field name="nombre" column="nombre" /> 
+        <field name="login" column="login" /> 
+        <field name="password" column="password" /> 
+
+        <field name="nivelAcceso" type="integer" column="nivel_acceso">
+            <options>
+                <option name="unsigned">true</option>
+            </options>                 
+        </field>
+        <field name="contratado" column="contratado" type="boolean" /> 
+        <field name="fechaAlta" column="fecha_alta" type="datetime"/>   
+        <field name="fechaOcupacional" column="fecha_ocupacional" type="date"/>    
+
+        <many-to-one field="estructura" target-entity="Estructura">
+            <join-column name="id_estructura" referenced-column-name="id" />
+        </many-to-one> 
+        <field name="procesado" column="procesado" type="boolean"/>        
+
+        <many-to-one field="estructuraAfectado" target-entity="Estructura">
+            <join-column name="afectado_a_estructura" referenced-column-name="id" />
+        </many-to-one> 
+
+        <field name="borrado" column="borrado" type="boolean" /> 
+
+        <many-to-one field="usuarioAltaProvisoria" target-entity="Usuario">
+            <join-column name="usuario_alta_provisoria" referenced-column-name="id" />
+        </many-to-one> 
+
+        <many-to-one field="usuarioAltaDefinitiva" target-entity="Usuario">
+            <join-column name="usuario_alta_definitiva" referenced-column-name="id" />
+        </many-to-one> 
+
+        <field name="fechaAltaDefinitiva" column="fecha_alta_definitiva" type="datetime"/>   
+        <field name="fechaFin" column="fecha_fin_relacion_laboral" type="date"/>    
+
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,287 @@
+
+
+
+/*--diseño adaptativo--*/
+
+@media screen and   (max-width:992px) { 
+	
+	
+}
+
+@media ( max-width : 767px) {
+	.pre-header .pull-right {
+		float: left !important;
+	}
+	.pre-header .pull-right li:first-child {
+		padding-left: 0;
+	}
+	#portada .portada-img{
+		min-height: 420px;
+		//padding-top: 160px;	 
+	    //background-size: 100% 100%;
+	    //height: 50%;
+	}
+	#portada .lead {
+		font-size: 34px;
+	}
+}
+ 
+ /*Styles for screen 600px and lower*/
+@media screen and (max-width: 768px) {
+	nav { 
+  		height: auto;
+  		float:none;
+  	}
+  	nav ul {
+  		width: 100%;
+  		display: block;
+  		height: auto;
+  	}
+  	nav li {
+  		width: 100%;
+  		position: relative;
+  	}
+  	nav li a {
+		border-bottom: 1px solid #eee;
+	}
+  	nav a {
+	  	text-align: left;
+	  	width: 100%;
+	  	text-indent: 25px;
+  	}
+}
+/*Styles for screen 515px and lower*/
+@media only screen and (max-width : 768px) {
+	nav {
+		border-bottom: 0;
+		float:none;
+	}
+	nav ul {
+		display: none;
+		height: auto;
+		margin:0;
+		background: #fff;
+		margin-top: 1em;
+	}
+	nav a#pull {
+		display: block; 
+		color: #F26D7D;
+		text-align: right;
+		position: absolute; 
+		//top:30%;
+		top: 20px; 
+	}
+	nav a#pull:after {
+	 /*
+		content:"";
+		background: url('../imgs/iconos/nav-icon.png') no-repeat;
+		width: 30px;
+		height: 30px;
+		display: inline-block;
+		position: absolute;
+		right: 15px;
+		top: 10px;
+	 */
+	}
+	nav a#pull img{
+		margin-right:2%;
+	}
+	.top-nav ul li a {
+		color: #2C3E50;
+		padding: 0em 0;
+	}
+}
+/*Smartphone*/
+@media only screen and (max-width : 320px) {
+	nav {
+		float:none;
+	}
+	nav li {
+		display: block;
+		float: none;
+		width: 100%;
+	}
+	nav li a {
+		border-bottom: 1px solid #576979;
+	}
+}
+
+@media (max-width:1366px){
+	 .portada-texto-slider h1 {
+		width: 34%;
+	}
+}
+
+@media (max-width:1280px){
+	 .portada-texto-slider h1 {
+		width: 36%;
+	}
+	.top-nav ul li a {
+		margin:0;
+	}
+}
+
+@media (max-width:1024px){
+	 .portada-texto-slider h1 {
+		width: 37%;
+		font-size: 1.2em;
+	}
+	.portada-texto-slider label {
+		font-size: 0.95em;
+	}
+	.top-nav ul li a {
+		margin:0;
+	}
+	 
+	.contact-info {
+		right: 15px;
+	}
+	.contact-info p {
+		font-size: 1.2em;
+	}
+	.contact-info span {
+		height: 33px;
+	} 
+	.titulo-encabezado h2{
+	font-size: 1.7em;
+	}
+	.servicio-item h3 {
+		font-size: 1em;
+	}
+	.servicio-item h3 span {
+		vertical-align: sub;
+	}
+	.servicio-item p {
+		font-size: 0.8125em;
+	}
+}
+
+@media (max-width:992px){
+	.top-nav ul li a {
+		padding: 0.5em 0.7em;
+		font-size: 0.85em;
+		 
+	} 
+	.contact-info {
+		top: 50px;
+	} 
+	 .logo  {
+		position:absolute;
+		left:0%;
+	}
+	
+	.logo a {
+		margin-top:0;
+		margin-left:0;
+	}
+	.contact-top_left p {
+		margin: 1em 0;
+	}
+	.contact-top_left {
+		margin-bottom: 30px;
+	} 
+	 
+	.servicios-lista {
+		text-align: center;
+	}
+	.turismo-lista {
+		text-align: center;
+	}
+}
+@media (max-width:768px){
+	 .logo  {
+		position:relative;
+		
+	}
+	.contact-info {
+		display: none;
+	} 
+	.portada-texto-slider h1 {
+		font-size: 0.95em;
+	}
+	.portada-texto-slider span {
+		font-size: 14px;
+	}
+	.portada-texto-slider label {
+		font-size: 0.85em;
+		margin-top: 0.5em;
+	}
+	 
+	.titulo-encabezado p {
+		font-size: 0.85em;
+	}
+	.pre-header .additional-shop-info{
+		display:none;
+	}
+	.pre-header .additional-nav{
+		display: block;
+		width: 100%;
+		text-align: center;
+		float: right;
+		
+	}
+}
+@media (max-width:640px){
+ 	.portada-texto-slider h1 {
+		font-size: 0.85em;
+		width: 44%;
+	}
+	
+}
+@media (max-width:480px){
+	.pre-header .additional-shop-info{
+		display:none;
+	}
+	.pre-header .additional-nav{
+		display: block;
+		width: 100%;
+		text-align: center;
+		float: left;
+		 
+	}
+	 .pre-header .list-inline li:first-child {
+		display: inline-block;
+		border-right: solid 1px #d8d8d8;
+		 
+		padding-left: 5px;
+    	padding-right: 5px;
+	}
+	.pre-header .col-md-6 {
+		//float: left;
+	}
+	.pre-header .additional-nav {
+		float: right;
+		text-align: right;
+	}
+	.portada-texto-slider h1 {
+		display: none;
+	}
+}
+@media (max-width:320px){
+	.pre-header .col-md-6 {
+		padding-right: 10px;
+  		padding-left: 10px;
+	}
+	
+	.portada-texto-slider{
+		//min-width: 194px;
+	}
+	.portada-texto-slider span {
+	   font-size: 11px;
+	}
+	.portada-texto-slider label {
+		font-size: 11px;
+	}
+	.titulo-encabezado h2 {
+	 font-size: 1.2em;
+	}
+	.titulo-encabezado p {
+		font-size: 12px;
+	}
+	.servicios-lista {
+		padding-top:0;
+	}
+	.turismo-lista {
+		padding-top:0;
+	}
+}
