@@ -295,7 +295,7 @@ class TarifaServicio
                         if ($min != 999)
                             return $valueMin;
                         else
-                            return "NO ENCUENTRA UN CARAJO $tipo - ".$this->nombre;
+                            return null;
             }
             catch(Exception $e) {
                     throw new Exception("Pedazo de poronga:  value: ".get_class($value)."   tipo:".get_class($tipo));
@@ -314,7 +314,7 @@ class TarifaServicio
     /**
      * @var boolean
      */
-    private $calculaXHora;
+    private $calculaXHora = false;
 
 
     /**
@@ -365,4 +365,13 @@ class TarifaServicio
         catch(\Exception $e) {throw new Exception("ERROR TARIFA ".$this->id."   ".$e->getMessage());
         }
     }      
+
+        public function getTarifaPresupuestada()
+    {
+        foreach ($this->tarifasTipoVehiculo as $tarifa) { //recorre una coleccion de TarifaTipoServicio
+            if ($tarifa->getDefecto())
+                return $tarifa;
+        }
+        return null;
+    }
 }

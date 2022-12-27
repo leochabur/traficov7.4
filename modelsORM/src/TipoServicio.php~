@@ -93,4 +93,9 @@ class TipoServicio
     {
         return $this->estructura;
     }
+
+    public function __toString()
+    {
+        return $this->tipo;
+    }
 }

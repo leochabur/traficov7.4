@@ -1,4 +1,7 @@
 <?php
+    
+    error_reporting(0);
+
      session_start();
      include_once('../main.php');
      include_once('../paneles/viewpanel.php');
@@ -79,7 +82,7 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
                                                        $.post("/modelo/segvial/readinf.php",{accion:'ldint'}, function(data){
                                                                                                                             $('#int').html(data);
                                                                                                                             <?php
-                                                                                                                                 if (isset($_GET[ud])){
+                                                                                                                                 if (isset($_GET['ud'])){
                                                                                                                                     echo "$('#internos option[value=$_GET[ud]]').attr('selected','selected');
                                                                                                                                           $('#internos').selectmenu({width: 100});";
                                                                                                                                  }
@@ -88,7 +91,7 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
                                                        $.post("/modelo/segvial/readinf.php",{accion:'ldcond'}, function(data){
                                                                                                                              $('#cond').html(data);
                                                                                                                              <?php
-                                                                                                                                  if (isset($_GET[cn])){
+                                                                                                                                  if (isset($_GET['cn'])){
                                                                                                                                      echo "$('#conductores option[value=$_GET[cn]]').attr('selected','selected');
                                                                                                                                            $('#conductores').selectmenu({width: 350});";
                                                                                                                                   }
@@ -96,8 +99,8 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
                                                                                                                              });
                                                        <?php
 
-                                                            if (isset($_GET[ds])){
-                                                               print '$.post("/modelo/segvial/readinf.php", {accion:"reskm", desde:"'.$_GET[ds].'", hasta:"'.$_GET[hs].'", inter:'.$_GET[ud].', conductores:'.$_GET[cn].'}, function(data){
+                                                            if (isset($_GET['ds'])){
+                                                               print '$.post("/modelo/segvial/readinf.php", {accion:"reskm", desde:"'.$_GET['ds'].'", hasta:"'.$_GET['hs'].'", inter:'.$_GET['ud'].', conductores:'.$_GET['cn'].'}, function(data){
                                                                                                                                                                                                                  $("#dats").html(data);
                                                                                                                                                                                                                 });';
                                                             }
@@ -128,9 +131,9 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
                                 </tr>
                                 <tr>
                                     <td>Desde</td>
-                                    <td><input id="desde" name="desde"  type="text" size="20" value="<?php echo isset($_GET[ds])?$_GET[ds]:"";?>"></td>
+                                    <td><input id="desde" name="desde"  type="text" size="20" value="<?php echo isset($_GET['ds'])?$_GET['ds']:"";?>"></td>
                                     <td>Hasta</td>
-                                    <td><input id="hasta" name="hasta" type="text" size="20" value="<?php echo isset($_GET[hs])?$_GET[hs]:"";?>"></td>
+                                    <td><input id="hasta" name="hasta" type="text" size="20" value="<?php echo isset($_GET['hs'])?$_GET['hs']:"";?>"></td>
                                     <td>
                                         <input type="button" value="Cargar Infracciones" id="cargar">
                                     </td>

@@ -1,7 +1,8 @@
 <?php
   session_start();
   set_time_limit(0);
-    error_reporting(E_ALL & ~E_NOTICE); 
+  ini_set('error_reporting', 0);
+    //error_reporting(E_ALL & ~E_NOTICE); 
   ////////////////// modulo para dar de alta y mdificar un conductore en la BD  /////////////////////
   include '../../modelsORM/manager.php';
   include_once '../../modelsORM/call.php';

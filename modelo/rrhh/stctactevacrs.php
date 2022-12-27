@@ -21,35 +21,40 @@
                 $detalle[$i++]=$data[0];
           }
           
-          $sql = "SELECT legajo, upper(concat(apellido,', ',nombre)) as apenom, date_format(inicio_relacion_laboral, '%d/%m/%Y')$campos, (SELECT if(sum(cant_dias) is null, 0, sum(cant_dias)) FROM vacacionespersonal where id_empleado = e.id_empleado)-(SELECT if(DATEDIFF(hasta, desde) is null, 0, sum(DATEDIFF(hasta, desde) + 1))
-      FROM novedades n
-      where id_novedad = 19 and
-            (desde > '2014-06-30') and
-            activa and id_empleado = e.id_empleado)
+          $joinSector = $whereSector = $campoSector = "";
+          if ($_POST["sector"] != 99)
+          { 
+                $joinSector = " INNER JOIN cargo cgo ON cgo.id = e.id_cargo AND cgo.id_estructura = e.id_estructura_cargo
+                              INNER JOIN sector sec ON sec.id = cgo.id_sector ";
+                $whereSector = " AND sec.id = $_POST[sector]";
+                $campoSector = ", cgo.descripcion as puesto, sec.descripcion as sector";
+          }
+
+          $sql = "SELECT legajo, 
+                         upper(concat(apellido,', ',nombre)) as apenom, 
+                         date_format(inicio_relacion_laboral, '%d/%m/%Y')$campos, 
+                         (SELECT if(sum(cant_dias) is null, 0, sum(cant_dias)) FROM vacacionespersonal where id_empleado = e.id_empleado)
+                          -
+                         (SELECT if(DATEDIFF(hasta, desde) is null, 0, sum(DATEDIFF(hasta, desde) + 1))
+                          FROM novedades n
+                          where id_novedad = 19 and (desde > '2014-06-30') and activa and id_empleado = e.id_empleado) $campoSector
                   FROM empleados e
-                  WHERE (activo) and (not borrado) and (id_empleador = 1)
-                  order by apellido";/*
+                  $joinSector
+                  WHERE (e.activo) and (not borrado) and (id_empleador = 1) $whereSector
+                  order by apellido";
 
-               SELECT legajo, upper(concat(apellido,', ',nombre)) as apenom, date_format(inicio_relacion_laboral, '%d/%m/%Y'),
-                                          (
-
-                     (SELECT if(sum(cant_dias) is null, 0, sum(cant_dias)) FROM vacacionespersonal v where v.id_empleado = e.id_empleado)
-
-                     -
-                     (SELECT if (sum((datediff(hasta, desde)+1)) is null, 0, sum((datediff(hasta, desde)+1))) as dias
-                     FROM novedades n where (n.id_empleado = e.id_empleado) and (id_novedad = 19)and (activa) and (desde > '2014-06-30'))
-                     )as tot_vac
-                     FROM empleados e
-                     WHERE (activo) and (not borrado) and (id_empleador = 1) and (id_cargo = 1)
-                     order by apellido";        */
-
-          // die($sql);
+           //die($sql);
           $result = mysql_query($sql, $conn);
-          $tabla ='<a href="/modelo/rrhh/stctactevacrsexp.php?det='.$_POST['det'].'"><img src="../../vista/excel.jpg" width="35" height="35" border="0"></a><table id="tablitasssss" align="center" width="70%" class="ui-widget ui-widget-content">
+          $tabla ='<a href="/modelo/rrhh/stctactevacrsexp.php?det='.$_POST['det'].'&sc='.$_POST['sector'].'"><img src="../../vista/excel.jpg" width="35" height="35" border="0"></a><table id="tablitasssss" align="center" width="70%" class="ui-widget ui-widget-content">
                      <thead>
                             <tr class="ui-widget-header">
                                 <th>Legajo</th>
                                 <th>Apellido, Nombre</th>';
+          if ($_POST["sector"] != 99)
+          {
+                $tabla.="<th>Puesto</th>
+                        <th>Sector</th>";
+          }
                      for($i=0;$i < count($detalle);$i++)
                          if ($detalle[$i]==0)
                                 $tabla.="<th>S. Inicial</th>";
@@ -64,6 +69,11 @@
                 $tabla.="<tr bgcolor='$color'>
                              <td>$data[0]</td>
                              <td align='left'>$data[1]</td>";
+              if ($_POST["sector"] != 99)
+              {
+                    $tabla.="<td>$data[puesto]</td>
+                            <td>$data[sector]</td>";
+              }
                 for($i=0;$i < count($detalle);$i++){
                             $aux=$i+3;
                             $tabla.="<td align='right'>$data[$aux]</td>";

@@ -6,7 +6,7 @@ function enviarMail($dirs, $cuerpo, $subject){
 $array = explode(',', $dirs);
 
 $correo_emisor="soportetrafico@masterbus.net";
-$contrasena="soptra2011";
+$contrasena="Mas#Ter%21";
 $mail = new PHPMailer();
 $mail->IsSMTP(); // Envia el correo via SMTP
 $mail->SMTPAuth = true; // Enciende la autenticacion SMTP

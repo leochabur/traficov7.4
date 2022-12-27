@@ -95,11 +95,13 @@ $dql = "SELECT cr
         JOIN cr.clase cl
         JOIN cl.curso cu
         JOIN cr.empleado e
-        WHERE cl.esEvaluacion = :evaluacion AND cu = :socur
+        JOIN e.categoria cgo
+        WHERE cl.esEvaluacion = :evaluacion AND cu = :socur AND cl.eliminada = :eliminada
         ORDER BY e.apellido
         ";
 $result = $entityManager->createQuery($dql)
                         ->setParameter('evaluacion', true)
+                        ->setParameter('eliminada', false)
                         ->setParameter('socur', $curso)
                         ->getResult();
 
@@ -140,7 +142,9 @@ foreach ($result as $res)
       $pdf->cell(18, 5, $emple->getNumeroDocumento(), 1, 0,'L');
 
 
-      $pdf->cell(45, 5, $emple->getCategoria()->getDescripcion(), 1, 0,'L');
+      $pdf->cell(45, 5, ($emple->getCategoria()?$emple->getCategoria()->getDescripcion():''), 1, 0,'L');
+     // $pdf->cell(45, 5, '', 1, 0,'L');
+      
       if ($_GET['pje'])
       {
           $pdf->cell(25, 5, $res->getFecha()->format('d/m/Y - H:i'), 1,0, 'C');
@@ -153,6 +157,17 @@ foreach ($result as $res)
       
       $pdf->Ln();
       $pdf->setX(15);
+    }
+}
+
+
+
+
+
+$pdf->Output();
+
+
+
        /* $key = $cso->getNombre().$res->getEmpleado()->getEstructura().$res->getEmpleado()->getEmpleador()->getRazonSocial().$res->getEmpleado().$res->getEmpleado()->getLegajo();          
         $data[$key] = array($cso,
                             $res->getEmpleado()->getEstructura()->getNombre(),
@@ -165,14 +180,5 @@ foreach ($result as $res)
                             $res->getId(),
                             $res->getPuntaje()
                             );       */
-    }
-}
-
-
-
-
-//print_r($resumen);
-$pdf->Output();
-//$pdf->Output();
 
 ?>

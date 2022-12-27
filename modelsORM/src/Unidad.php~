@@ -357,10 +357,17 @@ class Unidad
 
     public function admiteAccion(TipoAccionUnidad $tipo)
     {
-        if ($tipo->getBanio())
-            return $this->banio;
-        else
-            return true;
+        try{
+            if ($tipo->getBanio())
+                return $this->banio;
+            else
+                return true;
+        } 
+        catch (Exception $e) {
+                                return false;
+                                
+        }
+
     }    
     /**
      * @var string

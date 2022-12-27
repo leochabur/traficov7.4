@@ -361,17 +361,20 @@ ini_set('error_reporting', E_ALL);
                 </li>';
                 }
 
-        if ($_SESSION['permisos'][4] >= 0){
+        if (($_SESSION['permisos'][4] >= 0) || ($_SESSION['lv'] > 2))
+        {
            $menu.='<li><a href="#" class="parent"><span>Admin. Taller</span></a>
                     <div>
                          <ul>';
            $confiLavadero = '';
-           if ($_SESSION['permisos'][4] > 2){
+           if (($_SESSION['permisos'][4] > 2) || ($_SESSION['lv'] > 2))
+           {
                  $menu.='<li><a href="'.RAIZ.'/vista/taller/elrstc.php"><span>Iniciar desvio de compras</span></a></li>';
                  $confiLavadero = '<li><a href="'.RAIZ.'/vista/taller/settime.php"><span>Configurar tiempos de Lavado</span></a></li> 
                                    <li><a href="'.RAIZ.'/vista/taller/lvdoedlc.php"><span>Cargar Lavados Edilicios</span></a></li>';
            }
-           if ($_SESSION['permisos'][4] >= 1){
+           if (($_SESSION['permisos'][4] >= 1) || ($_SESSION['lv'] > 2))
+           {
              $menu.='<li><a a href="#" class="parent"><span>Lavadero</span></a>
                         <div>
                             <ul>
@@ -414,7 +417,7 @@ ini_set('error_reporting', E_ALL);
         return $menu;
   }
   
-  function menuTrafico(){
+  function menuTrafico($modulo){
            $ordenes = "ordenes";
            global $cantTripulacion;
            $mdpxs="modpxhs";
@@ -426,14 +429,16 @@ ini_set('error_reporting', E_ALL);
               $diagsrv = "moordresur";
            }
            $menu='';
-           if (array_key_exists(2, $_SESSION['permisos'])){
+           if (array_key_exists(2, $_SESSION['permisos']) || ($_SESSION['userid'] == 163) )
+           {
               $menu.='<li>
                           <a href="#" class="parent"><span>Ordenes de Trabajo</span></a>
                           <div>
                                <ul>
                                    <li><a href="'.RAIZ.'/vista/ordenes/'.$ordenes.'.php" class=""><span>Ver Ordenes de Trabajo</span></a></li>
                                    <li><a href="'.RAIZ.'/vista/ordenes/'.$mdpxs.'.php" class=""><span>Cargar Pasajeros</span></a></li>
-                                  <li><a href="'.RAIZ.'/vista/ordenes/srvchrmv.php" class=""><span>Administrar ordenes Charter</span></a></li>';
+                                   <li><a href="'.RAIZ.'/vista/ordenes/srvchrmv.php" class=""><span>Administrar ordenes Charter</span></a></li>
+                                  <li><a href="'.RAIZ.'/vista/ordenes/diagadmin.php" class=""><span>Diagramar ordenes Charter</span></a></li>';
               if ($_SESSION['permisos'][2] > 1){
                   $route = ($cantTripulacion > 2?'cpydiagramasur':'cpydiagrama');
                                           $menu.='<li><a href="'.RAIZ.'/vista/ordenes/'.$route.'.php" class=""><span>Copiar Diagrama</span></a></li>
@@ -448,7 +453,7 @@ ini_set('error_reporting', E_ALL);
                                                   </ul>
                                              </div>
                                           </li>';
-              if ($_SESSION['permisos'][2] > 1){
+              if (($_SESSION['permisos'][2] > 1) || ($modulo == 2)) {
                                           $menu.='<li><a href="#" class="parent"><span>Crear Vacio</span></a>
                                                  <div>
                                                       <ul>
@@ -497,6 +502,7 @@ ini_set('error_reporting', E_ALL);
                     <li><a href="'.RAIZ.'/vista/servicios/ctrldiag.php"><span>Diagramas Base</span></a></li>
                     <li><a href="'.RAIZ.'/vista/rest/rescli.php"><span>Cargar Restricciones Clientes</span></a></li>
                     <li><a href="'.RAIZ.'/vista/servicios/agsrv.php"><span>Conf. Seguimiento Servicios</span></a></li>
+                    <li><a href="'.RAIZ.'/vista/servicios/addpax.php"><span>Administrar Pasajeros</span></a></li>
                     <li>
                         <a href="#" class="parent"><span>Modificar Cronograma</span></a>
                            <div>
@@ -533,26 +539,13 @@ ini_set('error_reporting', E_ALL);
                                        //$menu.='<li><a href="'.RAIZ.'/vista/rrhh/moddriv.php"><span>Baja/Modificaciones</span></a></li>';
                                     }
                                     $menu.='<li><a href="'.RAIZ.'/vista/rrhh/listrrhh.php"><span>Listado de Personal</span></a></li>';
-                                    if (($_SESSION['permisos'][1] > 1) || ($_SESSION['permisos'][2] > 1)){
+                                    if (($_SESSION['permisos'][1] > 1) || ($_SESSION['permisos'][2] > 1))
+                                    {
                                        $menu.='<li><a href="'.RAIZ.'/vista/rrhh/mjeups.php"><span>Enviar Mensaje</span></a></li>';
-                                    if ($_SESSION['permisos'][1] > 1){
-                                       $menu.='<li><a href="'.RAIZ.'/vista/iso/upnseg.php"><span>Subir Archivos</span></a></li>';
-                                      /* $menu.='<li><a href="#" class="parent"><span>Incentivos</span></a>
-                                               <div>
-                                               <ul>
-                                                   <li><a href="'.RAIZ.'/vista/rrhh/lstinc.php"><span>Ver Incentivos</span></a></li>
-                                                   <li><a href="'.RAIZ.'/vista/rrhh/diaginc.php"><span>Configurar Parametros</span></a></li>
-                                                   </ul>
-                                               </div>
-                                               </li>
-                                               <li><a href="#" class="parent"><span>Politica Master Bus</span></a>
-                                               <div>
-                                               <ul>
-                                               <li><a href="'.RAIZ.'/vista/iso/upnseg.php"><span>Subir Archivos</span></a></li>
-                                                    </ul>
-                                               </div>
-                                               </li>';    */
-                                       }
+                                        if ($_SESSION['permisos'][1] > 1)
+                                        {
+                                           $menu.='<li><a href="'.RAIZ.'/vista/iso/upnseg.php"><span>Subir Archivos</span></a></li>';
+                                        }
                                     }
                                     if ($_SESSION['permisos'][1] > 1){
                                        $menu.='<li><a href="#" class="parent"><span>Vacaciones Personal</span></a>
@@ -585,10 +578,9 @@ ini_set('error_reporting', E_ALL);
                                        $menu.='<li><a href="'.RAIZ.'/vista/rrhh/diagfer.php"><span>Diagramar Novedades</span></a></li>
                                                <li><a href="'.RAIZ.'/vista/rrhh/diagferi.php"><span>Diagramar Feriados</span></a></li>
                                                <li><a href="'.RAIZ.'/vista/rrhh/diagfracomp.php"><span>Diagramar FRANCOS A COMPENSAR</span></a></li>';
-                                             //  <li><a href="'.RAIZ.'/vista/rrhh/diagfer.php"><span>Diagramar Feriados</span></a></li>';
                                     }
                                     
-                                                                  $menu.='<li><a href="#" class="parent"><span>Pedido de Explicacion</span></a>
+                                    $menu.='<li><a href="#" class="parent"><span>Pedido de Explicacion</span></a>
                                     <div><ul>';
                                     if ($_SESSION['permisos'][4] > 1){
                                        $menu.='<li><a href="'.RAIZ.'/vista/segvial/updcgo.php"><span>Ingresar Pedido de Explicacion</span></a></li>
@@ -622,12 +614,21 @@ ini_set('error_reporting', E_ALL);
                                         </div>
                                     </li>';
                             }
-                         if ($_SESSION['permisos'][1] > 1){
+                         if ($_SESSION['permisos'][1] > 1)
+                         {
                             $menu.='<li>
                                         <a href="#" class="parent"><span>Programa de Incentivos</span></a>
                                         <div>
                                         <ul>
                                             <li><a href="'.RAIZ.'/vista/rrhh/ictvo/geninc.php"><span>Ingresar</span></a></li>
+                                        </ul>
+                                        </div>
+                                    </li>';
+                            $menu.='<li>
+                                        <a href="#" class="parent"><span>Base de Datos</span></a>
+                                        <div>
+                                        <ul>
+                                            <li><a href="'.RAIZ.'/vista/rrhh/bd/admsector.php"><span>Puestos/Sectores</span></a></li>
                                         </ul>
                                         </div>
                                     </li>';
@@ -701,7 +702,8 @@ ini_set('error_reporting', E_ALL);
                              <li>
                                  <a href="/vista" class="parent"><span>Inicio</span></a>
                              </li>';
-        if (($modulo == 5) || ($modulo == 6)){
+        if (($modulo == 5) || ($modulo == 6))
+        {
                $menu.='
                       <li>
                         <a href="#" class="parent"><span>Diagrama de Trabajo</span></a>
@@ -757,9 +759,10 @@ ini_set('error_reporting', E_ALL);
                                 </li>
                                 </ul>
                         </div>';
-        }else
+        }
+        else
         {
-           $menu.= menuTrafico();
+           $menu.= menuTrafico($modulo);
 
         $menu.='</li>
                 <li class="last"><a href="#"><span>Informes</span></a>
@@ -770,8 +773,8 @@ ini_set('error_reporting', E_ALL);
                            <div>
                                 <ul>                                    
                                     <li><a href="'.RAIZ.'/vista/informes/trafico/diagdia.php"><span>Diagrama diario</span></a></li>
-                                    <li><a href="'.RAIZ.'/vista/rrhh/stctacteff.php"><span>Gestionar Franco/Feriado</span></a></li>
-                                     <li><a href="'.RAIZ.'/vista/rrhh/stctacteffv2.php"><span>Gestionar Franco/Feriado (V 2)</span></a></li>
+                                     <li><a href="'.RAIZ.'/vista/rrhh/stctacteffv2.php"><span>Gestionar Franco/Feriado</span></a></li>
+                                     <li><a href="'.RAIZ.'/vista/informes/cria/rsmcgapump.php"><span>Cargas Combustible PUMP-CONTROL</span></a></li>
                                     <li><a href="'.RAIZ.'/vista/informes/cria/closeorders.php"><span>Cierre Automatico Ordenes</span></a></li>
                                     <li><a href="'.RAIZ.'/vista/ordenes/vrfDgm.php"><span>Verificar Diagrama</span></a></li>
                                     <li><a href="'.RAIZ.'/vista/informes/trafico/connas.php"><span>Conductores sin ordenes asignadas</span></a></li>
@@ -784,6 +787,7 @@ ini_set('error_reporting', E_ALL);
             $menu.='<li><a href="'.RAIZ.'/vista/ordenes/sendinf.php"><span>Generar/Enviar Informes</span></a></li>';
          }
          $rrhhxc = "kmxcond.php";
+         $menu.='<li><a href="'.RAIZ.'/vista/informes/trafico/modordssup.php"><span>Mod. Ordenes Superpuestas</span></a></li>';
          if ($_SESSION['modaf'] == 2){
             $menu.='<li><a href="'.RAIZ.'/vista/informes/trafico/modordssup.php"><span>Mod. Ordenes Superpuestas</span></a></li>';
             $menu.='<li><a href="'.RAIZ.'/vista/informes/trafico/sspcch.php"><span>Unidades superpuestas</span></a></li>';            
@@ -800,6 +804,8 @@ ini_set('error_reporting', E_ALL);
                                     <li><a href="'.RAIZ.'/vista/informes/rrhh/'.$rrhhxc.'"><span>KM por conductor</span></a></li>
                                     <li><a href="'.RAIZ.'/vista/informes/rrhh/closeorders.php"><span>Horario Cierre Ordenes</span></a></li>
                                     <li><a href="'.RAIZ.'/vista/informes/rrhh/cnporcli.php"><span>Conductores por Cliente</span></a></li>
+                                    <li><a href="'.RAIZ.'/vista/informes/rrhh/accessos.php"><span>Registro de Accesos</span></a></li>
+                                    <li><a href="'.RAIZ.'/vista/informes/rrhh/accessosv2.php"><span>Registro de Accesos V2</span></a></li>
                                     <li>
                                     <a href="#" class="parent"><span>Informe Ausentismo</span></a>
                                        <div>

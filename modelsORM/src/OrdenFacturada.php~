@@ -265,4 +265,16 @@ class OrdenFacturada
     {
         return $this->fechaAlta;
     }
+
+    private $tarifa;
+
+    public function getTarifa()
+    {
+        return $this->tarifa;
+    }
+
+    public function setTarifa($tarifa)
+    {
+        $this->tarifa = $tarifa;
+    }
 }

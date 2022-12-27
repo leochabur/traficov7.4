@@ -20,16 +20,22 @@
           join cod_novedades c on c.id = n.id_novedad
           where (isFeriado or isFranco) and n.id_estructura = 1 and desde > '2020-09-25' and n.id not in (SELECT id_novedad FROM rrhh_movimiento_debito_feriado)";
 
-  $result = mysqli_query($conn, $sql);*/
+  $result = mysqli_query($conn, $sql);
+
+  En septiembre de 2022 cambia el rango de liquidacion, del 26 al 25   pasa a liquidarse del 21 al 20
+
+  */
 
 
-  $fecha =  DateTime::createFromFormat('Y-m-d', '2021-05-26'); //new DateTime();
+  $fecha = DateTime::createFromFormat('Y-m-d', '2022-11-22'); //new DateTime();
 
-  $inicio = DateTime::createFromFormat('Y-m-d', $fecha->format('Y-'.($fecha->format('m')-1).'-26'));
-  $fin = DateTime::createFromFormat('Y-m-d', $fecha->format('Y-m-25'));
+  //$fecha = new DateTime();
+
+  $inicio = DateTime::createFromFormat('Y-m-d', $fecha->format('Y-'.($fecha->format('m')-1).'-21'));
+  $fin = DateTime::createFromFormat('Y-m-d', $fecha->format('Y-m-20'));
 
   
-  if ($fecha->format('d') > 25)
+  if ($fecha->format('d') > 20)
   {
     $inicio->add(new DateInterval('P1M'));
     $fin->add(new DateInterval('P1M'));
@@ -37,7 +43,7 @@
 
   $ctactes = array();
   $str = find('Estructura', 1);
-  $empleador = getPropietarioIndividual(1); //1 Master   -   51 Sintra
+  $empleador = getPropietarioIndividual(51); //1 Master   -   51 Sintra
 
   $novFranco = find('NovedadTexto', 15);
   $novFeriado = find('NovedadTexto', 17);
@@ -86,7 +92,7 @@
             $feriado->setFechaCarga(new DateTime());
 
             $fechaFeriado = $f->getFecha();
-            if ($fechaFeriado->format('d') > 25)
+            if ($fechaFeriado->format('d') > 20)
             {
               $fechaFeriado->add(new DateInterval('P1M'));
             }

@@ -236,6 +236,7 @@ class Cronograma
     public function __construct()
     {
         $this->servicios = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->estacionesPeajes = new \Doctrine\Common\Collections\ArrayCollection();        
     }
 
     /**
@@ -422,5 +423,122 @@ class Cronograma
     public function getClienteVacio()
     {
         return $this->clienteVacio;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $tarifas;
+
+
+    /**
+     * Add tarifas
+     *
+     * @param \TarifaServicio $tarifas
+     * @return Cronograma
+     */
+    public function addTarifa(\TarifaServicio $tarifas)
+    {
+        $this->tarifas[] = $tarifas;
+
+        return $this;
+    }
+
+    /**
+     * Remove tarifas
+     *
+     * @param \TarifaServicio $tarifas
+     */
+    public function removeTarifa(\TarifaServicio $tarifas)
+    {
+        $this->tarifas->removeElement($tarifas);
+    }
+
+    /**
+     * Get tarifas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTarifas()
+    {
+        return $this->tarifas;
+    }
+
+
+    public function getArticuloFacturacion()
+    {
+        foreach ($this->tarifas as $tarifa) {  //recorre la coleccion de TarifaServicio
+            $tfa = $tarifa->getTarifaPresupuestada();
+            if ($tfa)
+            {
+                return $tfa->getArticulo();
+            }
+        }
+        return null;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $estacionesPeajes;
+
+
+    /**
+     * Add estacionesPeajes
+     *
+     * @param \EstacionPeaje $estacionesPeajes
+     * @return Cronograma
+     */
+    public function addEstacionesPeaje(\EstacionPeaje $estacionesPeajes)
+    {
+        $this->estacionesPeajes[] = $estacionesPeajes;
+
+        return $this;
+    }
+
+    /**
+     * Remove estacionesPeajes
+     *
+     * @param \EstacionPeaje $estacionesPeajes
+     */
+    public function removeEstacionesPeaje(\EstacionPeaje $estacionesPeajes)
+    {
+        $this->estacionesPeajes->removeElement($estacionesPeajes);
+    }
+
+    /**
+     * Get estacionesPeajes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEstacionesPeajes()
+    {
+        return $this->estacionesPeajes;
+    }
+    /**
+     * @var string
+     */
+    private $tipoServicio;
+
+
+    /**
+     * Set tipoServicio
+     *
+     * @param string $tipoServicio
+     * @return Cronograma
+     */
+    public function setTipoServicio($tipoServicio)
+    {
+        $this->tipoServicio = $tipoServicio;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoServicio
+     *
+     * @return string 
+     */
+    public function getTipoServicio()
+    {
+        return $this->tipoServicio;
     }
 }

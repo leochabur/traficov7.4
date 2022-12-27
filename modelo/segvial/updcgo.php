@@ -44,16 +44,16 @@
      $entrega = $_POST['entrega']?"'".dateToMysql($_POST['entrega'],'/')."'": 'NULL';
      $rpta = ($_POST['rpta']?"'".dateToMysql($_POST['rpta'],'/')."'":'NULL');
      $campos ="id_empleado, fecha_emision, fecha_entrega, id_solicitante, mediante, descripcion_hecho, fecha_respuesta, resolucion, detalle_resolucion, id_siniestro, usr_alta, fecha_alta";
-     $values = $_POST[destinatario] ? $_POST[destinatario]:"NULL";
+     $values = $_POST['destinatario'] ? $_POST['destinatario']:"NULL";
      $values.=",'$emision'";
      $values.=",$entrega";
-     $values.=",". ($_POST[solicitante] ? $_POST[solicitante]:"NULL");
-     $values.=",". ($_POST[mediante] ? "'".str_replace(",",";",$_POST[mediante])."'":"NULL");
-     $values.=",". ($_POST[desc_hecho] ? "'".str_replace(",",";",$_POST[desc_hecho])."'":"NULL");
+     $values.=",". ($_POST['solicitante'] ? $_POST['solicitante']:"NULL");
+     $values.=",". ($_POST['mediante'] ? "'".str_replace(",",";",$_POST['mediante'])."'":"NULL");
+     $values.=",". ($_POST['desc_hecho'] ? "'".str_replace(",",";",$_POST['desc_hecho'])."'":"NULL");
      $values.=",$rpta";
-     $values.=",". ($_POST[resolucion] ? $_POST[resolucion]:"NULL");
-     $values.=",". ($_POST[detalleresolucion] ? "'".str_replace(",",";",$_POST[detalleresolucion])."'":"NULL");
-     $values.=",". ($_POST[siniestro] ? $_POST[siniestro]:"NULL");
+     $values.=",". ($_POST['resolucion'] ? $_POST['resolucion']:"NULL");
+     $values.=",". ($_POST['detalleresolucion'] ? "'".str_replace(",",";",$_POST['detalleresolucion'])."'":"NULL");
+     $values.=",". ($_POST['siniestro'] ? $_POST['siniestro']:"NULL");
 
      //  die($values);
      $conn = conexcion();

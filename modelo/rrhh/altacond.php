@@ -1,11 +1,13 @@
 <?php
+
   session_start();
+  error_reporting(0);
   ////////////////// modulo para dar de alta y mdificar un conductore en la BD  /////////////////////
   include ('../../controlador/bdadmin.php');
   include ('../../controlador/ejecutar_sql.php');
   include ('../../vista/paneles/viewpanel.php');
   include_once ('../utils/dateutils.php');
-  define(STRUCTURED, $_SESSION['structure']);
+
   $accion = $_POST['accion'];
 
   if($accion == 'sveevt'){ //codigo para guardar un empleado de forma eventual
@@ -23,20 +25,31 @@
   }
    elseif($accion == 'load'){
    		try{
-          $conn = conexcion();
-          $sql = "SELECT upper(es.nombre) as nomestr, es.id as idestr, e.id_empleado, c.id as id_ciudad, nrodoc, upper(c.ciudad) as nom_ciudad, e.id_empleado, upper(domicilio) as direccion, e.telefono, legajo, upper(apellido) as apellido, upper(e.nombre) as nombre, nrodoc, em.id as id_empleador, upper(razon_social) as empleador, if(e.activo, 'checked', '') as activo,
+          $conn = conexcion(true);
+          
+          $sql = "SELECT upper(es.nombre) as nomestr, es.id as idestr, e.id_empleado, c.id_estructura as id_str_city, c.id as id_ciudad, nrodoc, upper(c.ciudad) as nom_ciudad, e.id_empleado, upper(domicilio) as direccion, e.telefono, legajo, upper(apellido) as apellido, upper(e.nombre) as nombre, nrodoc, 
+              em.id as id_empleador, id_estructura_empleador as strEmp,  upper(razon_social) as empleador, if(e.activo, 'checked', '') as activo,
                          date_format(fechanac, '%d/%m/%Y') as fnac, date_format(inicio_relacion_laboral, '%d/%m/%Y') as inrelab, cuil, upper(ca.descripcion) as cargo, ca.id as idcargo,
-                         date_format(fecha_fin_relacion_laboral, '%d/%m/%Y') as finrelab, email
+                         date_format(fecha_fin_relacion_laboral, '%d/%m/%Y') as finrelab, email, ca.id_estructura as strCargo, cbu, banco
                   FROM empleados e
                   left join ciudades c on (c.id = e.id_ciudad) and (c.id_estructura = e.id_estructura_ciudad)
-                  left join cargo ca on ca.id = e.id_cargo
+                  left join cargo ca on ca.id = e.id_cargo and ca.id_estructura = e.id_estructura_cargo
                   left join empleadores em on (em.id = e.id_empleador)
                   inner join estructuras es on es.id = e.id_estructura
                   where (e.id_empleado = $_POST[conductor])";
 
-          $result = mysql_query($sql, $conn);
-          $data = mysql_fetch_array($result);
-          cerrarconexcion($conn);
+          $result = mysqli_query($conn, $sql);
+          $data = mysqli_fetch_array($result);
+          mysqli_close($conn);
+
+            $keyCity = 0;
+            $ciudade = '';
+
+        if (($data['id_str_city']) && ($data['id_ciudad']) && ($data['nom_ciudad']))
+        {
+            $keyCity = $data['id_str_city'].'-'.$data['id_ciudad'];
+            $ciudade = $data['nom_ciudad'];
+        }
           print '<fieldset class="ui-widget ui-widget-content ui-corner-all">
                 <legend class="ui-widget ui-widget-header ui-corner-all">Datos del conductor</legend>
                 <form id="modunidad">
@@ -45,8 +58,8 @@
                                     <td WIDTH="20%">Empleador</td>
                                     <td>
                                         <select id="empleador" name="empleador" class="ui-widget ui-widget-content  ui-corner-all">'.
-                                                '<option value="'.$data['id_empleador'].'">'.$data['empleador'].'</option>'.
-                                                armarSelect('empleadores', 'razon_social', 'id', 'razon_social', STRUCTURED,1).
+                                                '<option value="'.$data['strEmp'].'-'.$data['id_empleador'].'">'.$data['empleador'].'</option>'.
+                                                armarSelect('empleadores', 'razon_social', 'id', 'razon_social', $_SESSION['structure'] ,1).
                                        '</select>
                                     </td>
                                     <td>
@@ -94,7 +107,7 @@
                                 </tr>
                                 <td WIDTH="20%">Ciudad</td>
                                     <td><select id="city" name="city" class="ui-widget ui-widget-content  ui-corner-all" >'.
-                                    '<option value="'.$data['id_ciudad'].'">'.$data['nom_ciudad'].'</option>'.
+                                    '<option value="'.$keyCity.'">'.$ciudade.'</option>'.
                                     armarSelect('ciudades', 'ciudad', 'id', 'ciudad', "(id_estructura = $_SESSION[structure])", 1).
                               '</select>
                                     </td>
@@ -103,7 +116,7 @@
                                 </tr>
                                 <td WIDTH="20%">Cargo</td>
                                     <td><select id="cargo" name="cargo" class="ui-widget ui-widget-content  ui-corner-all" >'.
-                                    '<option value="'.$data['idcargo'].'">'.$data['cargo'].'</option>'.
+                                    '<option value="'.$data['strCargo'].'-'.$data['idcargo'].'">'.$data['cargo'].'</option>'.
                                     armarSelect('cargo', 'descripcion', 'id', 'descripcion', "(id_estructura = $_SESSION[structure])", 1).
                               '</select>
                                     </td>
@@ -133,6 +146,16 @@
                                 <tr>
                                     <td WIDTH="20%">E-mail</td>
                                     <td><input id="mail" name="mail" value="'.$data['email'].'" class="ui-widget ui-widget-content  ui-corner-all" size="50" minlength="2"/></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td WIDTH="20%">CBU</td>
+                                    <td><input id="cbu" name="cbu" value="'.$data['cbu'].'" class="ui-widget ui-widget-content  ui-corner-all" size="50" minlength="2"/></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td WIDTH="20%">Banco</td>
+                                    <td><input id="banco" name="banco" value="'.$data['banco'].'" class="ui-widget ui-widget-content  ui-corner-all" size="50" minlength="2"/></td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -168,6 +191,7 @@
                                                                               submitHandler: function(e){
                                                                                                                  var datos = $("#modunidad").serialize();
                                                                                                                  $.post("/modelo/rrhh/altacond.php", datos, function(data){
+                                                                                                                                                                             console.log(data);
                                                                                                                                                                              if (data == 1){
                                                                                                                                                                                       var mje = "<div class=\"ui-widget\">"+
                                                                                                                                                                                                  "<div class=\"ui-state-highlight ui-corner-all\" style=\"margin-top: 20px; padding: 0 .7em;\">"+
@@ -191,6 +215,8 @@
           $result = ejecutarSQL($sql);
           $userdef="";
           $userid="";
+          $strEmpleador = 1;
+          $domicilio = str_replace(',', ' ', $_POST['direccion']);
           if ($row = mysql_fetch_array($result))
           {
              if ($row['procesado'] == 0){
@@ -201,21 +227,68 @@
           $cargo = $_POST['cargo'];
           $valuecargo="";
           $campocargo="";
-          if($cargo){
-                     $valuecargo = ",$cargo, $_SESSION[structure]";
+
+          $cargo = explode("-", $cargo);
+          if(count($cargo) == 1 ){
+                     $valuecargo = ",$cargo[0], $_SESSION[structure]";
                      $campocargo = ",id_cargo, id_estructura_cargo";
           }
+          elseif (count($cargo) > 1)
+          {
+                    $valuecargo = ",$cargo[1], $cargo[0]";
+                    $campocargo = ",id_cargo, id_estructura_cargo";
+          }
+
+          $city =  explode('-',$_POST['city']);
+          $cityStr = $_SESSION['structure'];
+
+          if (count($city) > 1)
+          {
+                $ciudad = $city[1];
+                $cityStr = $city[0];
+                $city = $ciudad;
+          }
+          elseif (count($city) == 1)
+          {
+                $ciudad = $city[0];
+                $city = $ciudad;
+          }
+
+          if (!$_POST['city'])
+          {
+                $ciudad = 'NULL';
+                $cityStr = 'NULL';
+                $city = 'NULL';
+          }
           
-          $activo = $_POST['activo'] ? 1 : 0;
+          $empleador = $_POST['empleador'];
+          $valueEmpleador="";
+          $campoEmpleador="";
+
+          $empleador = explode("-", $empleador);
+          if(count($empleador) == 1 ){
+                     $valueEmpleador = ",$empleador[0], $_SESSION[structure]";
+                     $campoEmpleador = ",id_empleador, id_estructura_empleador";
+          }
+          elseif (count($empleador) > 1)
+          {
+                    $valueEmpleador = ",$empleador[1], $empleador[0]";
+                    $campoEmpleador = ",id_empleador, id_estructura_empleador";
+          }
+
+          $activo = isset($_POST['activo']) ? 1 : 0;
 
           $fnac = dateToMysql($_POST['fnac'], "/");
           $firl = dateToMysql($_POST['finlab'], "/");
           $ffirl = dateToMysql($_POST['ffinlab'], "/");
           
-          $campos = "email, afectado_a_estructura, id_estructura, id_empleador, id_estructura_empleador, apellido, nombre, nrodoc, domicilio, telefono, id_ciudad, id_estructura_ciudad, fechanac, inicio_relacion_laboral, fecha_fin_relacion_laboral, cuil, activo $userdef $campocargo";
-          $values = "'$_POST[mail]', $_POST[struct], $_POST[struct], $_POST[empleador], $_SESSION[structure], '$_POST[apellido]', '$_POST[nombre]', '$_POST[dni]', '$_POST[direccion]', '$_POST[telefono]', $_POST[city], $_SESSION[structure], '$fnac', '$firl', '$ffirl', '$_POST[cuil]', $activo $userid $valuecargo";
+          $campos = "cbu, banco, email, afectado_a_estructura, id_estructura $campoEmpleador, apellido, nombre, nrodoc, domicilio, telefono, id_ciudad, id_estructura_ciudad, fechanac, inicio_relacion_laboral, fecha_fin_relacion_laboral, cuil, activo $userdef $campocargo";
+          $values = "'$_POST[cbu]', '$_POST[banco]', '$_POST[mail]', $_POST[struct], $_POST[struct] $valueEmpleador, '$_POST[apellido]', '$_POST[nombre]', '$_POST[dni]', '$domicilio', '$_POST[telefono]', $city, $cityStr, '$fnac', '$firl', '$ffirl', '$_POST[cuil]', $activo $userid $valuecargo";
 
+          try{
           $status = update("empleados", $campos, $values, "(id_empleado = $_POST[id_empleado])");
+          }
+          catch (Exception $e) { die($e->getMessage()); }
 
           if (!$activo)
           {

@@ -96,10 +96,11 @@
         $i_v['v']="VUELTA";
         
         $tipoCronograma = array('company' => '', 'charter' => 'Servicio con Reserva');
+        $dinamicCronograma = array('0' => 'NO', '1' => 'SI');
         $tipoCode = 'company';
         $tipoNombre = '-';
 
-        $sql="SELECT km, DATE_FORMAT(tiempo_viaje, '%H:%i') as tiempo, o.ciudad as origen, d.ciudad as destino, cs.clase, c.activo, c.id, c.nombre as nombre, c.tipoServicio as tipo
+        $sql="SELECT km, DATE_FORMAT(tiempo_viaje, '%H:%i') as tiempo, o.ciudad as origen, d.ciudad as destino, cs.clase, c.activo, c.id, c.nombre as nombre, c.tipoServicio as tipo, if (c.isDinamic, 'SI', 'NO') as dinamicNombre, c.isDinamic as dinamicCode
               FROM cronogramas c
               inner join ciudades o on (o.id = c.ciudades_id_origen) and (o.id_estructura =  c.ciudades_id_estructura_origen)
               inner join ciudades d on (d.id = c.ciudades_id_destino) and (d.id_estructura =  c.ciudades_id_estructura_destino)
@@ -109,6 +110,10 @@
         $result = mysqli_query($conn, $sql) or die (mysqli_error($conn));
         if ($data = mysqli_fetch_array($result))
         {
+
+          $dinamicCode = "$data[dinamicCode]";
+          $dinamicNombre = "$data[dinamicNombre]";
+
           if ($data['tipo'] == 'charter')
           {
             $tipoCode = 'charter';
@@ -148,6 +153,10 @@
                      </tr>
                      <td WIDTH='20%'>Tipo</td>
                          <td><div id='tipoServicio-$data[id]' class='updtype'>$tipoNombre</div></td>
+                         <td></td>
+                     </tr>
+                     <td WIDTH='20%'>Recorrido Dinamico</td>
+                         <td><div id='isDinamic-$data[id]' class='updDinamic'>$dinamicNombre</div></td>
                          <td></td>
                      </tr>
                      <tr>
@@ -316,6 +325,11 @@
                                                                                                     });
                                         $(".updtype").editable("/modelo/procesa/servicios/upd-clase.php", {
                                                                                                    data   : '.json_encode($tipoCronograma).',
+                                                                                                   type   : "select",
+                                                                                                   submit : "Cambiar"
+                                                                                                    });
+                                        $(".updDinamic").editable("/modelo/procesa/servicios/upd-clase.php", {
+                                                                                                   data   : '.json_encode($dinamicCronograma).',
                                                                                                    type   : "select",
                                                                                                    submit : "Cambiar"
                                                                                                     });

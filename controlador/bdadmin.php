@@ -1,6 +1,11 @@
 <?php
     include "parameter.php";
-    
+
+    if (phpversion() > "7")
+    {
+        include "functions.php";
+    }
+
     set_time_limit(0);
     function master() {
            $con = mysql_connect("rrhh.masterbus.net", "xxmasterbus", "master,07A");
@@ -23,9 +28,16 @@
          }
          else
          {
-            $mysqli = new mysqli(HOSTNAME, USERNAME, PASSWORD, DBNAME);
-            mysqli_query($mysqli, "SET NAMES 'utf8'");
-            return $mysqli;
+            try
+            {
+                $mysqli = mysqli_connect(HOSTNAME, USERNAME, PASSWORD, DBNAME);
+
+               // $mysqli = new mysqli(HOSTNAME, USERNAME, PASSWORD, DBNAME);
+              //  die('hoa '.$mysqli);
+                mysqli_query($mysqli, "SET NAMES 'utf8'");
+                return $mysqli;
+            }
+            catch (Exception $e){ throw $e;}
          }
    }
    
@@ -70,79 +82,7 @@
             fclose($file);  */
    }
 
-   ///////////////redefinir conexciones PDO
 
-   function mysql_query($sql, $conn)
-   {
-        try
-        {
-            return mysqli_query($conn, $sql);
-        }
-        catch (Exception $e) { throw $e; }
-   }
-
-   function mysql_num_rows($result)
-   {
-        try
-        {
-            return mysqli_num_rows($result);
-        }
-        catch (Exception $e) { throw $e; }   
-   }
-
-   function mysql_fetch_array($result)
-   {
-        try
-        {
-            return $result->fetch_array();
-        }
-        catch (Exception $e) { throw $e; }   
-   }
-
-   function mysql_close($conn)
-   {
-        try
-        {
-            mysqli_close($conn);
-        }
-        catch (Exception $e) { throw $e; }   
-   }
-
-   function mysql_errno($conn)
-   {
-        try
-        {
-            return mysqli_errno($conn);
-        }
-        catch (Exception $e) { throw $e; }
-   }
-
-   function mysql_free_result($result)
-   {
-        try
-        {
-            mysqli_free_result($result);
-        }
-        catch (Exception $e) { throw $e; }
-   }   
-
-   function mysql_insert_id($conn)
-   {
-        try
-        {
-            return mysqli_insert_id($conn);
-        }
-        catch (Exception $e) { throw $e; }
-   }
-
-   function mysql_fetch_row($result)
-   {
-        try
-        {
-            return mysqli_fetch_row($result);
-        }
-        catch (Exception $e) { throw $e; }
-   }
 
    
    

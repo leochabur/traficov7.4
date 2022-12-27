@@ -5,7 +5,7 @@ error_reporting(E_ALL & ~E_NOTICE);
      include_once('../paneles/viewpanel.php');
      define(RAIZ, '');
      define(STRUCTURED, $_SESSION['structure']);
-     include('../../modelsORM/controller.php');
+     include_once('../../modelsORM/controller.php');
      encabezado('Menu Principal - Sistema de Administracion - Campana');
 ?>
 

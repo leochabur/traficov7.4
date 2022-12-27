@@ -402,4 +402,88 @@ class CargaCombustible
     {
         return $this->tipoFluido;
     }
+    /**
+     * @var \MotivoTAGMaestro
+     */
+    private $motivotagmaestro;
+
+
+    /**
+     * Set motivotagmaestro
+     *
+     * @param \MotivoTAGMaestro $motivotagmaestro
+     * @return CargaCombustible
+     */
+    public function setMotivotagmaestro(\MotivoTAGMaestro $motivotagmaestro = null)
+    {
+        $this->motivotagmaestro = $motivotagmaestro;
+
+        return $this;
+    }
+
+    /**
+     * Get motivotagmaestro
+     *
+     * @return \MotivoTAGMaestro 
+     */
+    public function getMotivotagmaestro()
+    {
+        return $this->motivotagmaestro;
+    }
+    /**
+     * @var boolean
+     */
+    private $usoTagMaestro = false;
+
+    /**
+     * @var string
+     */
+    private $descripcionMotivo;
+
+
+    /**
+     * Set usoTagMaestro
+     *
+     * @param boolean $usoTagMaestro
+     * @return CargaCombustible
+     */
+    public function setUsoTagMaestro($usoTagMaestro)
+    {
+        $this->usoTagMaestro = $usoTagMaestro;
+
+        return $this;
+    }
+
+    /**
+     * Get usoTagMaestro
+     *
+     * @return boolean 
+     */
+    public function getUsoTagMaestro()
+    {
+        return $this->usoTagMaestro;
+    }
+
+    /**
+     * Set descripcionMotivo
+     *
+     * @param string $descripcionMotivo
+     * @return CargaCombustible
+     */
+    public function setDescripcionMotivo($descripcionMotivo)
+    {
+        $this->descripcionMotivo = $descripcionMotivo;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcionMotivo
+     *
+     * @return string 
+     */
+    public function getDescripcionMotivo()
+    {
+        return $this->descripcionMotivo;
+    }
 }

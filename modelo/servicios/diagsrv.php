@@ -1,10 +1,11 @@
-<?
+<?php
   session_start();
   include($_SERVER['DOCUMENT_ROOT'].'/controlador/bdadmin.php');
   include($_SERVER['DOCUMENT_ROOT'].'/controlador/ejecutar_sql.php');
   define(STRUCTURED, $_SESSION['structure']);
   $accion = $_POST['accion'];
   if ($accion == 'fsrv'){ //codigo para filtrar los servicios
+
      if ($_POST['shw'] == 'filter'){ //se debe aplicar el filtro
               $estructura = STRUCTURED;
               $hdesde = $_POST['dsd']?$_POST['dsd']:'00:00';
@@ -73,35 +74,43 @@
               print $tabla;
   }
   elseif($accion == 'dss'){
-     $fecha = explode('/', $_POST['fecd']);
-     $fecha = "$fecha[2]-$fecha[1]-$fecha[0]";
-     $serv = "SELECT c.vacio, c.nombre, s.hcitacion, s.hsalida, s.hllegada, s.hfinserv, c.km, s.id, c.ciudades_id_origen, c.ciudades_id_destino, c.id_cliente, c.id_cliente_vacio
-              FROM cronogramas c
-              inner join servicios s on (s.id_cronograma = c.id) and (s.id_estructura_cronograma = c.id_estructura)
-              where (s.id_estructura = $_SESSION[structure]) and (s.id IN ($_POST[ords]))";
+    try
+    {
+         $fecha = explode('/', $_POST['fecd']);
+         $fecha = "$fecha[2]-$fecha[1]-$fecha[0]";
+         $serv = "SELECT c.vacio, c.nombre, s.hcitacion, s.hsalida, s.hllegada, s.hfinserv, c.km, s.id, c.ciudades_id_origen, c.ciudades_id_destino, c.id_cliente, c.id_cliente_vacio
+                  FROM cronogramas c
+                  inner join servicios s on (s.id_cronograma = c.id) and (s.id_estructura_cronograma = c.id_estructura)
+                  where (s.id_estructura = $_SESSION[structure]) and (s.id IN ($_POST[ords]))";
 
-     $conn = conexcion();
-     $result = mysql_query($serv, $conn);
-     //mysql_close($conn);
+         $conn = conexcion();
+         $result = mysql_query($serv, $conn);
+         //mysql_close($conn);
 
-     $resultDiagramas = mysql_query("SELECT * FROM estadoDiagramasDiarios where fecha = '$fecha' and id_estructura = $_SESSION[structure] and id_estado = 1", $conn);  
-     $finalizado = mysql_num_rows($resultDiagramas);
+         $resultDiagramas = mysql_query("SELECT * FROM estadoDiagramasDiarios where fecha = '$fecha' and id_estructura = $_SESSION[structure] and id_estado = 1", $conn);  
+         $finalizado = mysql_num_rows($resultDiagramas);
 
-     while ($data = mysql_fetch_array($result))
-     {
-           $campos = "id, id_estructura, fservicio, nombre, hcitacion, hsalida, hllegada, hfinservicio, km, id_servicio, id_estructura_servicio, id_ciudad_origen, id_estructura_ciudad_origen, id_ciudad_destino, id_estructura_ciudad_destino, id_cliente, id_estructura_cliente, finalizada, borrada";
-           $values = "$_SESSION[structure], '$fecha', '$data[nombre]', '$data[hcitacion]', '$data[hsalida]', '$data[hllegada]', '$data[hfinserv]', $data[km], '$data[id]', $_SESSION[structure], $data[ciudades_id_origen], $_SESSION[structure], $data[ciudades_id_destino], $_SESSION[structure], $data[id_cliente], $_SESSION[structure], 0, 0";
-           if ($data['vacio'] == 1){
-              $campos.=", id_cliente_vacio, id_estructura_cliente_vacio";
-              $values.=", $data[id_cliente_vacio], $_SESSION[structure]";
-           }
-           $id = insert('ordenes', $campos, $values, $conn);
-           if ($finalizado)
-           {
-              comunicateInsertsWhitId($id, $conn, 'Diagramar Servicios - POST Cierre Diagrama');
-           }
+         while ($data = mysql_fetch_array($result))  
+         {
+               $campos = "id, id_estructura, fservicio, nombre, hcitacion, hsalida, hllegada, hfinservicio, km, id_servicio, id_estructura_servicio, id_ciudad_origen, id_estructura_ciudad_origen, id_ciudad_destino, id_estructura_ciudad_destino, id_cliente, id_estructura_cliente, finalizada, borrada, id_micro";
+               $values = "$_SESSION[structure], '$fecha', '$data[nombre]', '$data[hcitacion]', '$data[hsalida]', '$data[hllegada]', '$data[hfinserv]', $data[km], '$data[id]', $_SESSION[structure], $data[ciudades_id_origen], $_SESSION[structure], $data[ciudades_id_destino], $_SESSION[structure], $data[id_cliente], $_SESSION[structure], 0, 0, $_POST[interno]";
+               if ($data['vacio'] == 1){
+                  $campos.=", id_cliente_vacio, id_estructura_cliente_vacio";
+                  $values.=", $data[id_cliente_vacio], $_SESSION[structure]";
+               }
+               $id = insert('ordenes', $campos, $values, $conn);
+               if ($finalizado)
+               {
+                  comunicateInsertsWhitId($id, $conn, 'Diagramar Servicios - POST Cierre Diagrama');
+               }
+         }
+         mysql_close($conn);
+         print json_encode(['ok' => true]);
      }
-     mysql_close($conn);
+      catch (Exception $e) {
+                                print json_encode($e->getMessage());
+      }
   }
+
 ?>
 

@@ -88,8 +88,10 @@ class Orden
     /**
      * Constructor
      */
-    public function __construct()
+    
+    public function __construct($id)
     {
+        $this->id = $id;
         $this->viajes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -335,7 +337,7 @@ class Orden
     /**
      * @var boolean
      */
-    private $borrada;
+    private $borrada = false;
 
     /**
      * @var string
@@ -355,22 +357,22 @@ class Orden
     /**
      * @var integer
      */
-    private $pasajeros;
+    private $pasajeros = 0;
 
     /**
      * @var boolean
      */
-    private $suspendida;
+    private $suspendida = false;
 
     /**
      * @var boolean
      */
-    private $checkeada;
+    private $checkeada = false;
 
     /**
      * @var float
      */
-    private $peajes;
+    private $peajes = 0;
 
     /**
      * @var \DateTime
@@ -978,34 +980,7 @@ class Orden
     {
         return $this->fechaAccion;
     }
-    /**
-     * @var \ObservacionOrden
-     */
-    private $obseracion;
 
-
-    /**
-     * Set obseracion
-     *
-     * @param \ObservacionOrden $obseracion
-     * @return Orden
-     */
-    public function setObseracion(\ObservacionOrden $obseracion = null)
-    {
-        $this->obseracion = $obseracion;
-
-        return $this;
-    }
-
-    /**
-     * Get obseracion
-     *
-     * @return \ObservacionOrden 
-     */
-    public function getObseracion()
-    {
-        return $this->obseracion;
-    }
     /**
      * @var \ObservacionOrden
      */
@@ -1033,5 +1008,35 @@ class Orden
     public function getObservacion()
     {
         return $this->observacion;
+    }
+
+    /**
+     * Add observacion
+     *
+     * @param \ObservacionOrden $observacion
+     * @return Orden
+     */
+    public function addObservacion(\ObservacionOrden $observacion)
+    {
+        $this->observacion[] = $observacion;
+
+        return $this;
+    }
+
+    /**
+     * Remove observacion
+     *
+     * @param \ObservacionOrden $observacion
+     */
+    public function removeObservacion(\ObservacionOrden $observacion)
+    {
+        $this->observacion->removeElement($observacion);
+    }
+
+    public function updateId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }

@@ -52,8 +52,8 @@
      $values.=(','. ($_POST['hsin'] ? "'$_POST[hsin]'":"NULL"));
      $values.=",". ($_POST['climasin'] ? $_POST['climasin']:"NULL");
      $values.=",". ($_POST[ubicacionsin] ? $_POST[ubicacionsin]:"NULL");
-     $values.=",". ($_POST[calle1sin] ? "'$_POST[calle1sin]'":"NULL");
-     $values.=",". ($_POST[calle2sin] ? "'$_POST[calle2sin]'":"NULL");
+     $values.=",". ($_POST[calle1sin] ? "'".str_replace(',', ' ', $_POST['calle1sin'])."'":"NULL");
+     $values.=",". ($_POST[calle2sin] ? "'".str_replace(',', ' ', $_POST['calle2sin'])."'":"NULL");
      $values.=",". ($_POST[ciudadsin] ? $_POST[ciudadsin]:"NULL");
      $values.=",". ($_POST[lesionsin] ? $_POST[lesionsin]:"NULL");
      $values.=",". ($_POST[respsin] ? "'$_POST[respsin]'":"NULL");
@@ -131,8 +131,8 @@
      $values.=(','. ($_POST['hsin'] ? "'$_POST[hsin]'":"NULL"));
      $values.=",". ($_POST['climasin'] ? $_POST['climasin']:"NULL");
      $values.=",". ($_POST[ubicacionsin] ? $_POST[ubicacionsin]:"NULL");
-     $values.=",". ($_POST[calle1sin] ? "'$_POST[calle1sin]'":"NULL");
-     $values.=",". ($_POST[calle2sin] ? "'$_POST[calle2sin]'":"NULL");
+     $values.=",". ($_POST[calle1sin] ? "'".str_replace(',', ' ', $_POST['calle1sin'])."'":"NULL");
+     $values.=",". ($_POST[calle2sin] ? "'".str_replace(',', ' ', $_POST['calle2sin'])."'":"NULL");
      $values.=",". ($_POST[ciudadsin] ? $_POST[ciudadsin]:"NULL");
      $values.=",". ($_POST[lesionsin] ? $_POST[lesionsin]:"NULL");
      $values.=",". ($_POST[respsin] ? "'$_POST[respsin]'":"NULL");

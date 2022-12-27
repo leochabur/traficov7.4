@@ -1,10 +1,10 @@
-<?
+<?php
   session_start();
   ////////////////// modulo para dar de alta y mdificar un conductore en la BD  /////////////////////
     include ('../../controlador/bdadmin.php');
   include ('../../controlador/ejecutar_sql.php');
   include_once ('../../modelo/utils/dateutils.php');
-  include ('../../modelo/enviomail/sendmail.php');
+  include_once ('../../modelo/enviomail/sendmail.php');
   
   $accion = $_POST['accion'];
 

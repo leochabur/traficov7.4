@@ -38,9 +38,19 @@ class AccionUnidad
     private $unidad;
 
     /**
+     * @var \Sector
+     */
+    private $sector;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $responsables;
+
+    /**
+     * @var \DateTime
+     */
+    private $tiempo;
 
     /**
      * Constructor
@@ -133,6 +143,30 @@ class AccionUnidad
     }
 
     /**
+     * Set sector
+     *
+     * @param \Sector $accion
+     *
+     * @return Sector
+     */
+    public function setSector(\Sector $sector = null)
+    {
+        $this->sector = $sector;
+    
+        return $this;
+    }
+
+    /**
+     * Get sector
+     *
+     * @return \Sector
+     */
+    public function getSector()
+    {
+        return $this->sector;
+    }
+
+    /**
      * Set accion
      *
      * @param \TipoAccionUnidad $accion
@@ -220,4 +254,37 @@ class AccionUnidad
     {
         // Add your code here
     }
+
+    /**
+     * Set tiempo
+     *
+     * @param \DateTime $tiempo
+     * @return TiempoAccionTipoUnidad
+     */
+    public function setTiempo($tiempo)
+    {
+        $this->tiempo = $tiempo;
+
+        return $this;
+    }
+
+    /**
+     * Get tiempo
+     *
+     * @return \DateTime 
+     */
+    public function getTiempo()
+    {
+        return $this->tiempo;
+    }
+
+    public function responsablesList()
+    {
+        $res = "";
+        foreach ($this->responsables as $value) {
+            $res.=$value->getApellido()." - ";
+        }
+        return $res;
+    }
+
 }

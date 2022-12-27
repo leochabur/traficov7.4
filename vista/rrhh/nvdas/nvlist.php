@@ -40,7 +40,7 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
 </style>
 <script type="text/javascript">
                           $(document).ready(function(){
-                          <?
+                          <?php
                                                 if (isset($_GET['emp'])){
                                                         print "$('#empleadores option[value=$_GET[emp]]').attr('selected', 'selected');
                                                                \$.post('/modelo/rrhh/nvdas/nvlist.php', {accion:'lemp', emplor:$_GET[emp], emple:$_GET[emple]}, function(data){\$('#empleados').html(data);});";
@@ -59,7 +59,7 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
                                                                                               $.post("/modelo/rrhh/nvdas/nvlist.php", {accion:'lnov', tt: tit, emple: emp, desde:des, hasta:has}, function(data){$('#data').html(data);});
                                                        });
                                                        
-                                                       <?
+                                                       <?php
                                                        $desde = dateToJS("$_GET[ds]", "-");
                                                        $hasta = dateToJS("$_GET[hs]", "-");
 

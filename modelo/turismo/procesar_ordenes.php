@@ -6,10 +6,10 @@
   }
   date_default_timezone_set('America/New_York');
   include ($_SERVER['DOCUMENT_ROOT'].'/controlador/bdadmin.php');
-  include($_SERVER['DOCUMENT_ROOT'].'/controlador/ejecutar_sql.php');
-  include($_SERVER['DOCUMENT_ROOT'].'/modelo/enviomail/sendmail.php');
-  include($_SERVER['DOCUMENT_ROOT'].'/modelo/utils/dateutils.php');
-  define(STRUCTURED, $_SESSION['structure']);
+  include_once($_SERVER['DOCUMENT_ROOT'].'/controlador/ejecutar_sql.php');
+  include_once($_SERVER['DOCUMENT_ROOT'].'/modelo/enviomail/sendmail.php');
+  include_once($_SERVER['DOCUMENT_ROOT'].'/modelo/utils/dateutils.php');
+  define('STRUCTURED', $_SESSION['structure']);
   
   $accion = $_POST['accion'];
   if ($accion == 'soe'){ //codigo para guardar una orden de un vacio
@@ -336,7 +336,7 @@
 
               $conn = conexcion();
               $response = array();     ///respuesta al cliente de la accion requerida
-              $response[status] = true;
+              $response['status'] = true;
               
               ////////////datos correspondientes a la salida y llegada del servicio//////////////////7
               $fecha_ida =  dateToMysql($_POST['fsalida'],'/');
@@ -355,8 +355,8 @@
               $ahora = new DateTime("now");
               if ($ahora > $salida_servicio){
                  if (($_SESSION['userid'] != 25) && ($_SESSION['userid'] != 33)) {
-                    $response[status] = false;
-                    $response[msge] = "La fecha del servicio no puede ser anterior a la fecha actual!!";
+                    $response['status'] = false;
+                    $response['msge'] = "La fecha del servicio no puede ser anterior a la fecha actual!!";
                     print (json_encode($response));
                     exit();
                  }
@@ -364,8 +364,8 @@
               
               if (! isset($_POST['srg'])){
                  if ($salida_servicio > $regreso_servicio){
-                    $response[status] = false;
-                    $response[msge] = "La fecha de regreso no puede ser anterior a la fecha de salida!!";
+                    $response['status'] = false;
+                    $response['msge'] = "La fecha de regreso no puede ser anterior a la fecha de salida!!";
                     print (json_encode($response));
                     exit();
                  }
@@ -385,13 +385,13 @@
 
                   ////campos orden de turismo//////////////////////////////////////////////
                   $campos_turismo= "id, viaticos";
-                  $values_turismo=($_POST[viaticos]==''?'NULL':$_POST[viaticos]);
+                  $values_turismo=($_POST['viaticos']==''?'NULL':$_POST['viaticos']);
 
                   $campos_turismo.=", bar, banio, tv, mantas, microfono, mov_dest";
-                  $values_turismo.=", ".(isset($_POST[bar])?1:0).', '.(isset($_POST[banio])?1:0).','.(isset($_POST[dvd])?1:0).','.(isset($_POST[mantas])?1:0).','.(isset($_POST[mic])?1:0).','.(isset($_POST[excur])?1:0);
+                  $values_turismo.=", ".(isset($_POST['bar'])?1:0).', '.(isset($_POST['banio'])?1:0).','.(isset($_POST['dvd'])?1:0).','.(isset($_POST['mantas'])?1:0).','.(isset($_POST['mic'])?1:0).','.(isset($_POST['excur'])?1:0);
                      
                   $campos_turismo.=", contacto, tel_contacto, mail_contacto, observaciones, pago_anticipado";
-                  $values_turismo.=",'$_POST[nomcontacto]','$_POST[telcontacto]','$_POST[mailcontacto]', '".str_replace(",",";",$_POST[observa])."',".(isset($_POST[pagoanti])?1:0);
+                  $values_turismo.=",'$_POST[nomcontacto]','$_POST[telcontacto]','$_POST[mailcontacto]', '".str_replace(",",";",$_POST['observa'])."',".(isset($_POST['pagoanti'])?1:0);
                   
                   $fec_reg = (!isset($_POST['srg']))?"'".$regreso_servicio->format('Y-m-d')."'":"NULL";
                   
@@ -410,14 +410,14 @@
                      $campos.=", fservicio";
                      $values.=", '".$salida_servicio->format('Y-m-d')."'";
 
-                     $response[msge] = "Se ha generado un error al intentar guardar la orden!";
+                     $response['msge'] = "Se ha generado un error al intentar guardar la orden!";
                      $orden = insert('ordenes', "id, $campos", $values, $conn); //inserta la orden
                      
-                     $price = ($_POST[preciofinal]==''?'NULL':$_POST[preciofinal]);
+                     $price = ($_POST['preciofinal']==''?'NULL':$_POST['preciofinal']);
                      $campos_turismo.= ", id_orden, id_estructura_orden, precio_venta_final, efc, afecta_ctacte";
-                     $values_turismo.= ", $orden, $estructura, $price, ".(isset($_POST[efc])?1:0).", 1";
+                     $values_turismo.= ", $orden, $estructura, $price, ".(isset($_POST['efc'])?1:0).", 1";
                      
-                     $response[msge] = "Se ha generado un error al intentar guardar la orden de turismo!";
+                     $response['msge'] = "Se ha generado un error al intentar guardar la orden de turismo!";
                      $orden_turismo = insert('ordenes_turismo', $campos_turismo, $values_turismo, $conn);
                   //   die(json_encode($response));
                   }
@@ -432,11 +432,11 @@
                        $orden = insert('ordenes', "id, $campos", $values, $conn); //inserta la orden del servicio de ida
                        
                        //solo genera ordenes de turismo para el servicio de ida, el resto no
-                       $price = ($_POST[preciofinal]==''?'NULL':$_POST[preciofinal]);
+                       $price = ($_POST['preciofinal']==''?'NULL':$_POST['preciofinal']);
                        $campos_turismo.= ", id_orden, id_estructura_orden, precio_venta_final, efc, afecta_ctacte";
-                       $values_turismo.= ", $orden, $estructura, $price, ".(isset($_POST[efc])?1:0).", 1";
+                       $values_turismo.= ", $orden, $estructura, $price, ".(isset($_POST['efc'])?1:0).", 1";
 
-                       $response[msge] = "Se ha generado un error al intentar guardar la orden de turismo !";
+                       $response['msge'] = "Se ha generado un error al intentar guardar la orden de turismo !";
                        $orden_turismo = insert('ordenes_turismo', $campos_turismo, $values_turismo, $conn);
                        
                    //    $response[sql] = "$campos";
@@ -474,7 +474,7 @@
               $campos_ctacte = "id, id_orden, id_estructura_orden, id_cliente, id_estructura_cliente, importe, viaje_pago, fecha_ingreso, id_user";
               $values_ctacte = "$orden_turismo, $estructura, $_POST[cliente], $estructura, $price, 'v', now(), $_SESSION[userid]";
 
-              if ($_POST[preciofinal]){
+              if ($_POST['preciofinal']){
                  $orden_turismo = insert('ctacteturismo', $campos_ctacte, $values_ctacte, $conn);
               }
               
@@ -496,19 +496,20 @@
                  $mail = "Cliente: $data[0]<br>Fecha: $data[1]  Hora Salida: $data[2]<br> Capacidad Solicitada: $data[3]<br>
                           Origen: $data[4]  Destino:$data[5]<br> Contacto: $data[6]  Tel. Contacto: $data[7]";
               //   enviarMail("leochabur@gmail.com", $mail, "Nueva Orden de Turismo Generada");
-
+              
                  enviarMail("leochabur@gmail.com,mdepeon@masterbus.net,raguiar@masterbus.net,turismo@masterbus.net,rpizzutti@masterbus.net", $mail, "Nueva Orden de Turismo Generada");
+
                  
               }
               commit($conn);
               cerrarconexcion($conn);
-              $response[msge] = "Se ha generado con exito la orden!";
+              $response['msge'] = "Se ha generado con exito la orden!";
               print (json_encode($response));
               }catch (Exception $e) {
                                       rollback($conn);
                                       cerrarconexcion($conn);
-                                      $response[status] = false;
-                                      $response[msge]=$e->getMessage();
+                                      $response['status'] = false;
+                                      $response['msge']=$e->getMessage();
                                       print (json_encode($response));
                                       };
               

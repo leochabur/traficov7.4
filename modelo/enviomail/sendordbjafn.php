@@ -1,5 +1,5 @@
 <?php
-session_start();
+@session_start();
 
 include_once("../../controlador/bdadmin.php");
 include_once('../../modelo/enviomail/sendmail.php');

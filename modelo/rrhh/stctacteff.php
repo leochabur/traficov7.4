@@ -147,7 +147,19 @@
 
        $select.="</select>";
 
-          $tabla ='<table id="tablitasssss" align="center" width="100%" class="table table-zebra">
+          $tabla ='
+                  <style type="text/css">
+
+
+                      thead { 
+                              position: sticky;
+                              top: 0;
+                              z-index: 10;
+                              background-color: #ffffff;
+                      }
+
+                  </style>
+                  <table id="tablitasssss" align="center" width="100%" class="table table-zebra">
                      <thead>
                             <tr>
                                 <th rowspan="2">Legajo</th>                                

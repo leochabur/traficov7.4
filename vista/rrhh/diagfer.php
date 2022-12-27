@@ -46,15 +46,19 @@ table {
 </style>
 <script type="text/javascript">
                           $(document).ready(function(){
-                                                       $("#empleador option[value=<?print $vacio;?>]").attr("selected",true);
+                                                       $("#empleador option[value=<?php print $vacio;?>]").attr("selected",true);
                                                        $('#empleador').selectmenu({width: 350});
                                                        $('#desde, #hasta').datepicker({dateFormat:'dd/mm/yy'});
 
                                                        $('#cargar').button().click(function(){
-                                                                                              $.post("/modelo/rrhh/diagfer.php", {accion: 'sbana', desde: $('#desde').val(), hasta: $('#hasta').val(), emple: $('#empleador').val()}, function(data){
+                                                                                              $('#sbana').html('<h5>Cargando....</h5>');
+                                                                                              $.post("/modelo/rrhh/diagfer.php", 
+                                                                                                     {accion: 'sbana', desde: $('#desde').val(), 
+                                                                                                    hasta: $('#hasta').val(), emple: $('#empleador').val()}, 
+                                                                                                    function(data){
 
-                                                                                                                                                                                                                                $('#sbana').html(data);
-                                                                                                                                                                                                                             });
+                                                                                                                    $('#sbana').html(data);
+                                                                                                                 });
                                                                                               });
                                                        });
 </script>

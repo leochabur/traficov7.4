@@ -1,4 +1,4 @@
-<?
+<?php
   session_start();
   ////////////////// modulo para dar de alta y mdificar una unidad en la BD  /////////////////////
   include ('../../controlador/bdadmin.php');
@@ -31,7 +31,7 @@
           $sql="SELECT upper(c.descripcion) as cargo, e.id_empleado, legajo, upper(concat(apellido, ', ',e.nombre)) as apenom, nrodoc, upper(razon_social) as empleador, if(e.activo, 'checked', '') as activo, es.nombre as str, e.activo as act, e.borrado as bor
                 FROM empleados e
                 left join empleadores em on (em.id = e.id_empleador)
-                left join cargo c on (c.id = e.id_cargo)
+                left join cargo c on ((c.id = e.id_cargo) and (c.id_estructura = e.id_estructura_cargo))
                 left join estructuras es on es.id = e.id_estructura
                 where $cargo (e.id_estructura in (SELECT id_estructura FROM usuariosxestructuras where id_usuario = $_SESSION[userid])) $emp $mostrar
                 order by empleador, $_POST[order]";

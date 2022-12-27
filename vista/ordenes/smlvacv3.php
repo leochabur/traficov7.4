@@ -151,6 +151,10 @@ option.1{background-color: ;}
                           </td>
                       </tr>
                       <tr>
+                          <td colspan="2">Incluir Servicios Turismo</td>
+                          <td colspan="2"><input type="checkbox" name="turismo"></td>
+                      </tr>
+                      <tr>
                           <td colspan="2">Minutos Corte</td>
                           <td colspan="2">
 								              <input type="text" name="mincorte" id="mincorte" value="480" size="5">

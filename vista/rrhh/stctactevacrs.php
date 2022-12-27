@@ -32,10 +32,12 @@ table tr td{padding: 3px;}
 </style>
 <script type="text/javascript">
                           $(document).ready(function(){
-                                                       $('#detalle').selectmenu({width: 250});
+                                                       $('.detalle').selectmenu({width: 250});
                                                        $('#cargar').button().click(function(){
                                                                                               $('#data').html("<div align='center'><img  alt='cargando' src='../ajax-loader.gif' /></div>");
-                                                                                              $.post("/modelo/rrhh/stctactevacrs.php", {accion: 'load', det:$('#detalle').val()}, function(data){$('#data').html(data);});
+                                                                                              $.post("/modelo/rrhh/stctactevacrs.php", 
+                                                                                                     $("#upuda").serialize(), 
+                                                                                                    function(data){$('#data').html(data);});
                                                                                               });
 
 
@@ -52,14 +54,23 @@ table tr td{padding: 3px;}
 	           <fieldset class="ui-widget ui-widget-content ui-corner-all">
 		                 <legend class="ui-widget ui-widget-header ui-corner-all">Vacaciones Personal</legend>
                          <div align="center">
-                         <select id="detalle">
-                           <option value="99">Todos</option>
-                         <?php
-                              $conn=conexcion();
-                              $result = mysql_query("SELECT anio, detalle FROM vacacionespersonal group by anio order by detalle", $conn);
-                              while ($data = mysql_fetch_array($result))
-                                    print "<option value='$data[0]'>$data[1]</option>";
-                         ?>
+                         <select class="detalle" name="sector">
+                                <option value="99">Todos los sectores</option>
+                                 <?php
+                                      $conn=conexcion();
+                                      $result = mysql_query("SELECT id, descripcion FROM sector WHERE activo ORDER BY descripcion", $conn);
+                                      while ($data = mysql_fetch_array($result))
+                                            print "<option value='$data[id]'>$data[descripcion]</option>";
+                                 ?>
+                         </select>
+                         <select class="detalle" name="det">
+                            <option value="99">Todos</option>
+                             <?php
+
+                                  $result = mysql_query("SELECT anio, detalle FROM vacacionespersonal group by anio order by detalle", $conn);
+                                  while ($data = mysql_fetch_array($result))
+                                        print "<option value='$data[0]'>$data[1]</option>";
+                             ?>
                          </select>
                          <input type="button" value="Cargar" id="cargar">
                          </div>

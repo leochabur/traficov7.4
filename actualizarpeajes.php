@@ -10,8 +10,8 @@
                      $result = mysql_query($sql, $conn);   */
                      //";
                      
-                     $export = mysql_connect('127.0.0.1', 'c0mbexpuser', 'Mb2013Exp');
-                     mysql_select_db('c0mbexport', $export);
+                     $export = mysqli_connect('mariadb-masterbus-trafico.planisys.net', 'c0mbexpuser', 'Mb2013Exp', 'c0mbexport');
+                    // mysql_select_db('c0mbexport', $export);
                      
                      $sql="select c.id as cron, tu.id as tipo, c.nombre, o.id as orden
                                   from ordenes o
@@ -19,21 +19,21 @@
                                   inner join tipounidad tu on tu.id = m.id_tipounidad
                                   inner join servicios s on s.id = o.id_servicio and s.id_estructura = o.id_estructura_servicio
                                   inner join cronogramas c on c.id = s.id_cronograma and c.id_estructura = s.id_estructura_cronograma
-                                  where o.id_estructura = 1 and fservicio between '$_GET[desde]' and '$_GET[hasta]' and c.id in (select id_cronograma from peajesporcronogramas group by id_cronograma)";
+                                  where o.id_estructura = 1 and fservicio between '2021-12-01' and '2021-12-31' and c.id in (select id_cronograma from peajesporcronogramas group by id_cronograma)";
                    //  die($sql);
-                     $result = mysql_query($sql, $export);
+                     $result = mysqli_query($export, $sql);
                      $i=0;
-                     while ($data = mysql_fetch_array($result)){
+                     while ($data = mysqli_fetch_array($result)){
                           // $update = "SELECT id_empleado FROM empleados where (legajo = $data[legajo])";
                            $peaje = "select sum(precio_peaje)
                                     from peajesporcronogramas pxc
                                     inner join estacionespeaje ep on ep.id = pxc.id_estacion_peaje
                                     inner join preciopeajeunidad ppu on ppu.id_estacionpeaje = ep.id
                                     where id_cronograma = $data[cron] and id_tipounidad = $data[tipo]";
-                           $re = mysql_query($peaje, $export);
-                           if ($row = mysql_fetch_array($re)){
+                           $re = mysqli_query($export, $peaje);
+                           if ($row = mysqli_fetch_array($re)){
                               $update = "UPDATE ordenes SET peajes = $row[0] WHERE id = $data[orden]";
-                              $reza = mysql_query($update, $export);
+                              $reza = mysqli_query($export, $update);
                               $i++;
                            }
                          /*  if (mysql_num_rows($re) == 0){

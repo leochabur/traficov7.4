@@ -52,7 +52,7 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
                                                                                                                                                                                                                                            $('#dats').html(data);
                                                                                                                                                                                                                                });
                                                        });
-                                                       $('#emples').selectmenu({width: 350});
+                                                       $('#emples').selectmenu({width: 400});
                                                        $('#anios').selectmenu({width: 100});
                                                        $('#puesto').selectmenu({width: 250});
 
@@ -80,11 +80,11 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
                                                      $sql="SELECT ch1.id_empleado, upper(if(em.id = 1,concat(ch1.apellido, ', ',ch1.nombre), concat(ch1.apellido, ', ',ch1.nombre, '(',em.razon_social,')'))) as empleado
                                                            FROM empleados ch1
                                                            inner join empleadores em on em.id = ch1.id_empleador
-                                                           where (ch1.activo)and (not borrado) and (em.id in (1, 51)) and (em.activo) and (ch1.id_estructura in (SELECT id_estructura FROM usuariosxestructuras where id_usuario = $_SESSION[userid]))
+                                                           where (ch1.activo)and (not borrado) and (em.id in (1, 51, 143)) and (em.activo) and (ch1.id_estructura in (SELECT id_estructura FROM usuariosxestructuras where id_usuario = $_SESSION[userid]))
                                                            order by em.id, apellido, nombre";
                                                      $result = ejecutarSQL($sql);
                                                      while($row = mysql_fetch_array($result)){
-                                                                print "<option value='$row[id_empleado]'>".utf8_decode($row[empleado])."</option>";
+                                                                print "<option value='$row[id_empleado]'>".htmlentities($row[empleado])."</option>";
                                                      }
                                                      mysql_free_result($result);
                                                 ?>

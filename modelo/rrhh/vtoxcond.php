@@ -11,7 +11,6 @@
        (SELECT id_licencia FROM licenciasxconductor where (id_licencia = 1) and (id_conductor = id_empleado) group by id_licencia) as nac,
        (SELECT id_licencia FROM licenciasxconductor where (id_licencia = 2) and (id_conductor = id_empleado) group by id_licencia) as prov,
        (SELECT id_licencia FROM licenciasxconductor where (id_licencia = 3) and (id_conductor = id_empleado) group by id_licencia) as mun,
-       (SELECT id_licencia FROM licenciasxconductor where (id_licencia = 4) and (id_conductor = id_empleado) group by id_licencia) as alc,
        (SELECT id_licencia FROM licenciasxconductor where (id_licencia = 5) and (id_conductor = id_empleado) group by id_licencia) as pre,
        (SELECT id_licencia FROM licenciasxconductor where (id_licencia = 6) and (id_conductor = id_empleado) group by id_licencia) as lt
                FROM empleados e
@@ -32,7 +31,6 @@
                                 <th>Lic. Prov.</th>
                                 <th>Lic. Nacional</th>
                                 <th>Preocupacional</th>
-                                <th>Ex. Alc. Drog.</th>
                                 <th>Libreta Trabajo</th>
                             </tr>
                      </thead>
@@ -60,11 +58,6 @@
                          $sel = 'checked';
                       }
                       $tabla.="<td align='center'><input type=\"checkbox\" $sel onClick=\"cambioEstado($data[id], 5, this.checked);\"></td>";
-                      $sel='';
-                      if ($data['alc']){
-                         $sel = 'checked';
-                      }
-                      $tabla.="<td align='center'><input type=\"checkbox\" $sel onClick=\"cambioEstado($data[id], 4, this.checked);\"></td>";
                       $sel='';
                       if ($data['lt']){
                          $sel = 'checked';

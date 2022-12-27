@@ -5,7 +5,9 @@
      define(RAIZ, '');
      define(STRUCTURED, $_SESSION['structure']);
      encabezado('Menu Principal - Sistema de Administracion - Campana');
-     $route = ($_SESSION['structure'] == 2?'diagdiasur':'diagdia');
+
+     $route = ((($_SESSION['structure'] == 2) || ($_SESSION['structure'] == 11))?'diagdiasur':'diagdia');
+     $isSur = ((($_SESSION['structure'] == 2) || ($_SESSION['structure'] == 11))?true:false);
 ?>
    <link type="text/css" href="<?php echo RAIZ;?>/vista/css/jquery.ui.selectmenu.css" rel="stylesheet" />
     <link type="text/css" href="<?php echo RAIZ;?>/vista/css/blue/style.css" rel="stylesheet"/>
@@ -83,30 +85,72 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
 		                 <div id="mensaje"> </div>
 		                 <fieldset class="ui-widget ui-widget-content ui-corner-all">
 		                 <legend class="ui-widget ui-widget-header ui-corner-all">Filtrar por:</legend>
-                         <table border="0" align="center" width="50%" name="tabla">
-                                <tr>
-                                    <td>Conductor</td>
-                                    <td>
-                                    <select id="cond" name="cond" class="ui-widget ui-widget-content  ui-corner-all">
-                                            <option value="0">Todos</option>
-                                                <?php
-                                                     armarSelectCond(STRUCTURED);
-                                                ?>
-                                        </select>
-                                    </td>
-                                    <td>Desde</td>
-                                    <td><input id="desde" name="desde"  type="text" size="20"></td>
-                                    <td>Hasta</td>
-                                    <td><input id="hasta" name="hasta" type="text" size="20"></td>
-                                    <td>
-                                        <input type="button" value="Cargar Diagrama" id="cargar">
-                                    </td>
-                                </tr>
-                         </table>
+
+                            <?php
+
+                                if ($isSur)
+                                {
+                            ?>
+                                 <table border="0" align="center" width="75%" name="tabla">
+                                        <tr>
+                                            <td>Conductor</td>
+                                            <td>Desde</td>
+                                            <td>Hasta</td>
+                                            <td>Corregir Horarios</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                            <select id="cond" name="cond" class="ui-widget ui-widget-content  ui-corner-all">
+                                                    <option value="0">Todos</option>
+                                                        <?php
+                                                             armarSelectCond(STRUCTURED);
+                                                        ?>
+                                                </select>
+                                            </td>
+                                            <td><input id="desde" name="desde"  type="text" size="20"></td>
+                                            <td><input id="hasta" name="hasta" type="text" size="20"></td>
+                                            <td align='center'><input type="checkbox" name="corregir"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" align="right">
+                                                <input type="button" value="Cargar Diagrama" id="cargar">
+                                            </td>
+                                        </tr>
+                                 </table>
+
+                            <?php
+                                }
+                                else
+                                {
+                            ?>
+                                 <table border="0" align="center" width="50%" name="tabla">
+                                        <tr>
+                                            <td>Conductor</td>
+                                            <td>
+                                            <select id="cond" name="cond" class="ui-widget ui-widget-content  ui-corner-all">
+                                                    <option value="0">Todos</option>
+                                                        <?php
+                                                             armarSelectCond(STRUCTURED);
+                                                        ?>
+                                                </select>
+                                            </td>
+                                            <td>Desde</td>
+                                            <td><input id="desde" name="desde"  type="text" size="20"></td>
+                                            <td>Hasta</td>
+                                            <td><input id="hasta" name="hasta" type="text" size="20"></td>
+                                            <td>
+                                                <input type="button" value="Cargar Diagrama" id="cargar">
+                                            </td>
+                                        </tr>
+                                 </table>
+                            <?php
+
+                                }
+                            ?>
                          </fieldset>
                          <br>
                          <div id="data">
-                              <?//include_once("../../../modelo/informes/trafico/diagdia.php");?>
+
                          </div>
             </fieldset>
             <input type="hidden" name="accion" id="accion" value="list">

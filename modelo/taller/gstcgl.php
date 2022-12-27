@@ -118,7 +118,7 @@ error_reporting(1);
                                           <span class='tag'>Observ.</span>
                                           <input class='tag' type='text' name='observaTag'/>
                                           <input type='hidden' name='interno' value='$coche[id]'/>
-                                          <input type='hidden' name='accion' value='sve'/>                                                                                
+                                          <input type='hidden' name='accion' value='verify'/>                                                                                
                                           <a href='#' class='addcga' data-fluid='1' data-msge='GAS OIL' data-id='".$coche['id']."'><i class='fas fa-gas-pump fa-2x'></i></a>
                                           <a href='#' class='addcga' data-fluid='2' data-msge='UREA' data-id='".$coche['id']."'><i class='fas fa-seedling fa-2x'></i></a>
                                           <input type='hidden' name='tipofluido'/>    
@@ -149,6 +149,7 @@ error_reporting(1);
                                                                       $.post('/modelo/taller/gstcgl.php',
                                                                             form.serialize()+a.data('fluid'),
                                                                             function(data){
+                                                                                           console.log(data);
                                                                                            var response =  $.parseJSON(data);
                                                                                            if(!response.status)
                                                                                               alert(response.message);
@@ -219,13 +220,50 @@ error_reporting(1);
         print json_encode(array('status' => false, 'message'=>'Se han producido errores alrealizar la accion!! '.$e->getMessage()));
     }    
   }
-  elseif($accion == 'sve'){
-    try{
+  elseif($accion == 'verify')
+  {
+        $coche = find('Unidad', $_POST['interno']);
+        $tipoFluido = find('TipoFluido', $_POST['tipofluido']);
+        $fecha = new DatetIme();
+
+         try{
+         $a = $entityManager->createQuery("SELECT cc
+                                           FROM CargaCombustible cc
+                                           WHERE cc.unidad = :unidad AND cc.tipoFluido = :tipo AND cc.fecha = :fecha
+                                           ORDER BY cc.fecha DESC")
+                            ->setParameter('unidad', $coche)
+                            ->setParameter('tipo', $tipoFluido)
+                            ->setParameter('fecha', $fecha)
+                            ->setMaxResults(1)
+                            ->getOneOrNullResult();
+          }
+          catch (Exception $e){
+                                print json_encode(array('ok' => true, 'msge' => $e->getMessage()));
+                                return;
+          }
+
+        if (!$a)
+        {
+            print json_encode(array('ok' => true));
+        }
+        else
+        {
+            print json_encode(array('ok' => false, 'msge' => 'Existe una carga realizada para el dia de la fecha al interno '.$a->getUnidad()));
+        }
+
+        
+
+  }
+  elseif($accion == 'sve')
+  {
+    try
+    {
 
         if (!is_numeric($_POST['odometro'])){
               print json_encode(array('status' => false, 'message'=>'Los datos del odometro son incorrectos!!'));
               exit();
         }
+
         if (!is_numeric($_POST['litros'])){
               print json_encode(array('status' => false, 'message'=>'Los litros ingresados son incorrectos!!'));
               exit();
@@ -254,7 +292,9 @@ error_reporting(1);
         $entityManager->persist($carga);
         $entityManager->flush();
         print json_encode(array('status' => true));
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) 
+    {
         print json_encode(array('status' => false, 'message'=>'Se han producido errores alrealizar la accion!! '.$e->getMessage()));
     }
   }

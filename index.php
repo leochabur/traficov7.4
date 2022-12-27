@@ -1,7 +1,7 @@
 <?php
 
      session_start();
-
+     error_reporting(E_ALL);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html> <head> <title>Login | Adminisnistracion Master Bus</title>
@@ -46,7 +46,7 @@
            <div id="inner-content">
                 <div id="content">
                      <div id="login-form-wrap">
-                     <?
+                     <?php
 
                           if (isset($_GET['ste'])){
                              if ($_GET['ste'] == 'oan') //usuario o password invalido

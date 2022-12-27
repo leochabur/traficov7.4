@@ -1,21 +1,19 @@
 <?php
-  session_start();
-  header("Content-Type: application/vnd.ms-excel");
+session_start();
+
+header("Content-Type: application/vnd.ms-excel");
 
 header("Expires: 0");
 
 header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 
-header("content-disposition: attachment;filename=resumenctacte.xls");
+header("content-disposition: attachment;filename=vacaciones_personal.xls");
 
-  include ('../../controlador/bdadmin.php');
-  include ('../../controlador/ejecutar_sql.php');
-  include ('../../vista/paneles/viewpanel.php');
-  include_once('../../modelo/utils/dateutils.php');
-  define(STRUCTURED, $_SESSION['structure']);
- // $accion = $_POST['accion'];
+include ('../../controlador/bdadmin.php');
+
+
   $tabla="<html><body>";
- // if($accion == 'load'){
+
           $conn = conexcion();
           $where="";
           if ($_GET['det'] != 99)
@@ -27,36 +25,54 @@ header("content-disposition: attachment;filename=resumenctacte.xls");
                 $campos.=", (SELECT if(sum(cant_dias) is null, 0, sum(cant_dias)) FROM vacacionespersonal v where v.id_empleado = e.id_empleado and anio = $data[0])";
                 $detalle[$i++]=$data[0];
           }
-          
-          $sql = "SELECT legajo, upper(concat(apellido,', ',nombre)) as apenom, date_format(inicio_relacion_laboral, '%d/%m/%Y')$campos, (SELECT if(sum(cant_dias) is null, 0, sum(cant_dias)) FROM vacacionespersonal where id_empleado = e.id_empleado)-(SELECT if(DATEDIFF(hasta, desde) is null, 0, sum(DATEDIFF(hasta, desde) + 1))
-      FROM novedades n
-      where id_novedad = 19 and
-            (desde > '2014-06-30') and
-            activa and id_empleado = e.id_empleado)
+        
+          $joinSector = $whereSector = $campoSector = "";
+          if ($_GET["sc"] != 99)
+          { 
+                $joinSector = " INNER JOIN cargo cgo ON cgo.id = e.id_cargo AND cgo.id_estructura = e.id_estructura_cargo
+                              INNER JOIN sector sec ON sec.id = cgo.id_sector ";
+                $whereSector = " AND sec.id = $_GET[sc]";
+                $campoSector = ", cgo.descripcion as puesto, sec.descripcion as sector";
+          }
+
+         /* $sql = "SELECT legajo, upper(concat(apellido,', ',nombre)) as apenom, date_format(inicio_relacion_laboral, '%d/%m/%Y')$campos, 
+                         (SELECT if(sum(cant_dias) is null, 0, sum(cant_dias)) 
+                          FROM vacacionespersonal where id_empleado = e.id_empleado)-
+                          (SELECT if(DATEDIFF(hasta, desde) is null, 0, sum(DATEDIFF(hasta, desde) + 1))
+                           FROM novedades n
+                          where id_novedad = 19 and
+                                (desde > '2014-06-30') and
+                                activa and id_empleado = e.id_empleado)
                   FROM empleados e
+
                   WHERE (activo) and (not borrado) and (id_empleador = 1)
-                  order by apellido";/*
+                  order by apellido";*/
+          $sql = "SELECT legajo, 
+                         upper(concat(apellido,', ',nombre)) as apenom, 
+                         date_format(inicio_relacion_laboral, '%d/%m/%Y')$campos, 
+                         (SELECT if(sum(cant_dias) is null, 0, sum(cant_dias)) FROM vacacionespersonal where id_empleado = e.id_empleado)
+                          -
+                         (SELECT if(DATEDIFF(hasta, desde) is null, 0, sum(DATEDIFF(hasta, desde) + 1))
+                          FROM novedades n
+                          where id_novedad = 19 and (desde > '2014-06-30') and activa and id_empleado = e.id_empleado) $campoSector
+                  FROM empleados e
+                  $joinSector
+                  WHERE (e.activo) and (not borrado) and (id_empleador = 1) $whereSector
+                  order by apellido";
 
-               SELECT legajo, upper(concat(apellido,', ',nombre)) as apenom, date_format(inicio_relacion_laboral, '%d/%m/%Y'),
-                                          (
-
-                     (SELECT if(sum(cant_dias) is null, 0, sum(cant_dias)) FROM vacacionespersonal v where v.id_empleado = e.id_empleado)
-
-                     -
-                     (SELECT if (sum((datediff(hasta, desde)+1)) is null, 0, sum((datediff(hasta, desde)+1))) as dias
-                     FROM novedades n where (n.id_empleado = e.id_empleado) and (id_novedad = 19)and (activa) and (desde > '2014-06-30'))
-                     )as tot_vac
-                     FROM empleados e
-                     WHERE (activo) and (not borrado) and (id_empleador = 1) and (id_cargo = 1)
-                     order by apellido";        */
 
           // die($sql);
           $result = mysql_query($sql, $conn);
-          $tabla.='<table id="tablitasssss" align="center" width="70%" class="ui-widget ui-widget-content">
+          $tabla.='<table id="tablitasssss" align="center" width="100%">
                      <thead>
                             <tr class="ui-widget-header">
                                 <th>Legajo</th>
                                 <th>Apellido, Nombre</th>';
+          if ($_GET["sc"] != 99)
+          {
+                $tabla.="<th>Puesto</th>
+                        <th>Sector</th>";
+          }
                      for($i=0;$i < count($detalle);$i++)
                          if ($detalle[$i]==0)
                                 $tabla.="<th>S. Inicial</th>";
@@ -71,6 +87,11 @@ header("content-disposition: attachment;filename=resumenctacte.xls");
                 $tabla.="<tr bgcolor='$color'>
                              <td>$data[0]</td>
                              <td align='left'>$data[1]</td>";
+                  if ($_GET["sc"] != 99)
+                  {
+                        $tabla.="<td>$data[puesto]</td>
+                                <td>$data[sector]</td>";
+                  }
                 for($i=0;$i < count($detalle);$i++){
                             $aux=$i+3;
                             $tabla.="<td align='right'>$data[$aux]</td>";
@@ -79,13 +100,7 @@ header("content-disposition: attachment;filename=resumenctacte.xls");
                 $tabla.="<td align='right'>$data[$aux]</td></tr>";
           }
           $tabla.="</tbody>
-                   </table>
-                  <style>
-                         #tablitasssss { font-size: 85%; }
-                         #tablitasssss tbody tr:hover {
-                                                 background-color: #FF8080;
-                                                 }
-                  </style></body></html>                   ";
+                   </table>";
           print $tabla;
   //}
 ?>

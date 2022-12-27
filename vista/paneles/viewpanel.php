@@ -1,9 +1,13 @@
 <?php
+    
+    error_reporting(E_ALL);
   //define(RAIZ, '/nuevotrafico');
   //include ('/nuevotrafico/controlador/bdadmin.php');
   include_once($_SERVER['DOCUMENT_ROOT'].'/controlador/bdadmin.php');
+    include_once($_SERVER['DOCUMENT_ROOT'].'/controlador/functions.php');
   include_once($_SERVER['DOCUMENT_ROOT'].'/modelo/utils/dateutils.php');
   include_once($_SERVER['DOCUMENT_ROOT'].'/modelo/bd/consultas/consultasBD.php');
+  
   function armarSelect ($tabla, $orden, $key, $valor, $estructura, $return = 0){
            if ($estructura)
               $cond = "WHERE $estructura";
@@ -13,7 +17,7 @@
               $sql = getSQLEmpleadores($estructura);
            }
 
-           $conn = conexcion();
+           $conn = conexcion(true);
            $result = mysql_query($sql, $conn);
 
            $option="";

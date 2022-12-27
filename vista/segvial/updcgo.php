@@ -1,5 +1,9 @@
 <?php
      session_start();
+
+     set_time_limit(0);
+     error_reporting(0);
+
    /*  include('../../modelo/provincia.php');
      include('../../modelo/ciudades.php');*/
      include('../paneles/viewpanel.php');
@@ -71,6 +75,7 @@
                                   submitHandler: function(){
                                                             var datos = $("#commentForm").serialize();
                                                             $.post("/modelo/segvial/updcgo.php", datos, function(data) {
+                                                                                                                         console.log(data);
                                                                                                                          var response = $.parseJSON(data);
                                                                                                                          if (response.status){
                                                                                                                             alert(response.msge);
@@ -240,7 +245,16 @@ font-size: 11px ;
                                     <td WIDTH="20%">Resolucion</td>
                                     <td><select id="resolucion" name="resolucion" class="ui-widget-content  ui-corner-all">
                                                 <option value="0"></option>
-                                                <?php armarSelect('resolucionSiniestro', 'descripcion', 'id', 'descripcion');?>
+
+                                                <?php 
+                                                        $result = ejecutarSQL('SELECT * FROM resolucionSiniestro order by descripcion');
+                                                        while ($rowres = mysql_fetch_array($result))
+                                                        {
+                                                            print "<option value='$rowres[id]'>$rowres[descripcion]</option>";
+                                                        }
+
+                                                        //armarSelect('resolucionSiniestro', 'descripcion', 'id', 'descripcion');
+                                                ?>
                                         </select>
                                     </td>
                                     <td>

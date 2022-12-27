@@ -2,7 +2,7 @@
   session_start();
   include ('../../../controlador/bdadmin.php');
   include_once ('../../../controlador/ejecutar_sql.php');
-  define(STRUCTURED, $_SESSION['structure']);
+ 
 
   $data  = explode("-",$_POST['id']);
 
@@ -90,6 +90,12 @@
                update("servicios", $campos, "'v'", "id = $id");
               $value = "VUELTA";
           }
+  }
+  elseif($reg == 'isDinamic'){
+          $campos=$reg;
+          $values="'$value'";
+          update("cronogramas", $campos, $values, "id = $id");
+          $value = ($value?'SI':'NO');
   }
   elseif($reg == 'est_dest'){
           $conn = conexcion();

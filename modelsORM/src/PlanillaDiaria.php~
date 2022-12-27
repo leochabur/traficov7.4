@@ -12,7 +12,7 @@ class PlanillaDiaria
     /**
      * @var string
      */
-    private $nombre;
+    private $descripcion;
 
     /**
      * @var integer
@@ -20,32 +20,44 @@ class PlanillaDiaria
     private $id;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $bloques;
+
+    /**
      * @var \Cliente
      */
     private $cliente;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->bloques = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
-     * Set nombre
+     * Set descripcion
      *
-     * @param string $nombre
+     * @param string $descripcion
      * @return PlanillaDiaria
      */
-    public function setNombre($nombre)
+    public function setDescripcion($descripcion)
     {
-        $this->nombre = $nombre;
+        $this->descripcion = $descripcion;
 
         return $this;
     }
 
     /**
-     * Get nombre
+     * Get descripcion
      *
      * @return string 
      */
-    public function getNombre()
+    public function getDescripcion()
     {
-        return $this->nombre;
+        return $this->descripcion;
     }
 
     /**
@@ -59,12 +71,45 @@ class PlanillaDiaria
     }
 
     /**
+     * Add bloques
+     *
+     * @param \BloquePlanilla $bloques
+     * @return PlanillaDiaria
+     */
+    public function addBloque(\BloquePlanilla $bloques)
+    {
+        $this->bloques[] = $bloques;
+
+        return $this;
+    }
+
+    /**
+     * Remove bloques
+     *
+     * @param \BloquePlanilla $bloques
+     */
+    public function removeBloque(\BloquePlanilla $bloques)
+    {
+        $this->bloques->removeElement($bloques);
+    }
+
+    /**
+     * Get bloques
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBloques()
+    {
+        return $this->bloques;
+    }
+
+    /**
      * Set cliente
      *
      * @param \Cliente $cliente
      * @return PlanillaDiaria
      */
-    public function setCliente(\Cliente $cliente = null)
+    public function setCliente(\Cliente $cliente)
     {
         $this->cliente = $cliente;
 
@@ -79,5 +124,10 @@ class PlanillaDiaria
     public function getCliente()
     {
         return $this->cliente;
+    }
+
+    public function __toString()
+    {
+        return $this->descripcion." (".$this->cliente.")";
     }
 }

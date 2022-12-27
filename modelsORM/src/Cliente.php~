@@ -141,7 +141,7 @@ class Cliente
 
     public function __toString()
     {
-        return $this->razonSocial;
+        return ucwords(strtolower($this->razonSocial));
     }
     /**
      * @var string

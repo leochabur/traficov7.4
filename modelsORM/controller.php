@@ -682,15 +682,86 @@ function getFrancosCreditos($fecha, $empleador){
                                       JOIN e.categoria cat
                                       JOIN e.empleador emp
                                       JOIN m.novedadTexto nt
-                                      WHERE nt.isFranco = :isFranco AND m.fecha <= :fecha AND m.activo = :activo AND emp.id = :empleador AND cat.id = 1
+                                      WHERE nt.isFranco = :isFranco AND m.fecha BETWEEN :desde AND :fecha AND m.activo = :activo AND emp.id = :empleador AND cat.id = 1
                                       ORDER BY e.apellido")
                         ->setParameter('isFranco', true)
                         ->setParameter('activo', true)
                         ->setParameter('fecha', $fecha)   
+                        ->setParameter('desde', '2020-11-26')
                         ->setParameter('empleador', $empleador)     
                         ->getResult();   
         }
         catch (Exception $e){throw $e;}        
+}
+
+function getFrancosCreditosPorPeriodo($desde, $hasta, $empleador){
+         $em = $GLOBALS['entityManager'];
+         try
+         {  //m.cantidad as cant, e.id as idE, e.apellido as ape, e.nombre as nom, e.legajo as leg
+             return $em->createQuery("SELECT m.cantidad as cant, e.id as idE, e.apellido as ape, e.nombre as nom, e.legajo as leg, m.periodoAnio as anio, m.periodoMes as mes
+                                      FROM MovimientoCreditoFeriado m
+                                      JOIN m.ctacte cta
+                                      JOIN cta.empleado e
+                                      JOIN e.categoria cat
+                                      JOIN e.empleador emp
+                                      JOIN m.novedadTexto nt
+                                      WHERE cat.id = 1 AND e.activo = :activo AND nt.isFranco = :isFranco AND m.fecha BETWEEN :desde AND :hasta AND m.activo = :activo AND emp.id = :empleador
+                                      ORDER BY e.apellido")
+                        ->setParameter('isFranco', true)
+                        ->setParameter('activo', true)
+                        ->setParameter('desde', $desde)   
+                        ->setParameter('hasta', $hasta)
+                        ->setParameter('empleador', $empleador)     
+                        ->getResult();   
+        }
+        catch (Exception $e){throw $e;}        
+}
+
+function getFrancosDebitosPorPeriodo($desde, $hasta, $empleador){
+         $em = $GLOBALS['entityManager'];
+
+         try
+         {
+             return $em->createQuery("SELECT count(n.id) as cant, e.id as idE, e.apellido as ape, e.nombre as nom, e.legajo as leg
+                                      FROM Novedad n
+                                      JOIN n.empleado e
+                                      JOIN e.categoria cat
+                                      JOIN e.empleador emp
+                                      JOIN n.novedadTexto nt
+                                      WHERE e.activo = :activo AND n.activa = :activo AND n.desde BETWEEN :desde AND :hasta AND emp.id = :empleador AND cat.id = 1 AND (nt.id in (:novedad))
+                                      GROUP BY e.id
+                                      ORDER BY e.apellido")
+                        ->setParameter('activo', true)
+                        ->setParameter('desde', $desde)   
+                        ->setParameter('novedad', [15, 16])
+                        ->setParameter('hasta', $hasta)
+                        ->setParameter('empleador', $empleador)     
+                        ->getResult();   
+        }
+        catch (Exception $e){throw $e;}  
+         /*
+         try
+         {
+             return $em->createQuery("SELECT count(e.id) as cant, e.id as idE, e.apellido as ape, e.nombre as nom, e.legajo as leg, e.activo as activo
+                                      FROM MovimientoDebitoFeriado m
+                                      JOIN m.ctacte cta
+                                      JOIN cta.empleado e
+                                      JOIN e.categoria cat
+                                      JOIN e.empleador emp
+                                      JOIN m.novedad nvda
+                                      JOIN nvda.novedadTexto nt
+                                      WHERE nvda.activa = :activo AND m.fecha BETWEEN :desde AND :hasta AND m.activo = :activo AND emp.id = :empleador AND cat.id = 1 AND (nt.id in (:novedad))
+                                      GROUP BY e.id
+                                      ORDER BY e.apellido")
+                        ->setParameter('activo', true)
+                        ->setParameter('desde', $desde)   
+                        ->setParameter('novedad', [15, 16])
+                        ->setParameter('hasta', $hasta)
+                        ->setParameter('empleador', $empleador)     
+                        ->getResult();   
+        }
+        catch (Exception $e){throw $e;}        
+        */
 }
 
 function getFrancosDebitos($fecha, $empleador){
@@ -705,12 +776,13 @@ function getFrancosDebitos($fecha, $empleador){
                                       JOIN e.empleador emp
                                       JOIN m.novedad nvda
                                       JOIN nvda.novedadTexto nt
-                                      WHERE m.fecha <= :fecha AND m.compensable = :compensable AND m.activo = :activo AND emp.id = :empleador AND cat.id = 1 AND (nt.id in (:novedad))
+                                      WHERE m.fecha BETWEEN :desde AND :fecha AND m.compensable = :compensable AND m.activo = :activo AND emp.id = :empleador AND cat.id = 1 AND (nt.id in (:novedad))
                                       ORDER BY e.apellido")
                         ->setParameter('activo', true)
                         ->setParameter('compensable', false)
                         ->setParameter('fecha', $fecha)   
                         ->setParameter('novedad', [50, 15, 16, 54, 25])
+                        ->setParameter('desde', '2020-11-26')
                         ->setParameter('empleador', $empleador)     
                         ->getResult();   
         }
@@ -729,15 +801,49 @@ function getFeriadoDebitos($fecha, $empleador){
                                       JOIN e.empleador emp
                                       JOIN m.novedad nvda
                                       JOIN nvda.novedadTexto nt
-                                      WHERE nt.isFeriado = :isFeriado AND m.fecha <= :fecha AND m.activo = :activo AND emp.id = :empleador AND cat.id = 1
+                                      WHERE nt.isFeriado = :isFeriado AND m.fecha BETWEEN :desde AND :fecha AND m.activo = :activo AND emp.id = :empleador AND cat.id = 1
                                       ORDER BY e.apellido")
                         ->setParameter('isFeriado', true)
                         ->setParameter('activo', true)
                         ->setParameter('fecha', $fecha)   
+                        ->setParameter('desde', '2020-11-26')
                         ->setParameter('empleador', $empleador)     
                         ->getResult();   
         }
         catch (Exception $e){return $e->getMessage();}        
+}
+
+function getOrdenGPX($id, $str)
+{   
+    try{
+         $em = $GLOBALS['entityManager'];    
+         $q = $em->createQuery("SELECT ogpx
+                                FROM OrdenGPX ogpx
+                                JOIN ogpx.orden o
+                                JOIN o.estructura e
+                                WHERE o.id = :id AND e.id = :str")
+                 ->setParameter('id', $id)
+                 ->setParameter('str', $str);         
+         return $q->getOneOrNullResult();      
+    }
+    catch (Exception $e){die($e->getTraceAsString());}      
+}
+
+function getPasajeroConDNI($dni)
+{   
+    try
+    {
+         $em = $GLOBALS['entityManager'];    
+         $q = $em->createQuery("SELECT p
+                                FROM Pasajero p
+                                WHERE p.dni = :dni AND p.activo = :activo")
+                 ->setParameter('activo', true)
+                 ->setParameter('dni', $dni);         
+         return $q->getResult();      
+    }
+    catch (Exception $e){
+                            throw $e;
+                        }      
 }
 
 ?>

@@ -98,7 +98,7 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
                                       <?php
                                             $query = $entityManager->createQuery("SELECT e FROM Empleado e JOIN e.categoria c WHERE e.activo = :activo AND c.id = :categoria ORDER BY e.apellido");
                                              $query->setParameter('activo', true);
-                                             $query->setParameter('categoria', 12);
+                                             $query->setParameter('categoria', 52);
                                              $lavadores = $query->getResult();
                                              $options = "";
                                              foreach ($lavadores as $lavador) {

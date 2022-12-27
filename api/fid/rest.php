@@ -185,17 +185,40 @@ $app->get('/embeddings/:stamp/:type', function ($stamp, $type) use ($app)
         $conn = conexcion(true);
 
         $sql = "SELECT upper(concat(apellido,',', nombre)) as nombre, replace(nrodoc,'.','') as nrodoc, e.id_empleado as id,
-                        if (embedding is null, '', embedding) as embedding, if (e.activo is null, 1, e.activo) as activo, em.id as idEmbedding
+                        if (embedding is null, '', embedding) as embedding, if (e.activo is null, 1, e.activo) as activo, em.id as idEmbedding, e.id_empleado
                 FROM empleados e 
                 LEFT JOIN embeddings em ON em.id_empleado = e.id_empleado
                 WHERE e.activo and em.stamp > $stamp";
 
         $sql = "SELECT upper(concat(apellido,',', nombre)) as nombre, replace(nrodoc,'.','') as nrodoc, e.id_empleado as id, 
-                        if (embedding is null, '', embedding) as embedding, if (e.activo is null, 1, e.activo) as activo, em.id as idEmbedding
+                        if (embedding is null, '', embedding) as embedding, if (e.activo is null, 1, e.activo) as activo, em.id as idEmbedding, e.id_empleado
                 FROM empleados e 
                 LEFT JOIN embeddings em ON em.id_empleado = e.id_empleado 
-                WHERE (changeStamp >= $stamp) or ((activo) and (stamp >= $stamp)) or ((fechaHoraBaja >= $stamp) and not activo) $type 
-                ORDER BY e.id_empleado";
+                WHERE (changeStamp >= $stamp) or ((activo) and (stamp >= $stamp)) or ((fechaHoraBaja >= $stamp) and not activo) $type
+                union all
+                SELECT upper(concat(apellido,',', nombre)) as nombre, replace(nrodoc,'.','') as nrodoc, e.id_empleado as id,
+                                        '' as embedding, activo, null as idEmbedding, id_empleado
+                FROM empleados e
+                WHERE activo and nrodoc <> '' and e.id_empleado not in (select id_empleado from embeddings) $type
+                ORDER BY id_empleado";
+
+
+        $sql = "SELECT upper(concat(apellido,',', nombre)) as nombre, replace(nrodoc,'.','') as nrodoc, e.id_empleado as id, 
+                        if (embedding is null, '', embedding) as embedding, if (e.activo is null, 1, e.activo) as activo, em.id as idEmbedding, e.id_empleado
+                FROM empleados e 
+                JOIN embeddings em ON em.id_empleado = e.id_empleado 
+                WHERE ((activo) and (stamp >= $stamp))  $type
+                union all
+                SELECT upper(concat(apellido,',', nombre)) as nombre, replace(nrodoc,'.','') as nrodoc, e.id_empleado as id,
+                                        '' as embedding, activo, null as idEmbedding, id_empleado
+                FROM empleados e
+                WHERE activo and nrodoc <> '' and e.id_empleado not in (select id_empleado from embeddings) $type
+                union all
+                SELECT upper(concat(apellido,',', nombre)) as nombre, replace(nrodoc,'.','') as nrodoc, e.id_empleado as id, 
+                        '' as embedding, if (e.activo is null, 1, e.activo) as activo, null as idEmbedding, e.id_empleado
+                FROM empleados e 
+                WHERE ((fechaHoraBaja >= $stamp) and not activo) $type
+                ORDER BY id_empleado";
 
        /* $sql = "SELECT upper(concat(apellido,',', nombre)) as nombre, replace(nrodoc,'.','') as nrodoc, e.id_empleado as id, 
                         if (embedding is null, '', embedding) as embedding, if (e.activo is null, 1, e.activo) as activo, em.id as idEmbedding
@@ -302,8 +325,8 @@ $app->post('/record', function () use ($app)
 
                     $idEmbedding = (isset($input['idEmbedding'])?$input['idEmbedding']:'null');
 
-                    $sql = "INSERT INTO accesosregistro (id_empleado, stamp, sentido, request, idEmbedding) 
-                            VALUES ($input[id], $input[stamp], $input[action], '$body', $idEmbedding)";
+                    $sql = "INSERT INTO accesosregistro (id_empleado, stamp, sentido, request) 
+                            VALUES ($input[id], $input[stamp], $input[action], '$body')";
                     mysqli_query($conn, $sql);
                     
                     if (!mysqli_errno($conn))

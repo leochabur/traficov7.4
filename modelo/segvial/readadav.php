@@ -70,6 +70,10 @@
               $show = false;
             }
         }
+        elseif (!$res->getEmpleado()->getActivo())
+        {
+          $show = false;
+        }
 
         if ($show)
         {
@@ -135,44 +139,47 @@
               $curso = find('Curso', $k);
               foreach ($curso->getEmpleados() as $emple)
               {
-                  if (!in_array($emple, $c))
+                  if ($emple->getActivo())
                   {
-                      $ok = true;
-                      if ($_POST['cursos'])
+                      if (!in_array($emple, $c))
                       {
-                          if ($_POST['cursos'] != $curso->getId())
+                          $ok = true;
+                          if ($_POST['cursos'])
                           {
-                              $ok = false;
+                              if ($_POST['cursos'] != $curso->getId())
+                              {
+                                  $ok = false;
+                              }
                           }
-                      }
 
-                      if ($_POST['estructura'])
-                      {
-                          if ($_POST['estructura'] != $emple->getEstructura()->getId())
+                          if ($_POST['estructura'])
                           {
-                            $ok = false;
+                              if ($_POST['estructura'] != $emple->getEstructura()->getId())
+                              {
+                                $ok = false;
+                              }
                           }
-                      }
 
-                      if ($_POST['empleadores'])
-                      {
-                          if ($_POST['empleadores'] != $emple->getEmpleador()->getId())
+                          if ($_POST['empleadores'])
                           {
-                            $ok = false;
+                              if ($_POST['empleadores'] != $emple->getEmpleador()->getId())
+                              {
+                                $ok = false;
+                              }
                           }
-                      }
-                      if ($ok)
-                      {
-                        $key = $curso->getNombre().$emple->getEstructura().$emple->getEmpleador()->getRazonSocial().$emple.$emple->getLegajo();
-                        $data[$key] = array($curso,
-                                        $emple->getEstructura()->getNombre(),
-                                        $emple->getEmpleador()->getRazonSocial(),
-                                        $emple->getLegajo(),
-                                        $emple."",
-                                        '_',
-                                        false
-                                        );
-                         $countFilterTotal++;
+                          if ($ok)
+                          {
+                            $key = $curso->getNombre().$emple->getEstructura().$emple->getEmpleador()->getRazonSocial().$emple.$emple->getLegajo();
+                            $data[$key] = array($curso,
+                                            $emple->getEstructura()->getNombre(),
+                                            $emple->getEmpleador()->getRazonSocial(),
+                                            $emple->getLegajo(),
+                                            $emple."",
+                                            '_',
+                                            false
+                                            );
+                             $countFilterTotal++;
+                          }
                       }
                   }
               }

@@ -8,7 +8,7 @@ function enviarMailFromUser($dirs, $cuerpo, $subject, $usuario, $clave)
         $array = explode(',', $dirs);
 
         $correo_emisor="soportetrafico@masterbus.net";
-        $contrasena="soptra2011";
+        $contrasena="Mas#Ter%21";
         $mail = new PHPMailer();
         $mail->IsSMTP(); // Envia el correo via SMTP
         $mail->SMTPDEbug = 4;
@@ -33,7 +33,7 @@ function enviarMail($dirs, $cuerpo, $subject)
         $array = explode(',', $dirs);
 
         $correo_emisor="soportetrafico@masterbus.net";
-        $contrasena="soptra2011";
+        $contrasena="Mas#Ter%21";
         $mail = new PHPMailer();
         $mail->IsSMTP(); // Envia el correo via SMTP
         $mail->SMTPAuth = true; // Enciende la autenticacion SMTP
@@ -56,7 +56,7 @@ function enviarMailAdjunto($dirs, $cuerpo, $subject, $file){
          $array = explode(',', $dirs);
 
          $correo_emisor="soportetrafico@masterbus.net";
-         $contrasena="soptra2011";
+         $contrasena="Mas#Ter%21";
          $mail = new PHPMailer();
          $mail->IsSMTP(); // Envia el correo via SMTP
          $mail->SMTPAuth = true; // Enciende la autenticacion SMTP

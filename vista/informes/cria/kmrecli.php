@@ -8,6 +8,13 @@
 
 <?php
      encabezado('Menu Principal - Sistema de Administracion - Campana');
+
+     $file = "kmrecli.php";
+
+     if (in_array($_SESSION['structure'], array(2,11)))
+     {
+        $file = "kmreclisur.php";
+     }
 ?>
 
    <link type="text/css" href="<?php echo RAIZ;?>/vista/css/jquery.ui.selectmenu.css" rel="stylesheet" />
@@ -46,18 +53,18 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
                                                        $('#desde,#hasta').datepicker({dateFormat:'dd/mm/yy'});
                                                        $("#cargar").button().click(function(){
                                                                                               $('#dats').html("<div align='center'><img  alt='cargando' src='../../ajax-loader.gif' /></div>");
-                                                                                              $.post("/modelo/informes/cria/kmrecli.php", {type:$('#type').val(),accion:'reskm', desde: $('#desde').val(), hasta: $('#hasta').val(), str: $('#str').val(), cli:$('#clientes').val()}, function(data){  $('#dats').html(data);
+                                                                                              $.post("/modelo/informes/cria/<?php print $file; ?>", {type:$('#type').val(),accion:'reskm', desde: $('#desde').val(), hasta: $('#hasta').val(), str: $('#str').val(), cli:$('#clientes').val()}, function(data){  $('#dats').html(data);
                                                                                                                                                                            });
                                                        });
 
                                                        $('#str').change(function(){
-                                                                                  $.post("/modelo/informes/cria/kmrecli.php",{accion:'ldcli', str:$('#str').val()}, function(data){
+                                                                                  $.post("/modelo/informes/cria/<?php print $file; ?>",{accion:'ldcli', str:$('#str').val()}, function(data){
                                                                                                                                                                                    $('#clis').html(data);
                                                                                                                                                                                    });
                                                                                   });
                                                        $("#str option[value=1]").attr("selected", "selected");
                                                        $('#str, #type').selectmenu({width: 350});
-                                                       $.post("/modelo/informes/cria/kmrecli.php",{accion:'ldcli', str:$('#str').val()}, function(data){$('#clis').html(data);});
+                                                       $.post("/modelo/informes/cria/<?php print $file; ?>",{accion:'ldcli', str:$('#str').val()}, function(data){$('#clis').html(data);});
 
                           });
 </script>

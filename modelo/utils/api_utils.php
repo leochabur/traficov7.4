@@ -1,6 +1,6 @@
 <?php
   
-  include $_SERVER["DOCUMENT_ROOT"].'/controlador/bdadmin.php';
+  include_once $_SERVER["DOCUMENT_ROOT"].'/controlador/bdadmin.php';
 
 	function comunicatePush($from)
 	{

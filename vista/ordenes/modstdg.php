@@ -46,6 +46,7 @@ table tr td{padding: 3px;}
                                                                                              $('#result').html("<br><div align='center'><img  alt='cargando' src='../ajax-loader.gif' /><br><font color='#CB292E'><i>Modificando estado / Guardando contexto</i></font></div>");
                                                                                              $.post("/modelo/ordenes/modstdg.php", {accion:'sve', fecha:$('#fecha').val(), estados: $('#estados').val()}, 
                                                                                                                                                         function(data){ 
+                                                                                                                                                            console.log(data);
                                                                                                                                                             
                                                                                             })
                                                                                              .always(function(){

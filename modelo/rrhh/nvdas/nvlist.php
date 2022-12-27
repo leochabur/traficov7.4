@@ -43,44 +43,59 @@
         print $tabla;
      }
      elseif($accion == 'lnov'){
+
+        $des = DateTime::createFromFormat('d/m/Y', $_POST['desde']);
+        $has = DateTime::createFromFormat('d/m/Y', $_POST['hasta']);
+
+        $unixdes = $des->getTimestamp();
+        $unixhas = $has->getTimestamp();
+
+        $params = "des=$unixdes&has=$unixhas&modaf=$_SESSION[modaf]";
+
         $desde = dateToMysql($_POST['desde'],'/');
         $hasta = dateToMysql($_POST['hasta'], '/');
         $conn = conexcion();
         $empleado="";
         $nofranco="";
-        if ($_SESSION['modaf'] == 1){
+        if ($_SESSION['modaf'] == 1)
+        {
            $nofranco="and (cn.id <> 15)";
         }
         if ($_POST['emple']){
            $empleado = "and (n.id_empleado = $_POST[emple])";
+           $params.="&emp=$_POST[emple]";
         }
 
         if ($_POST['tt']){
            $titular = "and (em.id_empleador = $_POST[tt])";
+           $params.="&tt=$_POST[tt]";
         }
-              $sql = "SELECT ca.descripcion, legajo, n.id_empleado, n.id, upper(concat(em.apellido, ', ',em.nombre)) as empleado, date_format(desde, '%d/%m/%Y') as desde, date_format(hasta, '%d/%m/%Y') as hasta, cn.nov_text, e.nombre, u.apenom
+              $sql = "SELECT ca.descripcion, legajo, n.id_empleado, n.id, upper(concat(em.apellido, ', ',em.nombre)) as empleado, date_format(desde, '%d/%m/%Y') as desde, date_format(hasta, '%d/%m/%Y') as hasta, cn.nov_text, e.nombre, u.apenom, empl.razon_social as emplea
                       FROM novedades n
                       inner join cod_novedades cn on cn.id = n.id_novedad
                       inner join estructuras e on e.id = n.id_estructura
                       inner join usuarios u on u.id = n.usuario
                       inner join empleados em on em.id_empleado = n.id_empleado
-                      left join cargo ca on ca.id = em.id_cargo
+                      inner join empleadores empl ON empl.id = em.id_empleador
+                      left join cargo ca on ca.id = em.id_cargo AND ca.id_estructura = em.id_estructura_cargo
                       where  (n.id_estructura in (SELECT uxe.id_estructura
                                                                                      FROM usuarios u
                                                                                      inner join usuariosxestructuras uxe on uxe.id_usuario = u.id
                                                                                      where u.id = $_SESSION[userid]))
                              and ((desde between '$desde' and '$hasta') or (hasta between '$desde' and '$hasta') or ('$desde' between  desde and hasta)or ('$hasta' = hasta) or ('$desde' = desde) or ('$hasta' between desde and hasta)) and (n.activa) $nofranco $empleado $titular
                       order by nombre, desde, nov_text";
-         //     die($sql);
+
               $result = mysql_query($sql, $conn) or die ("error al conectar ".mysql_error($conn));
-            //  die("registros ".mysql_num_rows($result));
+
               $tabla ='<fieldset class="ui-widget ui-widget-content ui-corner-all">
                       <legend class="ui-widget ui-widget-header ui-corner-all">Listado de Novedades</legend>
+                      <a href="/modelo/rrhh/nvdas/nvlistexport.php?'.$params.'"><img src="../../../vista/excel.jpg" width="35" height="35" border="0"></a><table id="tablitasssss" align="center" width="70%" class="ui-widget ui-widget-content">
                       <table id="example" name="example">
 	                      <thead>
 		                         <tr>
                                      <th>Legajo</th>
                                      <th>Apellido, Nombre</th>
+                                     <th>Empleador</th>
                                      <th>Puesto</th>
                                      <th>Fecha Desde</th>
 			                         <th>Fecha Hasta</th>
@@ -94,6 +109,7 @@
                     $tabla.="<tr id='$data[id]' title='$data[id_empleado]'>
                                  <td>$data[legajo]</td>
                                  <td>".($data['empleado'])."</td>
+                                 <td>$data[emplea]</td>
                                  <td>$data[descripcion]</td>
                                  <td>$data[desde]</td>
                                  <td>$data[hasta]</td>

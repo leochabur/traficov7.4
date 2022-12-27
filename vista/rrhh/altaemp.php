@@ -47,7 +47,7 @@ table tr td{padding: 3px;}
                                                                                     submitHandler: function(e){
                                                                                                                var datos = $("#commentForm").serialize();
                                                                                                                $.post("/modelo/rrhh/altaemp.php", datos, function(data) {
-
+                                                                                                                                                                        console.log(data);
                                                                                                                                                                         var obj = JSON.parse(data);
                                                                                                                                                                         var mjetxt = "No se ha podido guardar el empleado en la Base de Datos";
                                                                                                                                                                         if (obj > 0){
@@ -206,7 +206,19 @@ table tr td{padding: 3px;}
                                     <td WIDTH="20%">E-mail</td>
                                     <td><input id="mail" name="mail" class="ui-widget ui-widget-content  ui-corner-all"/></td>
                                     <td></td>
-                                </tr>';}
+                                </tr>
+                                <tr>
+                                    <td WIDTH="20%">CBU</td>
+                                    <td><input id="cbu" name="cbu" class="ui-widget ui-widget-content  ui-corner-all"/></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td WIDTH="20%">Banco</td>
+                                    <td><input id="banco" name="banco" class="ui-widget ui-widget-content  ui-corner-all"/></td>
+                                    <td></td>
+                                </tr>';
+
+                            }
                                 ?>
                                 <tr>
                                     <td colspan="3" align="right"><input type="submit" id="create" value="Guardar Empleado"/> </td>

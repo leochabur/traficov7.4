@@ -1,5 +1,8 @@
 <?php
   session_start();
+  error_reporting(0);
+  set_time_limit(0);
+  
   if (!$_SESSION['auth']){
      print "<br><b>La sesion a expirado</b>";
      exit;
@@ -27,7 +30,7 @@
   //   die($sql);
      $result = mysql_query($sql, $conn);
      if ($data = mysql_fetch_array($result)){
-        $tot_sin = $data[0];
+        $tot_sin = ($data[0]?$data[0]:0);
      }
      
      $sql = "SELECT count(*) as indice
@@ -40,7 +43,7 @@
              
      $result = mysql_query($sql, $conn) or die($sql);
      if ($data = mysql_fetch_array($result)){
-        $km = $data[0];
+        $km = ($data[0]?$data[0]:0);
      }
 
      $sql = "SELECT count(*) as km
@@ -48,7 +51,7 @@
              WHERE fservicio between '$desde' and '$hasta' and not borrada and not suspendida $str";
      $result = mysql_query($sql, $conn);
      if ($data = mysql_fetch_array($result)){
-        $count = $data[0];
+        $count = ($data[0]?$data[0]:0);
      }
      $sql = "SELECT upper(ciudad), count(*)
             FROM siniestros s
@@ -62,7 +65,7 @@
      while ($data = mysql_fetch_array($result)){
         $tbodyCity.= "<tr>
                           <td>$data[0]</td>
-                          <td>$data[1]</td>
+                          <td>".($data[1]?$data[1]:0)."</td>
                       </tr>";
      }
      
@@ -154,25 +157,28 @@
                                 <tbody>';
      $sql = "SELECT * FROM tipoLesionSiniestro t order by tipo";
      $result = mysql_query($sql, $conn);
-     while ($data = mysql_fetch_array($result)){
+     while ($data = mysql_fetch_array($result))
+     {
            $sql="SELECT count(*) as actual,
-      (SELECT count(*)
-       FROM siniestros where tipo_lesion = s.tipo_lesion and
-            fecha_siniestro between DATE_ADD('2016-11-01', INTERVAL -1 YEAR) and DATE_ADD('2016-12-31', INTERVAL -1 YEAR) $str) as anterior,
-       round(count(*)/12, 2) as media_mensual
-FROM siniestros s
-where fecha_siniestro between '$desde' and '$hasta' and not borrada and s.tipo_lesion = $data[0] and afecta_estadistica $str
-group by tipo_lesion";
+                      (SELECT count(*)
+                       FROM siniestros where tipo_lesion = s.tipo_lesion and
+                            fecha_siniestro between DATE_ADD('2016-11-01', INTERVAL -1 YEAR) and DATE_ADD('2016-12-31', INTERVAL -1 YEAR) $str) as anterior,
+                       round(count(*)/12, 2) as media_mensual
+                FROM siniestros s
+                where fecha_siniestro between '$desde' and '$hasta' and not borrada and s.tipo_lesion = $data[0] and afecta_estadistica $str
+                group by tipo_lesion";
          $res = mysql_query($sql, $conn);
-         if ($row = mysql_fetch_array($res)){
+         if ($row = mysql_fetch_array($res))
+         {
+            $tabla.="<tr>
+                         <td align='left'>$data[1]</td>
+                         <td align='right'>$row[0]</td>
+                         <td align='right'>$row[1]</td>
+                         <td align='right'>$row[2]</td>
+                     </tr>";
          }
-        $tabla.="<tr>
-                     <td align='left'>$data[1]</td>
-                     <td align='right'>$row[0]</td>
-                     <td align='right'>$row[1]</td>
-                     <td align='right'>$row[2]</td>
-                 </tr>";
-  }
+
+    }
 $tabla.='</tbody></table>
                          </fieldset>';
 
@@ -201,7 +207,7 @@ $tabla.='</tbody></table>
     while ($data = mysql_fetch_array($result)){
           $pago.="<tr>
                       <td>PAGOS A TERCEROS</td>
-                      <td>".number_format($data[0],2)."</td>
+                      <td>".($data[0]?number_format($data[0],2):"0.00")."</td>
                   </tr>";
     }    
 

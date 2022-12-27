@@ -8,7 +8,9 @@
   include ('../../controlador/ejecutar_sql.php');
   include ('../../modelo/utils/dateutils.php');
   $accion= $_POST['accion'];
-  if ($accion == 'ldint'){
+
+  if ($accion == 'ldint')
+  {
      $conn = conexcion();
 
      $sql = "SELECT id, interno
@@ -53,7 +55,8 @@
      mysql_close($conn);
      print $tabla;
   }
-  elseif($accion == 'reskm'){
+  elseif($accion == 'reskm')
+  {
      $rango = "$_POST[desde]  hasta  $_POST[hasta]";
      $desde = dateToMysql($_POST['desde'], '/');
      $hasta = dateToMysql($_POST['hasta'], '/');
@@ -153,6 +156,7 @@
      }
      $tabla.='</tbody>
               </table>
+               <a href="/modelo/segvial/export-inf.php?li='.$_POST['desde'].'&ls='.$_POST['hasta'].'&cnds='.$_POST['conductores'].'&ud='.$_POST['inter'].'"><img title="Exportar a Excel" src="../../vista/excel.jpg" width="35" height="35" border="0"></a>
                 </div>
               </div>
 

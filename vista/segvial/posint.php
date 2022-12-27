@@ -101,6 +101,18 @@ function wsGetSoapCli(){
         $int =$resultado['ApiGetLocationByVehicleResult']['Resultado']['Interno']." (".$resultado['ApiGetLocationByVehicleResult']['Resultado']['Patente'].")";
         $velocidad = $resultado['ApiGetLocationByVehicleResult']['Resultado']['Velocidad'];
         $fecha_hora =  $resultado['ApiGetLocationByVehicleResult']['Resultado']['Fecha'];
+        $fecha_hora = str_replace('T', ' ', $fecha_hora);
+        $fecha = DateTime::createFromFormat('Y-m-d H:i:s', $fecha_hora);
+        $fecha->sub(new DateInterval('PT3H'));
+        $fechaCorrejida = clone $fecha;
+        $fechaCorrejida->add(new DateInterval('PT2M'));
+
+        $now = new DateTime();
+
+        if ($now > $fechaCorrejida)
+            print "NO SE PUDO";
+        else
+            print "SI SE PUEDE";
 ?>
 <HTML>
 <HEAD>

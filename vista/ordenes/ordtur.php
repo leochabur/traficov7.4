@@ -330,10 +330,10 @@ font-size: 11px ;
                                              $sql = "SELECT id, detalle, requiere $edit
                                                      FROM items_gastos_turismo i
                                                      order by detalle";
-                                             $result = ejecutarSQL($sql, $conn);
+                                             $result = ejecutarSQL($sql);
                                              while ($row = mysql_fetch_array($result)){
-                                                   $chk = ($row[ok]?"checked":"");
-                                                   if ($row[requiere]){
+                                                   $chk = (isset($row['ok'])?$row['ok']?"checked":"":"");
+                                                   if ($row['requiere']){
                                                       $chk="checked class='semper'";
                                                    }
                                                    print "$row[detalle]<input type='checkbox' id='gas$row[0]' name='gas$row[0]' $chk>";
@@ -343,7 +343,10 @@ font-size: 11px ;
                                 </tr>
                                 <tr>
                                     <td>Observaciones</td>
-                                    <td><textarea rows="5" cols="45" class="ui-widget-content ui-corner-all" name="observa"><?php print $data[observaciones];?></textarea></td>
+                                    <td>
+                                        <textarea rows="5" cols="45" class="ui-widget-content ui-corner-all" name="observa">
+                                            <?php print (isset($data)?$data['observaciones']:'');?>
+                                        </textarea></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="ui-widget ui-widget-header ui-corner-all">Datos de contacto</td>

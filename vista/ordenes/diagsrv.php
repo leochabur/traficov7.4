@@ -44,6 +44,7 @@
                                           noneSelectedText: "Seleccione una opcion",
                                           selectedList: 1
                                           });
+                 $('unidades').select();
                  $.mask.definitions['H']='[012]';
                  $.mask.definitions['N']='[012345]';
                  $(".hora").mask("H9:N9");
@@ -66,11 +67,15 @@
                  $('#fecha').datepicker({dateFormat:'dd/mm/yy'});
                  $('#svsrv').button().click(function(){
 
-                                                       $.post('/modelo/servicios/diagsrv.php', {accion: "dss", ords: ordenes.join(','), fecd:$("#fecha").val()}, function(data){
-
-                                                                                                                                                                                $( "#fedisr" ).dialog( "close" );
-                                                                                                                                                                                $('#ressrv').html('');
-                                                                                                                                                                                });
+                                                       $.post('/modelo/servicios/diagsrv.php', {accion: "dss", 
+                                                                                                ords: ordenes.join(','), 
+                                                                                                interno: $('#interno').val(), 
+                                                                                                fecd:$("#fecha").val()}, 
+                                                                                                function(data){
+                                                                                                                    console.log(data);
+                                                                                                                    $( "#fedisr" ).dialog( "close" );
+                                                                                                                    $('#ressrv').html('');
+                                                                                                                });
                                                        });
                  $('#diagsrv').button().click(function(){
                                                          if (ordenes.length > 0){
@@ -82,8 +87,8 @@
                                                          });
                  $( "#fedisr" ).dialog({
                                         autoOpen: false,
-                                        height: 150,
-                                        width: 300,
+                                        height: 300,
+                                        width: 450,
                                         modal: true
                                         });
 
@@ -209,7 +214,29 @@ font-size: 11px ;
 	</fieldset>
 	<div id="fedisr" title="Fecha diagrama">
       <form id="fdsrv">
-         <div><input type="text" size="20" id="fecha" class="required ui-widget ui-widget-content  ui-corner-all"></div>
+         <div>
+                <label for="fecha">Fecha</label>
+                <input type="text" size="20" id="fecha" class="required ui-widget ui-widget-content  ui-corner-all">
+        </div>
+        <br>
+        <br>
+         <div>
+                <label for="interno">Interno</label>
+            <?php
+              $sqlIntenos = "select id, interno from unidades where id_estructura = $_SESSION[structure] and activo order by interno";
+              $intenos = ejecutarSQL($sqlIntenos);
+
+              $select = "<select name='interno' id='interno' class='unidades'>";
+              while($row = mysql_fetch_array($intenos))
+              {
+                    $select .= "<option value='$row[id]'>$row[interno]</option>";
+              }
+              $select .= "</select>";
+              print $select;
+            ?>
+
+         </div>
+         <br>
          <div id="svsrv">Diagramar Servicios</div>
       </form<
 	</div>

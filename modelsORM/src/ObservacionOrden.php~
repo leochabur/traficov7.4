@@ -34,7 +34,6 @@ class ObservacionOrden
      */
     private $usuario;
 
-
     /**
      * Set comentario
      *
@@ -148,5 +147,10 @@ class ObservacionOrden
     public function getUsuario()
     {
         return $this->usuario;
+    }
+
+    public function __toString()
+    {
+        return $this->comentario;
     }
 }

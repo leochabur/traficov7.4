@@ -217,6 +217,7 @@ font-size: 11px ;
 
          <div id="tablaordenes">
                             <?php
+                            $body='';
                             if ($cargar){
                                  if ($cantTripulacion > 2){
                                     $tripulacion = "LEFT JOIN tripulacionXOrdenes txo ON txo.id_orden = o.id AND txo.id_estructura_orden = o.id_estructura
@@ -224,8 +225,9 @@ font-size: 11px ;
                                     $camposTripulacion = ", concat(ch3.apellido, ', ',ch3.nombre) as chofer3, if (txo.id is null, 0, txo.id) as id_trip_x_orden, ch3.id_empleado as id_emple_3";
                                  }
 
-                                 $con = conexcion();
-                                 $sql = "SELECT tipoServicio, o.id, finalizada, o.borrada, o.km, date_format(o.hcitacion, '%H:%i') as hcitacion, date_format(o.hsalida, '%H:%i') as hsalida, o.nombre, concat(ch1.apellido, ', ',ch1.nombre) as chofer1, upper(c.razon_social) as razon_social, concat(ch2.apellido, ', ',ch2.nombre) as chofer2, comentario, if(interno is null, '', interno) as interno, c.id as id_cli, ori.ciudad, ori.id as id_city, m.id as id_micro, ch1.id_empleado as id_emple_1, DAYOFWEEK(fservicio) as diasem $camposTripulacion
+                                 $con = conexcion(true);
+                                 $sql = "SELECT tipoServicio, o.id, finalizada, o.borrada, if (o.km, o.km, '') as km, TIME_FORMAT(o.hcitacion, '%H:%i') as hcitacion, 
+                                                TIME_FORMAT(o.hsalida, '%H:%i') as hsalida, o.nombre, concat(ch1.apellido, ', ',ch1.nombre) as chofer1, upper(c.razon_social) as razon_social, concat(ch2.apellido, ', ',ch2.nombre) as chofer2, comentario, if(interno is null, '', interno) as interno, c.id as id_cli, ori.ciudad, ori.id as id_city, m.id as id_micro, ch1.id_empleado as id_emple_1, DAYOFWEEK(fservicio) as diasem $camposTripulacion
                                                        FROM ordenes o
                                                        left join servicios s on (s.id = o.id_servicio) and (s.id_estructura = o.id_estructura_servicio)
                                                        left join cronogramas cr on (cr.id = s.id_cronograma) and (cr.id_estructura = s.id_estructura_cronograma)
@@ -239,13 +241,13 @@ font-size: 11px ;
                                                        WHERE (fservicio = '$fecha') and  (o.id_estructura = $_SESSION[structure]) and (not borrada)
                                                        ORDER BY c.razon_social, ori.ciudad, o.nombre, o.hcitacion";
                                //  die($sql);
-                                 $query = mysql_query($sql, $con);
-                                 $row = mysql_fetch_array($query);
+                                 $query = mysqli_query($con, $sql);
+                                 $row = mysqli_fetch_array($query);
                                  if ($row){
-                                    echo "<div align='left'><h2><input id='delall' type='button' class='button' value='Eliminar Diagrama Completo'></h2></div>";
-                                    echo "<div align='center'><h2>".$dias[$row['diasem']]."</h2></div>";
+                                    $body.= "<div align='left'><h2><input id='delall' type='button' class='button' value='Eliminar Diagrama Completo'></h2></div>";
+                                    $body.= "<div align='center'><h2>".$dias[$row['diasem']]."</h2></div>";
                                  }
-                                 print "<table border='0' width='100%'>";
+                                 $body.= "<table border='0' width='100%'>";
                                  $stcliente = "Estilo1";
                                  $stdestino = "Estilo2";
                                  $encabe_serv = "Estilo3";
@@ -253,19 +255,19 @@ font-size: 11px ;
                                  while($row){                                            
 
                                              $cliente = $row['id_cli'];
-                                             print "<tr><td colspan='9' class='$stcliente' align='center'>$row[razon_social]</td></tr>";
+                                             $body.= "<tr><td colspan='9' class='$stcliente' align='center'>$row[razon_social]</td></tr>";
                                              while (($row) &&($cliente == $row['id_cli'])){
                                                    $destino = $row['id_city'];
-                                                   print "<tr><td colspan='9' class='$stdestino' align='center'>".utf8_decode($row['ciudad'])."</td></tr>";
-                                                   print "<tr>";
+                                                   $body.= "<tr><td colspan='9' class='$stdestino' align='center'>".utf8_decode($row['ciudad'])."</td></tr>";
+                                                   $body.= "<tr>";
                                                    if ($cantTripulacion <= 2){
-                                                              print "<td class=\"$encabe_serv\">Orden</td>";
+                                                              $body.= "<td class=\"$encabe_serv\">Orden</td>";
                                                    }
                                                    else{
                                                         $tripulacion = "<td class=\"$encabe_serv\">Chofer 2</td>
                                                                         <td class=\"$encabe_serv\">Chofer 3</td>";
                                                    }
-                                                   print "<td class=\"$encabe_serv\">Servicio</td>
+                                                   $body.= "<td class=\"$encabe_serv\">Servicio</td>
                                                               <td class=\"$encabe_serv\">H. Citacion</td>
                                                               <td class=\"$encabe_serv\">H. Salida</td>
                                                               <td class=\"$encabe_serv\">Km</td>
@@ -279,10 +281,10 @@ font-size: 11px ;
 					                                     $check = '';
 					                                     if ($row['borrada'] == 1)
                                                             $check = 'checked';
-					                                     print "<tr class='celda'>";
+					                                     $body.= "<tr class='celda'>";
 					                                     if ($cantTripulacion <= 2)
                                                {
-                                                    print "<td class=\"$servi\"><div class=\"$servi\" id=\"id-$id\">$id</div></td>";
+                                                    $body.= "<td class=\"$servi\"><div class=\"$servi\" id=\"id-$id\">$id</div></td>";
                                                }
                                                else{
                                                     $tripulacion = "<td class=\"$servi\">
@@ -303,40 +305,53 @@ font-size: 11px ;
                                                   $chofer1 = $row['chofer1'];
                                                   $id_chofer1 = $row['id_emple_1'];
                                                }
-                                               print "<td class=\"$servi\"><div class=\"$servi\" id=\"nombre-$id\">".utf8_decode($row['nombre'])."</div></td>
-                                                          <td class=\"$servi\"><div class=\"$servi $hora\" id=\"hcitacion-$id\">$row[hcitacion]</div></td>
-                                                          <td class=\"$servi\"><div class=\"$servi $hora\" id=\"hsalida-$id\">$row[hsalida]</div></td>
-                                                          <td class=\"$servi\"><input type='text' class='modkm' id=\"km-$id\" value='$row[km]' size='4' title='presione enter para modificar'></td>
-                                                          <td class=\"$servi\">
-                                                              <select id=\"id_micro-$id\" align=\"center\" onFocus=\"cargarComboMicros(this)\" onchange=\"change('id_micro-$id')\">
-                                                              <option value=\"$row[id_micro]\"><div align=\"center\">$row[interno]</div></option>
+                                               $saleHora = '';
+                                               if (array_key_exists('hsalida', $row))
+                                               {
+                                                    try{
+                                                    //$saleHora = utf8_decode($row['hsalida']);
+                                                    }
+                                                    catch(Exception $e){ $saleHora = $e->getMessage(); }
+                                               }
+
+                                               $cita = $row['hcitacion']; //substr($row['hcitacion'], 0, 5);
+                                               $sale = $row['hsalida']; //substr($row['hsalida'], 0, 5);
+
+                                               $body.= "<td class='$servi'><div class='$servi' id='nombre-$id'>".htmlentities($row['nombre'])."</div></td>
+                                                          <td class='$servi'><div class='$servi $hora' id='hcitacion-$id'>$cita</div></td>
+                                                          <td class='$servi'><div class='$servi $hora' id='hsalida-$id'>$sale</div></td>
+                                                          <td class='$servi'><input type='text' class='modkm' id='km-$id' value='$row[km]' size='4' title='presione enter para modificar'></td>
+                                                          <td class='$servi'>
+                                                              <select id='id_micro-$id' align='center' onFocus='cargarComboMicros(this)\" onchange='change('id_micro-$id')'>
+                                                              <option value='$row[id_micro]'><div align='center'>$row[interno]</div></option>
                                                               </select>
                                                           </td>
-                                                          <td class=\"$servi\">
-                                                              <select id=\"id_chofer_1-$id\" onFocus=\"cargarComboChoferes(this)\" onchange=\"change('id_chofer_1-$id')\">
-                                                              <option value=\"$id_chofer1\"><div align=\"center\">$chofer1</div></option>
+                                                          <td class='$servi'>
+                                                              <select id='id_chofer_1-$id' onFocus='cargarComboChoferes(this)' onchange='change('id_chofer_1-$id')'>
+                                                              <option value='$id_chofer1'><div align='center'>$chofer1</div></option>
                                                               </select>
                                                           </td>
                                                           $tripulacion";
                                                        if ($row['tipoServicio'] == 'charter')
                                                        {
-                                                          print "<td class=\"$servi\"></td>
+                                                          $body.= "<td class='$servi'></td>
                                                               </tr>";
                                                        }
                                                        else
                                                        {
-                                                       print "<td class=\"$servi\"><input type=\"checkbox\" $check onchange=\"{var val=0;if(this.checked){val=1;};delend(val, 'borrada-$id');}\"></td>
+                                                       $body.= "<td class='$servi'><input type='checkbox' $check onchange=\"{var val=0;if(this.checked){val=1;};delend(val, 'borrada-$id');}\"></td>
                                                               </tr>";
                                                        }
-                                                       $row = mysql_fetch_array($query) or die("corto");
+                                                       $row = mysqli_fetch_array($query);
                                                    }
                                              }
                                  }
-                                 print "</table>";
-                                 mysql_free_result($query);
-                                 mysql_close($con);
+                                 $body.= "</table>";
+                                 mysqli_free_result($query);
+                                 mysqli_close($con);
                                  }
+                                 print $body;
                             ?>
          </div>
-</BODY>
-</HTML>
+</body>
+</html>

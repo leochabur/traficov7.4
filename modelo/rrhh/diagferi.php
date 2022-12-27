@@ -206,7 +206,7 @@ table thead tr .header {
                                             state = 1;
                                          }
                                          $.post('/modelo/rrhh/diagferi.php', 
-                                               {accion:'update', id_e: emp, fecha: fec, estado: state},
+                                               {accion:'update', id_e: emp, fecha: fec, estado: state, emple: $_POST[emple]},
                                                 function(data){
                                                                 console.log(data);
                                                                
@@ -251,7 +251,10 @@ table thead tr .header {
                 $debitoFeriado = getDebitoConNovedad(15, $cc, $fecha->format('Y-m-d'));
                 if ($debitoFeriado)
                 {
-                    $debitoFeriado->setCompensable(true);
+                    if ($_POST['emple'] != 51)  //A partir del 23/12/2022 Maxi pidio que no se le computen mas los francos sobre feriados al personal de sintra
+                    {
+                        $debitoFeriado->setCompensable(true);
+                    }
                 }
 
 

@@ -1,4 +1,4 @@
-<?
+<?php
   session_start();
   if (!$_SESSION['auth']){
      print "<meta http-equiv=Refresh content=\"0 ; url=/\">";
@@ -15,18 +15,19 @@
      $sql = "SELECT legajo, concat(apellido, ', ', nombre) as apenom, nrodoc
              FROM empleados e
              inner join empleadores emp on emp.id = e.id_empleador
-             where (e.id_estructura = 1) and (not e.borrado)and (emp.id in (1, 51)) and (emp.activo)and (e.activo) and (id_cargo = 1) and (e.id_empleado not in(
+             where (e.id_estructura = $_SESSION[structure]) and 
+                   (not e.borrado) and (emp.id in (1, 51)) and (emp.activo)and (e.activo) and (id_cargo = 1) and (e.id_empleado not in(
                                                                                            select id_empleado
                                                                                            from novedades
                                                                                            where ('$fecha' between desde and hasta) and (activa)
                                                                                            union all
                                                                                            select id_chofer_1
                                                                                            from (select * from ordenes where fservicio = '$fecha') o
-                                                                                           where fservicio = '$fecha' and not borrada and not suspendida and id_estructura = 1 and id_chofer_1 is not null
+                                                                                           where fservicio = '$fecha' and not borrada and not suspendida and id_estructura = $_SESSION[structure] and id_chofer_1 is not null
                                                                                            union all
                                                                                            select id_chofer_2
                                                                                            from (select * from ordenes where fservicio = '$fecha') o
-                                                                                           where fservicio = '$fecha' and not borrada and not suspendida and id_estructura = 1 and id_chofer_2 is not null))
+                                                                                           where fservicio = '$fecha' and not borrada and not suspendida and id_estructura = $_SESSION[structure] and id_chofer_2 is not null))
              order by apellido";
   //   die($sql);
      $result = mysql_query($sql, $conn);

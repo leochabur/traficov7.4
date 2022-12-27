@@ -43,10 +43,11 @@
     $sqlNovedades = "SELECT n.id_empleado, upper(concat(if (emp.id = 1, '', concat('(', upper(emp.razon_social),') - ')), apellido,', ', nombre)) as cond, legajo, 
                             if (desde < '$desde', '$desde', desde) as desde,
                             if (hasta > '$hasta', '$hasta', hasta) as hasta,
-                            upper(CONCAT(nov_text, ' (',date_format(desde, '%d/%m/%Y'), ' - ', date_format(hasta, '%d/%m/%Y'),')')) as descripcion, legajo
+                            upper(CONCAT(nov_text, ' (',date_format(desde, '%d/%m/%Y'), ' - ', date_format(hasta, '%d/%m/%Y'),')')) as descripcion, legajo, ciudad
                      FROM novedades n
                      inner join cod_novedades cn on cn.id = n.id_novedad
                      inner join (SELECT * FROM empleados $cond) em on (em.id_empleado = n.id_empleado) and (em.id_cargo = 1)
+                     left join ciudades cty on cty.id = em.id_ciudad and cty.id_estructura = em.id_estructura_ciudad
                      inner join empleadores emp on (emp.id = em.id_empleador) and (emp.id_estructura = em.id_estructura_empleador)
                      WHERE ((hasta between '$desde' and '$hasta') or 
                            (desde between '$desde' and '$hasta') or 
@@ -64,7 +65,7 @@
       $data = array();
       while($row = mysqli_fetch_array($resultNovedades))
       {
-          $empleados[$row['id_empleado']] = array($row['cond'], $row['legajo']);
+          $empleados[$row['id_empleado']] = array($row['cond'], $row['legajo'], $row['ciudad']);
           if (!array_key_exists($row['id_empleado'],$data))
           {
             $data[$row['id_empleado']] = array();
@@ -97,7 +98,7 @@
 
       $sqlOrdenes = "SELECT fservicio, citaReal, saleReal, llegadaReal, hfinservicioReal, hcitacion, hsalida, hllegada, hfinservicio, upper(ordenes.nombre) as nombre, 
                             concat(if (emp.id = 1, '', concat('(', upper(emp.razon_social),') - ')), apellido,', ', e.nombre) as cond, 
-                            e.id_empleado as idEmp, upper(c.razon_social) as razon_social, interno, idOrden, ot.id as id_turismo, legajo
+                            e.id_empleado as idEmp, upper(c.razon_social) as razon_social, interno, idOrden, ot.id as id_turismo, legajo, ciudad
                      FROM
                      (   
                         SELECT *
@@ -140,7 +141,8 @@
                                     and id_estructura = $_SESSION[structure] and id_chofer_2 is not null) o                        
                     ) ordenes
                     inner join clientes c on c.id = ordenes.id_cliente and c.id_estructura = ordenes.id_estructura_cliente
-                    inner join (SELECT nombre, apellido, id_empleado, id_empleador, legajo FROM empleados $cond)e on e.id_empleado = ordenes.id_chofer_1
+                    inner join (SELECT nombre, apellido, id_empleado, id_empleador, legajo, id_ciudad, id_estructura_ciudad FROM empleados $cond)e on e.id_empleado = ordenes.id_chofer_1
+                    left join ciudades cty on cty.id = e.id_ciudad and cty.id_estructura = e.id_estructura_ciudad
                     inner join  empleadores emp on emp.id = e.id_empleador
                     left join unidades u on u.id = id_micro
                     left join ordenes_turismo ot on ot.id_orden = ordenes.idOrden
@@ -151,7 +153,7 @@
         $resultOrdenes = mysqli_query($conn, $sqlOrdenes) or die (mysqli_error($conn));
         while ($row = mysqli_fetch_array($resultOrdenes))
         { 
-            $empleados[$row['idEmp']] = array($row['cond'], $row['legajo']);
+            $empleados[$row['idEmp']] = array($row['cond'], $row['legajo'], $row['ciudad']);
             $fecha = DateTime::createFromFormat('Y-m-d', $row['fservicio']);
             if (!array_key_exists($row['idEmp'], $data))
             {
@@ -186,7 +188,7 @@
                                                                     'cli' => $row['razon_social'],
                                                                     'id' => $row['idOrden'],
                                                                     'ot' => $row['id_turismo'],
-                                                                    'legajo' => $row['legajo'],);
+                                                                    'legajo' => $row['legajo']);
         }
 
 
@@ -223,7 +225,7 @@
                 $resultOrdenes = mysqli_query($conn, $sqlOrdenesSinConductor) or die (mysqli_error($conn));
                 while ($row = mysqli_fetch_array($resultOrdenes))
                 { 
-                    $empleados[$row['idEmp']] = array($row['cond'], $row['legajo']);
+                    $empleados[$row['idEmp']] = array($row['cond'], $row['legajo'], '');
                     $fecha = DateTime::createFromFormat('Y-m-d', $row['fservicio']);
                     if (!array_key_exists($row['idEmp'], $data))
                     {
@@ -269,7 +271,7 @@
            $tabla.= "<table width='100%' class='order' id='tablatrafico'>
                            <thead>
                                 <tr>
-                                    <th colspan='9'>Conductor:  ".htmlentities($cond[0])." - Legajo: ".$cond[1]."</th>
+                                    <th colspan='9'>Conductor:  ".htmlentities($cond[0])." - Legajo: ".$cond[1]."___________________".($_SESSION['structure'] == 4?"Ciudad: ".$cond[2]:'')."</th>
                                 </tr>
                                 <tr>
                                     <th>Fecha de Servicio</th>
@@ -363,9 +365,24 @@
                                               }
               </style>
                <script type='text/javascript'>
+
+                                if ($('#posy').val())
+                                {
+                                    console.log('offset ', $('#posy').val());
+                                    $('html, body').animate({
+                                                         scrollTop: ($('#posy').val()-100)+'px'
+                                                         },
+                                                         0);
+                                }
+
                                 $('.order').tableHover();
 
                                 $('#tablatrafico tr td').not('.turismo').click(function(){
+                                                                    var row = $(this);
+                                                                   
+                                                                    $('#posy').val(row.position().top);
+                                                                    console.log($('#posy').val());
+
                                                                     var id_orden = $(this).data('id');
                                                                     var dialog = $('<div style=\"display:none\" id=\"dialog\" class=\"loading\" align=\"center\"></div>').appendTo('body');
                                                                     dialog.dialog({
@@ -667,6 +684,7 @@
                <script type='text/javascript'>
                                 $('.order').tableHover();
                                 $('.modord').click(function(){
+
                                                                     var id_orden = $(this).parent().attr('id');
                                                                     var dialog = $('<div style=\"display:none\" id=\"dialog\" class=\"loading\" align=\"center\"></div>').appendTo('body');
                                                                     dialog.dialog({

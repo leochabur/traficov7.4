@@ -7,7 +7,7 @@
   include ('../../controlador/bdadmin.php');
   include_once ('../../controlador/ejecutar_sql.php');
   include ('../../modelo/utils/dateutils.php');
-   include ('../enviomail/sendmail.php');
+   include_once ('../enviomail/sendmail.php');
   $accion = $_POST['accion'];
   $estado='';
   if (isset($_POST['estados']))
@@ -20,24 +20,49 @@
         $fecha = dateToMysql($_POST['fecha'], '/');
         $conn = conexcion(true);
           
-
-        //primero debe verificar si el diagrama no ha sido aun finalizado
-        $sqlExist = "SELECT * FROM estadoDiagramasDiarios e where fecha = '$fecha' and id_estado = 1 and id_estructura = $_SESSION[structure]";
-        $result = mysqli_query($conn, $sqlExist);
-        if (mysqli_num_rows($result))  //el diagrama ya se ha finalizado con anteriorirdad, debe copiar los horarios reales (que so los que se pueden modificar una vez finalizado el diagrama) a los horaiors diagramados -la accion inversa a la primera vez que se finaliza el diagrama- 
+        if (($_SESSION['structure'] == 1) || ($_SESSION['structure'] == 4))
         {
-          $sqlUpdate = "UPDATE ordenes set hcitacion= hcitacionreal, hsalida = hsalidaplantareal, hllegada = hllegadaplantareal, hfinservicio = hfinservicioreal
-                        WHERE (fservicio ='$fecha') and (id_estructura = $_SESSION[structure])";
+            //primero debe verificar si el diagrama no ha sido aun finalizado
+            $sqlExist = "SELECT * FROM estadoDiagramasDiarios e where fecha = '$fecha' and id_estado = 1 and id_estructura = $_SESSION[structure]";
+            $result = mysqli_query($conn, $sqlExist);
+            if (mysqli_num_rows($result))  //el diagrama ya se ha finalizado con anteriorirdad, debe copiar los horarios reales (que so los que se pueden modificar una vez finalizado el diagrama) a los horaiors diagramados -la accion inversa a la primera vez que se finaliza el diagrama- 
+            {
+              $sqlUpdate = "UPDATE ordenes set hcitacion= hcitacionreal, hsalida = hsalidaplantareal, hllegada = hllegadaplantareal, hfinservicio = hfinservicioreal
+                            WHERE (fservicio ='$fecha') and (id_estructura = $_SESSION[structure])";
 
+            }
+            else
+            {
+              $sqlUpdate = "UPDATE ordenes set hcitacionreal = hcitacion, hsalidaplantareal = hsalida, hllegadaplantareal = hllegada, hfinservicioreal = hfinservicio 
+                            WHERE (fservicio ='$fecha') and (id_estructura = $_SESSION[structure])";
+            }
+            mysqli_free_result($result);
+            mysqli_query($conn, $sqlUpdate);
         }
-        else
+
+
+        ///////////Para el caso de estructuras que manejen mas de un ocnductor las del sur, debe actualizar la tabla auxiliar de horario
+        $sqlCC = "SELECT cant_cond FROM estructuras WHERE id = $_SESSION[structure]";
+        $resultCC = mysqli_query($conn, $sqlCC);
+        if ($data_cc = mysqli_fetch_array($resultCC))
         {
-          $sqlUpdate = "UPDATE ordenes set hcitacionreal = hcitacion, hsalidaplantareal = hsalida, hllegadaplantareal = hllegada, hfinservicioreal = hfinservicio 
-                        WHERE (fservicio ='$fecha') and (id_estructura = $_SESSION[structure])";
+           $cantTripulacion = $data_cc['cant_cond'];
+           if ($cantTripulacion > 2)
+           {
+              $sqlOrdenesSur = "SELECT id, citacion, salida, llegada, finalizacion, citacion_real, salida_real, llegada_real, finalizacion_real FROM horarios_ordenes_sur WHERE date(citacion) = '$fecha'";
+              $resultOrdenesSur = mysqli_query($conn, $sqlOrdenesSur);
+             // return print($sqlOrdenesSur);
+              while ($rowOS = mysqli_fetch_array($resultOrdenesSur))
+              {
+                  $updateOS = "UPDATE horarios_ordenes_sur SET citacion_real = '$rowOS[citacion]', salida_real = '$rowOS[salida]', llegada_real = '$rowOS[llegada]', finalizacion_real = '$rowOS[finalizacion]' WHERE id = $rowOS[id]";
+                  mysqli_query($conn, $updateOS);
+              }
+           }
         }
+       // return print('kakak');
 
-        mysqli_free_result($result);
-        mysqli_query($conn, $sqlUpdate);
+        //////////////////////////////////////////////////////////////
+
 
 		    $sqlDelete = "DELETE FROM estadoDiagramasDiarios WHERE (fecha ='$fecha') and (id_estructura = $_SESSION[structure])";
 		    mysqli_query($conn, $sqlDelete);
@@ -45,7 +70,7 @@
         
         $sqlInsert = "INSERT INTO estadoDiagramasDiarios (id_estado, fecha, finalizado, usuario, fechahorafinalizacion, id_estructura) values ($_POST[estados], '$fecha', $estado, $_SESSION[userid] , now(), $_SESSION[structure])";
         mysqli_query($conn, $sqlInsert);
-        print (json_encode(array('ok' => true)));
+        
         $sql = "select s.id as idServicio,
                        ord.id as idOrden,
                        c.id as idCronograma,
@@ -62,7 +87,8 @@
                        c.tipoServicio as typeServ,
                        concat(ord.fservicio,' ', ord.hsalida) as dtsalida,
                        concat(ord.fservicio,' ', ord.hcitacion) as dtcitacion,
-                       concat(ord.fservicio,' ', ord.hllegada) as dtllegada
+                       concat(ord.fservicio,' ', ord.hllegada) as dtllegada,
+                       isDinamic
         from (select * from ordenes where fservicio = '$fecha' and not suspendida and not borrada and id_servicio is not null) ord
         inner join servicios s on s.id = ord.id_servicio and s.id_estructura = ord.id_estructura_servicio
         inner join cronogramas c on s.id_cronograma = c.id and s.id_estructura_cronograma = c.id_estructura
@@ -70,7 +96,7 @@
         inner join ciudades d on d.id = ciudades_id_destino and d.id_estructura = ciudades_id_estructura_destino
         inner join clientes cl on cl.id = c.id_cliente and cl.id_estructura = c.id_estructura_cliente
         left join unidades u on u.id = ord.id_micro
-        where not c.vacio and c.id_estructura = 1 and (c.id in (3679, 3681, 6355, 264, 3125, 3126, 3243, 3244, 3302, 5339, 5624, 5625, 5626) or cl.id <> 13)";
+        where not c.vacio and c.id_estructura = $_SESSION[structure] and (c.id in (3679, 3681, 6355, 264, 3125, 3126, 3243, 3244, 3302, 5339, 5624, 5625, 5626) or cl.id <> 13)";
 
         $result = mysqli_query($conn, $sql);
         $ordenes = array();
@@ -104,45 +130,79 @@
                               'interno' => $row['interno'],
                               'Horario_Cabecera' => $row['Horario_Cabecera'],
                               'Horario_Llegada' => $row['hllegada'],
-                              'direction' => $row['direction']);
-          if ($comunica)
+                              'direction' => $row['direction'],
+                              'type' => $row['typeServ'],
+                              'isDinamic'=>$row['isDinamic']);
+         /* if ($comunica)
           {
               $dataOrden['type'] = $row['typeServ'];
-          }
+          }*/
           $ordenes[] = $dataOrden;
         }
         mysqli_free_result($result);
         
         $payload = json_encode($ordenes);
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => "https://admtickets.masterbus.net/api/integrations/traffic/trips",
-          CURLOPT_CUSTOMREQUEST => "POST",
-          CURLOPT_POSTFIELDS =>"{'trips':$payload}",
-          CURLOPT_RETURNTRANSFER => 1, 
-          CURLOPT_HTTPHEADER => array(
-            "Authorization: Bearer d8Ypl7DMuQsHjjW/INIHxRXjiV1BSezxrmbTV8EWZvk=",
-            "Content-Type: text/plain"
-          ),
-        ));
-        $response = curl_exec($curl);
 
-        $json = json_decode($response, true);
-        if (isset($json['success']))
-        {
-          $resultado = ($json['success']?1:0);
-        }
-        else
-        {
-          $resultado = 0;
-        }
-       // curl_close($curl);
+        ////ENVIO A SERVIDOR PRODUCTIVO
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://admtickets.masterbus.net/api/integrations/traffic/trips",
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS =>"{'trips':$payload}",
+              CURLOPT_RETURNTRANSFER => 1, 
+              CURLOPT_HTTPHEADER => array(
+                "Authorization: Bearer d8Ypl7DMuQsHjjW/INIHxRXjiV1BSezxrmbTV8EWZvk=",
+                "Content-Type: text/plain"
+              ),
+            ));
+            $response = curl_exec($curl);
+
+            $json = json_decode($response, true);
+            if (isset($json['success']))
+            {
+              $resultado = ($json['success']?1:0);
+            }
+            else
+            {
+              $resultado = 0;
+            }
+            curl_close($curl);
+        /////////////////////////////
+        /////////////ENVIO A SERVIDOR DE PRUEBA
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://admin.paxtracker.xyz/api/integrations/traffic/trips",
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS =>"{'trips':$payload}",
+              CURLOPT_RETURNTRANSFER => 1, 
+              CURLOPT_HTTPHEADER => array(
+                "Authorization: Bearer d8Ypl7DMuQsHjjW/INIHxRXjiV1BSezxrmbTV8EWZvk=",
+                "Content-Type: text/plain"
+              ),
+            ));
+            $response = curl_exec($curl);
+
+            $json = json_decode($response, true);
+            if (isset($json['success']))
+            {
+              $resultado2 = ($json['success']?1:0);
+            }
+            else
+            {
+              $resultado2 = 0;
+            }
+            curl_close($curl);
+        /////////////////////////////////
+
+
         $sql = "INSERT INTO estadocomunicaciones (fecha, fecha_diagrama, estado) VALUES (now(), '$fecha',".$resultado.")";
         mysqli_query($conn, $sql);
         mysqli_close($conn);     
+        print (json_encode(array('ok' => true)));
        // print (json_encode(array('ok' => true)));
   }
-  elseif($accion == 'vdga'){
+  elseif($accion == 'vdga')
+  {
         $fecha = dateToMysql($_POST['fechav'], '/');
         $conn = conexcion();
         $sql = "Select upper(razon_social) as nombre, upper(c.nombre) as servicio, date_format(hcitacion, '%H:%i') as cita, date_format(hsalida, '%H:%i') as sale,
@@ -512,7 +572,7 @@ order by hsalida";
                         {
                             $destination = $emailDestino;
                             $subject = 'Diagrama de servicios Master Bus - Fecha: '.$fec;
-                            $emailDestino.= ','.$user.',mdepeon@masterbus.net,leochabur@gmail.com';
+                            $emailDestino.= ','.$user.',mdepeon@masterbus.net,leochabur@gmail.com,raguiar@masterbus.net';
                             $correosAEnviar[] = array('dest' => $emailDestino, 'table' => $tabla, 'subject' => $subject, 'razonsocial' => $razonSocial, 'mail' => $destination);
                         }
                         else

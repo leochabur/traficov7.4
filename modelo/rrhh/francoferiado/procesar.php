@@ -1,10 +1,10 @@
 <?php
 
-  session_start();
-  include '../../../modelsORM/manager.php';
-  include_once '../../../modelsORM/src/MovimientoDebitoFeriado.php';
-  include_once('../../../modelsORM/call.php');
-  include_once('../../../modelsORM/controller.php');
+  @session_start();
+  include_once ($_SERVER['DOCUMENT_ROOT'].'/modelsORM/manager.php');
+  include_once ($_SERVER['DOCUMENT_ROOT'].'/modelsORM/src/MovimientoDebitoFeriado.php');
+  include_once($_SERVER['DOCUMENT_ROOT'].'/modelsORM/call.php');
+  include_once($_SERVER['DOCUMENT_ROOT'].'/modelsORM/controller.php');
 
 
 function eliminarFranco($conductor, $fecha)

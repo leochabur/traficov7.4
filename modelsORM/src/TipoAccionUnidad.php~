@@ -32,6 +32,34 @@ class TipoAccionUnidad
      */
     private $id;
 
+    private $edilicio;
+
+    /**
+     * Set banio
+     *
+     * @param boolean $banio
+     *
+     * @return TipoAccionUnidad
+     */
+    public function setEdilicio($edilicio)
+    {
+        $this->edilicio = $edilicio;
+    
+        return $this;
+    }
+
+    /**
+     * Get banio
+     *
+     * @return boolean
+     */
+    public function getEdilicio()
+    {
+        return $this->edilicio;
+    }
+
+
+
 
     /**
      * Set tipo
@@ -137,5 +165,10 @@ class TipoAccionUnidad
     public function getId()
     {
         return $this->id;
+    }
+
+    public function __toString()
+    {
+        return $this->tipo;
     }
 }

@@ -19,10 +19,10 @@ $emp="";
                        nrodoc, cuil, upper(domicilio) as domicilio, e.telefono, upper(razon_social) as empleador,
                        date_format(fechanac, '%d/%m/%Y') as fechanac,
                        date_format(inicio_relacion_laboral, '%d/%m/%Y') as fechainicio,
-                       if(e.activo, 'checked', '') as activo, es.nombre as str
+                       if(e.activo, 'checked', '') as activo, es.nombre as str, cbu, banco
                 FROM empleados e
                 left join empleadores em on (em.id = e.id_empleador)
-                left join cargo c on (c.id = e.id_cargo)
+                left join cargo c on (c.id = e.id_cargo) and (c.id_estructura = e.id_estructura_cargo)
                 left join estructuras es on es.id = e.id_estructura
                 where (e.id_estructura in (SELECT id_estructura FROM usuariosxestructuras where id_usuario = $_SESSION[userid])) and (e.activo) and (not borrado) $emp
                 order by empleador, $_GET[order]";
@@ -30,7 +30,7 @@ $emp="";
           $conn = conexcion();
           $result = mysql_query($sql, $conn);
           $tabla = "<table id='example' align='center' border='0' width='100%'>
-                     <thead>
+                     <thead> 
             	            <tr>
                                 <th>Legjo</th>
                                 <th>Apellido, Nombre</th>
@@ -43,6 +43,8 @@ $emp="";
                                 <th>Empleador</th>
                                 <th>Afectado a...</th>
                                 <th>Puesto</th>
+                                <th>CBU</th>
+                                <th>Banco</th>
                             </tr>
                      </thead>
                      <tbody>";
@@ -58,7 +60,9 @@ $emp="";
                                    <td>$data[fechainicio]</td>
                                    <td>".htmlentities($data['empleador'])."</td>
                                    <td>".htmlentities($data['str'])."</td>
-                                   <td>".htmlentities($data['cargo'])."</td>";
+                                   <td>".htmlentities($data['cargo'])."</td>
+                                   <td>$data[cbu]</td>
+                                   <td>$data[banco]</td>";
                       $tabla.= "</tr>";
           }
           $tabla.='</tbody>

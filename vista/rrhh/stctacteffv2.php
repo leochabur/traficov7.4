@@ -56,13 +56,20 @@ table tr td{padding: 3px;}
 </style>
 <script type="text/javascript">
                           $(document).ready(function(){
+                                                       $( "#tabs" ).tabs();
                                                        $("#cargar").button().click(function(){
                                                                                               var datos = $("#upuda").serialize();
                                                                                               $('#data').html("<div align='center'><img  alt='cargando' src='../ajax-loader.gif' /></div>");
                                                                                               $.post("/modelo/rrhh/stctacteffv2.php", datos, function(data){$('#data').html(data);});
                                                        });
-                                                       $('#mes_d, #mes_h, #emples').selectmenu({width: 250});
-                                                       $('#anio_d, #anio_h').selectmenu({width: 100});
+                                                       $('#mes, #emples').selectmenu({width: 250});
+                                                       $('#anio').selectmenu({width: 100});
+
+                                                       $("#cargarfranco").button().click(function(){
+                                                                                              var datos = $("#upudafranco").serialize();
+                                                                                              $('#datafranco').html("<div align='center'><img  alt='cargando' src='../ajax-loader.gif' /></div>");
+                                                                                              $.post("/modelo/rrhh/stctacteffv2.php", datos, function(data){$('#datafranco').html(data);});
+                                                       });
 
                           });
 
@@ -72,98 +79,106 @@ table tr td{padding: 3px;}
 <?php
      menu();
 ?>
-    <br><br>
-         <form id="upuda">
+    <br>
+    <br>
+         
 	           <fieldset class="ui-widget ui-widget-content ui-corner-all">
 		                 <legend class="ui-widget ui-widget-header ui-corner-all">Gestion Francos/Feriados Personal</legend>
-		                 <div id="mensaje"> </div>
-		                 <fieldset class="ui-widget ui-widget-content ui-corner-all">
-		                 <legend class="ui-widget ui-widget-header ui-corner-all">Filtrar</legend>
-                         <table border="0" align="center" width="30%" name="tabla">
-                                <tr>
-                                   <td>Empleador</td>
-                                   <td colspan="2">
-                                      <select name="empleador" id="emples">
-                                      <option value="1">Master Bus</option>
-                                      <option value="51">Sintra</option>
-                                      </select>
 
-                                   </td>
-                                   
-                                   <!--tr>
-                                    <td>Desde</td>
-                                    <td>
-                                        <select id="mes_d" name="mes_d" class="ui-widget ui-widget-content  ui-corner-all">
-                                          <option value="1">Enero</option>                                          
-                                          <option value="2">Febrero</option>
-                                          <option value="3">Marzo</option>
-                                          <option value="4">Abril</option>
-                                          <option value="5">Mayo</option>
-                                          <option value="6">Junio</option>
-                                          <option value="7">Julio</option>
-                                          <option value="8">Agosto</option>
-                                          <option value="9">Septiembre</option>
-                                          <option value="10">Octubre</option>
-                                          <option value="11">Noviembre</option>
-                                          <option value="12">Diciembre</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                          <select id="anio_d" name="anio_d" class="ui-widget ui-widget-content  ui-corner-all">
-                                          <?php
-                                         /*     $year = date('Y');
-                                              $yearmas = ($year+1);
-                                              $yearmenos = ($year-1);
-                                              print "<option value='$year'>$year</option>";
-                                              print "<option value='$yearmenos'>$yearmenos</option>";
-                                              print "<option value='$yearmas'>$yearmas</option>";*/
-                                          ?>
-                                          </select>
-                                    </td>
-                                  </tr-->
-                                  <!--tr>
-                                    <td>Hasta</td>
-                                    <td>
-                                        <select id="mes_h" name="mes_h" class="ui-widget ui-widget-content  ui-corner-all">
-                                          <option value="1">Enero</option>                                          
-                                          <option value="2">Febrero</option>
-                                          <option value="3">Marzo</option>
-                                          <option value="4">Abril</option>
-                                          <option value="5">Mayo</option>
-                                          <option value="6">Junio</option>
-                                          <option value="7">Julio</option>
-                                          <option value="8">Agosto</option>
-                                          <option value="9">Septiembre</option>
-                                          <option value="10">Octubre</option>
-                                          <option value="11">Noviembre</option>
-                                          <option value="12">Diciembre</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                          <select id="anio_h" name="anio_h" class="ui-widget ui-widget-content  ui-corner-all">
-                                          <?php
-                                            /*  $year = date('Y');
-                                              $yearmas = ($year+1);
-                                              $yearmenos = ($year-1);
-                                              print "<option value='$year'>$year</option>";
-                                              print "<option value='$yearmenos'>$yearmenos</option>";
-                                              print "<option value='$yearmas'>$yearmas</option>";*/
-                                          ?>
-                                          </select>
-                                    </td>
-                                  </tr-->
-                                
-                                    <td colspan="3" align="right">
-                                        <input type="button" value="Cargar" id="cargar">
-                                    </td>
-                                </tr>
-                         </table>
-                         </fieldset>
-                         <br>
-                         <div id="data"> </div>
+                         <div id="tabs">
+                              <ul>
+                                <li><a href="#tabs-1">Francos/Feriado</a></li>
+                                <li><a href="#tabs-2">Franco</a></li>
+                              </ul>
+                              <div id="tabs-1">
+                                     <form id="upuda">
+                		                 <fieldset class="ui-widget ui-widget-content ui-corner-all">
+                    		                 <legend class="ui-widget ui-widget-header ui-corner-all">Filtrar</legend>
+                                                     <table border="0" align="center" width="30%" name="tabla">
+                                                            <tr>
+                                                               <td>Empleador</td>
+                                                               <td colspan="2">
+                                                                  <select name="empleador" id="emples">
+                                                                  <option value="1">Master Bus</option>
+                                                                  <option value="51">Sintra</option>
+                                                                  </select>
+                                                               </td>
+                                                               
+                                                            
+                                                                <td colspan="3" align="right">
+                                                                    <input type="button" value="Cargar" id="cargar">
+                                                                </td>
+                                                            </tr>
+                                                     </table>
+                                         </fieldset>
+                                        <br>
+                                        <div id="data"> </div>
+                                        <input type="hidden" name="accion" id="accion" value="load">
+                                    </form>
+                                </div>
+                                <div id="tabs-2">
+                                    
+                                     <form id="upudafranco">
+                                         <fieldset class="ui-widget ui-widget-content ui-corner-all">
+                                             <legend class="ui-widget ui-widget-header ui-corner-all">Filtrar</legend>
+
+                                                        <table border="0" align="center" width="30%" name="tabla">
+                                                                    <tr>
+                                                                   <td>Empleador</td>
+                                                                   <td colspan="2">
+                                                                      <select name="empleador" id="emples">
+                                                                      <option value="1">Master Bus</option>
+                                                                      <option value="51">Sintra</option>
+                                                                      </select>
+
+                                                                   </td>
+                                                                   </tr>
+                                                                   <tr>
+                                                                    <td>Desde</td>
+                                                                    <td>
+                                                                        <select id="mes" name="mes" class="ui-widget ui-widget-content  ui-corner-all">
+                                                                          <option value="1">Enero</option>                                          
+                                                                          <option value="2">Febrero</option>
+                                                                          <option value="3">Marzo</option>
+                                                                          <option value="4">Abril</option>
+                                                                          <option value="5">Mayo</option>
+                                                                          <option value="6">Junio</option>
+                                                                          <option value="7">Julio</option>
+                                                                          <option value="8">Agosto</option>
+                                                                          <option value="9">Septiembre</option>
+                                                                          <option value="10">Octubre</option>
+                                                                          <option value="11">Noviembre</option>
+                                                                          <option value="12">Diciembre</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                          <select id="anio" name="anio" class="ui-widget ui-widget-content  ui-corner-all">
+                                                                          <?php
+                                                                              $year = date('Y');
+                                                                              $yearmas = ($year+1);
+                                                                              $yearmenos = ($year-1);
+                                                                              print "<option value='$year'>$year</option>";
+                                                                              print "<option value='$yearmenos'>$yearmenos</option>";
+                                                                              print "<option value='$yearmas'>$yearmas</option>";
+                                                                          ?>
+                                                                          </select>
+                                                                    </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                    <td colspan="3" align="right">
+                                                                        <input type="button" value="Cargar" id="cargarfranco">
+                                                                    </td>
+                                                                </tr>
+                                                        </table>
+                                                        <div id="datafranco"> </div>
+                                            </fieldset>
+                                            
+                                            <input type="hidden" name="accion" value="loadfranco">
+                                    </form>
+                                </div>
+                            </div>
             </fieldset>
-            <input type="hidden" name="accion" id="accion" value="load">
-         </form>
+
 </body>
 </html>
 

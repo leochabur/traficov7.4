@@ -71,6 +71,11 @@
   font-size: 10px;
 }
 
+.tdhour {
+    width:10px;
+    max-width:10px;
+}
+
 </style>
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
@@ -86,33 +91,45 @@
 <BODY>
 <?php
      menu();
-     $con = conexcion();
+     $con = conexcion();  
      $ordenes = "SELECT o.id as orden, o.id_chofer_1 as id_chofer,if (date(citacion) < '$fecha', '00:00:00', citacion) as cita,
                         if (date(salida) < '$fecha', '00:00:00', salida) as sale,
                         if (date(finalizacion) > '$fecha', '23:59:59', finalizacion) as fina,
-                        if (date(llegada) > '$fecha', '23:59:59', llegada) as llega, id_cliente, id_estructura_cliente, id_micro, nombre as nomOrden, 1 as chofer_1, 0 as idtxo,finalizada, checkeada, id_estructura_ciudad_origen, id_estructura_ciudad_destino, id_ciudad_origen, id_ciudad_destino, id_cliente_vacio, id_estructura_cliente_vacio, vacio
+                        if (date(llegada) > '$fecha', '23:59:59', llegada) as llega, id_cliente, id_estructura_cliente, id_micro, nombre as nomOrden, 1 as chofer_1, 0 as idtxo,finalizada, checkeada, id_estructura_ciudad_origen, id_estructura_ciudad_destino, id_ciudad_origen, id_ciudad_destino, id_cliente_vacio, id_estructura_cliente_vacio, vacio,
+                        if (date(citacion_real) < '$fecha', '00:00:00', citacion_real) as citacion_real,
+                        if (date(salida_real) < '$fecha', '00:00:00', salida_real) as salida_real,
+                        if (date(finalizacion_real) > '$fecha', '23:59:59', finalizacion_real) as finalizacion_real,
+                        if (date(llegada_real) > '$fecha', '23:59:59', llegada_real) as llegada_real, cod_servicio
                   FROM ordenes o
                   INNER JOIN horarios_ordenes_sur hhs ON hhs.id_orden = o.id and hhs.id_estructura_orden = o.id_estructura
-                  WHERE ('$fecha' between date(citacion) and date(finalizacion))  and (not borrada) and (not suspendida) and (o.id_estructura = 2)
+                  WHERE ('$fecha' between date(citacion) and date(finalizacion))  and (not borrada) and (not suspendida) and (o.id_estructura in (2, 11))
                   UNION ALL
                   SELECT o.id, o.id_chofer_2,if (date(citacion) < '$fecha', '00:00:00', citacion),
                         if (date(salida) < '$fecha', '00:00:00', salida),
                         if (date(finalizacion) > '$fecha', '23:59:59', finalizacion),
                         if (date(llegada) > '$fecha', '23:59:59', llegada), id_cliente, id_estructura_cliente, id_micro, nombre, 2 as chofer_1, 0 as idtxo,
-                        finalizada, checkeada, id_estructura_ciudad_origen, id_estructura_ciudad_destino, id_ciudad_origen, id_ciudad_destino, id_cliente_vacio, id_estructura_cliente_vacio, vacio
+                        finalizada, checkeada, id_estructura_ciudad_origen, id_estructura_ciudad_destino, id_ciudad_origen, id_ciudad_destino, id_cliente_vacio, id_estructura_cliente_vacio, vacio,
+                        if (date(citacion_real) < '$fecha', '00:00:00', citacion_real) as citacion_real,
+                        if (date(salida_real) < '$fecha', '00:00:00', salida_real) as salida_real,
+                        if (date(finalizacion_real) > '$fecha', '23:59:59', finalizacion_real) as finalizacion_real,
+                        if (date(llegada_real) > '$fecha', '23:59:59', llegada_real) as llegada_real, cod_servicio
                   FROM ordenes o
                   INNER JOIN horarios_ordenes_sur hhs ON hhs.id_orden = o.id and hhs.id_estructura_orden = o.id_estructura
-                  WHERE ('$fecha' between date(citacion) and date(finalizacion))  and (not borrada) and (not suspendida) and (o.id_estructura = 2)
+                  WHERE ('$fecha' between date(citacion) and date(finalizacion))  and (not borrada) and (not suspendida) and (o.id_estructura in (2, 11))
                   union all
                   SELECT o.id, id_empleado,if (date(citacion) < '$fecha', '00:00:00', citacion),
                         if (date(salida) < '$fecha', '00:00:00', salida),
                         if (date(finalizacion) > '$fecha', '23:59:59', finalizacion),
                         if (date(llegada) > '$fecha', '23:59:59', llegada), id_cliente, id_estructura_cliente, id_micro, nombre, 3 as chofer_1, txo.id as idtxo,
-                        finalizada, checkeada, id_estructura_ciudad_origen, id_estructura_ciudad_destino, id_ciudad_origen, id_ciudad_destino, id_cliente_vacio, id_estructura_cliente_vacio, vacio
+                        finalizada, checkeada, id_estructura_ciudad_origen, id_estructura_ciudad_destino, id_ciudad_origen, id_ciudad_destino, id_cliente_vacio, id_estructura_cliente_vacio, vacio,
+                        if (date(citacion_real) < '$fecha', '00:00:00', citacion_real) as citacion_real,
+                        if (date(salida_real) < '$fecha', '00:00:00', salida_real) as salida_real,
+                        if (date(finalizacion_real) > '$fecha', '23:59:59', finalizacion_real) as finalizacion_real,
+                        if (date(llegada_real) > '$fecha', '23:59:59', llegada_real) as llegada_real, cod_servicio
                   FROM ordenes o
                   INNER JOIN horarios_ordenes_sur hhs ON hhs.id_orden = o.id and hhs.id_estructura_orden = o.id_estructura
                   INNER JOIN tripulacionXOrdenes txo ON txo.id_orden = o.id AND txo.id_estructura_orden = o.id_estructura
-                  WHERE ('$fecha' between date(citacion) and date(finalizacion))  and (not borrada) and (not suspendida) and (o.id_estructura = 2)";
+                  WHERE ('$fecha' between date(citacion) and date(finalizacion))  and (not borrada) and (not suspendida) and (o.id_estructura in (2, 11))";
 
 
 ?>
@@ -148,7 +165,8 @@
               <table id="dtBasicExample" class="table table-striped table-bordered table-sm table-condensed table-hover">
                      <thead>
             	            <tr class="clase">
-                                <th class="th-sm clase"></th>
+                                <th class="th-sm clase tdhour mx-0"></th>
+                                <th class="th-sm clase">H. Citacion</th>
                                 <th class="th-sm clase">H. Salida</th>
                                 <th class="th-sm clase">H. Llegada</th>
                                 <th class="th-sm clase">Servicio</th>
@@ -160,11 +178,33 @@
                                      }
                                 ?>
                                 <th class="th-sm clase">Cliente</th>
+                                <th class="th-sm clase">Codigo</th>
                             </tr>
                      </thead>
                      <tbody class="table-condensed">
                             <?php
-                                 $ordenes = "SELECT time_format(o.llega, '%H:%i') as llega, orden, nomOrden, time_format(o.cita, '%H:%i') as cita, time_format(o.sale, '%H:%i') as sale, interno, c.razon_social, concat(apellido,', ',nombre) as chofer, id_empleado, chofer_1, idtxo, finalizada, checkeada, id_chofer, upper(orig.ciudad) as origen, upper(dest.ciudad) as destino, cv.razon_social as cliVac, vacio, m.id_propietario as color
+
+                                $sql = "SELECT date_format(fecha, '%d/%m/%Y') as fecha 
+                                            FROM estadoDiagramasDiarios 
+                                            where (fecha = '$fecha') and (finalizado = 1) and (id_estructura = $_SESSION[structure])";
+                                $result = mysql_query($sql, $con);
+
+                                $finalizado = count($result);
+
+                                $fieldCita = 'cita';
+                                $fieldSale = 'sale';
+                                $fieldLlega = 'llega';
+
+                                if ($finalizado)
+                                {
+                                    $fieldCita = 'citacion_real';
+                                    $fieldSale = 'salida_real';
+                                    $fieldLlega = 'llegada_real';
+                                }
+
+
+                                $ordenes = "SELECT time_format(o.llega, '%H:%i') as llega, orden, nomOrden, time_format(o.cita, '%H:%i') as cita, time_format(o.sale, '%H:%i') as sale, interno, c.razon_social, concat(apellido,', ',nombre) as chofer, id_empleado, chofer_1, idtxo, finalizada, checkeada, id_chofer, upper(orig.ciudad) as origen, upper(dest.ciudad) as destino, cv.razon_social as cliVac, vacio, m.id_propietario as color,
+                                    time_format(o.citacion_real, '%H:%i') as citacion_real, time_format(o.salida_real, '%H:%i') as salida_real, time_format(o.llegada_real, '%H:%i') as llegada_real, if (cod_servicio is not null, cod_servicio, '') as cod_servicio
                                              FROM ($ordenes) o
                                              LEFT JOIN empleados ch ON (ch.id_empleado = o.id_chofer)
                                              LEFT JOIN unidades m ON (m.id = o.id_micro)
@@ -201,9 +241,13 @@
                                               $color = $tdclass;
                                            }
                                             
-                                            $fila = "<td class='text-center'><i class='far fa-edit' data-id='$id'></i></td>
-                                                       <td class='$tdclass'>$row[sale]</td>
-                                                       <td class='$tdclass'>$row[llega]</td>
+                                            $fila = "<td class='text-center'>
+                                                                            <i class='far fa-edit' data-id='$id'></i>
+                                                                            <a href='#' class='checked' data-servicio='$row[nomOrden]' data-orden='$row[orden]'><i class='fa fa-check-square ml-2' aria-hidden='true'></i></a>
+                                                      </td>
+                                                      <td class='$tdclass tdhour'>$row[$fieldCita]</td>
+                                                       <td class='$tdclass'>$row[$fieldSale]</td>
+                                                       <td class='$tdclass'>$row[$fieldLlega]</td>
                                                        <td class='$tdclass'>$row[nomOrden]</td>
                                                        <td class='$tdclass'>$row[origen] - $row[destino]</td>
                                                        <td class='$color'>$row[interno]</td>";
@@ -242,6 +286,7 @@
                                                 $razon_social.=" ($row[cliVac])";
                                             }
                                             $fila.= "<td class='$tdclass'>$razon_social</td>
+                                                     <td class='$tdclass'>$row[cod_servicio]</td>
                                                    </tr>";
                                             if (!$conductor)
                                                 $tdclass = "bg-danger text-white";
@@ -294,6 +339,31 @@
  <script>
 
   v34(function() {
+
+                    v34('.checked').click(function(event) {
+                                                            event.preventDefault();
+                                                            var a = $(this);
+                                                            if (confirm('Seguro chequear la orden '+ a.data('servicio') +'?'))
+                                                            {
+                                                                $.post('/modelo/ordenes/ordenessur.php', 
+                                                                      {
+                                                                            accion:'check', 
+                                                                            ord: a.data('orden')
+                                                                       },
+                                                                       function(data){
+                                                                                        var response = $.parseJSON(data);
+                                                                                        if (response.ok)
+                                                                                        {
+                                                                                            a.parent().parent().addClass('bg-primary ');
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            alert(a.msge);
+                                                                                        }
+                                                                       });
+                                                            }
+                    });
+
                     v34('.fa-edit').on('click', function (e) {
                                                             v34('#exampleModalLabel').html('Detalle de la orden '+ $(this).data('id'));
                                                             v34('.modal-body').load('/modelo/ordenes/ordenessur.php', {accion:'load', orden: $(this).data('id')});

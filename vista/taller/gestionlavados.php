@@ -43,7 +43,7 @@
           var personal = new Array();
 
   <?php
-       $query = $entityManager->createQuery("SELECT e FROM Empleado e JOIN e.categoria c WHERE e.activo = :activo AND c.id IN (12, 19, 11) ORDER BY e.apellido");
+       $query = $entityManager->createQuery("SELECT e FROM Empleado e JOIN e.categoria c WHERE e.activo = :activo AND c.id IN (12, 19, 11, 52) ORDER BY e.apellido");
 
        $query->setParameter('activo', true);
 

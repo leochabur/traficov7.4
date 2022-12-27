@@ -59,7 +59,7 @@ table tr td{padding: 3px;}
                                     <td WIDTH="20%">Conductor</td>
                                     <td><select id="conductor" name="conductor" class="ui-widget ui-widget-content  ui-corner-all"  validate="required:true">
                                                 <?php
-                                                     armarSelect("empleados", "apellido, nombre", "id_empleado",  "concat(apellido,', ',nombre)", "afectado_a_estructura in (select id from estructuras)");
+                                                     armarSelect("empleados", "apellido, nombre", "id_empleado",  "concat(apellido,', ',nombre)", "(activo) and (not borrado) and (afectado_a_estructura in (select id from estructuras))");
                                                 ?>
                                         </select>
                                     </td>
@@ -74,7 +74,7 @@ table tr td{padding: 3px;}
             </fieldset>
             <input type="hidden" name="accion" id="accion" value="load">
          </form>
-<?
+<?php
   if (isset($_GET['dri'])){
      print "<script type=\"text/javascript\">
                     \$(\"#conductor option[value=$_GET[dri]]\").attr(\"selected\", \"selected\");

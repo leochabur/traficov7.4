@@ -359,7 +359,7 @@ abstract class MovimientoCuentaFeriado
     /**
      * @var boolean
      */
-    private $compensado = 'false';
+    private $compensado = false;
 
 
     /**

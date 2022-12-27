@@ -70,7 +70,7 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
                                                                                                          });
                                              });
 
-                                             $('#cursos').selectmenu({width: 350});
+                                             $('#cursos').selectmenu({width: 500});
 
 
                 });
@@ -81,7 +81,9 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
      menu();
     $cursos = $entityManager->createQuery("SELECT c
                                            FROM Curso c
-                                           ORDER BY c.nombre")                         
+                                           WHERE c.activo = :activo
+                                           ORDER BY c.nombre")       
+                                ->setParameter('activo', true)                  
                                 ->getResult();
         $dql = "SELECT c 
                 FROM ClaseCurso c";

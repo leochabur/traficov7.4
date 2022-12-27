@@ -26,7 +26,7 @@
                      (SELECT sum((datediff(hasta, desde)+1)) as dias FROM novedades n where (n.id_empleado = e.id_empleado) and (activa) and (id_novedad = 19) and (desde > '2014-06-30'))
                      )as tot_vac, id_empleado
               FROM empleados e
-                     WHERE (activo) and (not borrado) and (id_empleador in (1, 51)) and ((SELECT cant_dias FROM vacacionespersonal v where v.id_empleado = e.id_empleado and anio = $_POST[anio]) is null) $cond_emple $cond_puesto
+                     WHERE (activo) and (not borrado) and (id_empleador in (1, 51, 143)) and ((SELECT cant_dias FROM vacacionespersonal v where v.id_empleado = e.id_empleado and anio = $_POST[anio]) is null) $cond_emple $cond_puesto
                      ORDER BY apenom";
 
       $result = mysql_query($sql, $conn);

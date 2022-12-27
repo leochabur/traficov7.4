@@ -1,0 +1,28 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+						  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="OrdenGPX" table="dinamic_ordenes_informadas">
+
+        <id name="id" type="integer">
+            <generator strategy="AUTO" />
+        </id>
+
+        <many-to-one field="orden" target-entity="Orden">
+            <join-columns>
+                <join-column name="id_orden" referenced-column-name="id" nullable="false"/>
+                <join-column name="id_estructura_orden" referenced-column-name="id_estructura" nullable="false"/>          
+            </join-columns>   
+        </many-to-one>
+
+        <field name="fechaComunicacion" column="fecha_comunicacion" type="datetime" nullable="true" />  
+
+        <many-to-one field="usuario" target-entity="Usuario">
+                <join-column name="id_user" referenced-column-name="id" nullable="true"/>
+        </many-to-one>  
+
+        <one-to-many field="pasajeros" target-entity="ReservaPasajero" mapped-by="ordenGPX" />
+      
+    </entity>
+</doctrine-mapping>

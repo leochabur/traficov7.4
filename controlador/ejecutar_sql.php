@@ -2,6 +2,10 @@
     @session_start();
     include_once($_SERVER['DOCUMENT_ROOT'].'/controlador/bdadmin.php');
     
+    include_once($_SERVER['DOCUMENT_ROOT'].'/modelsORM/manager.php');
+
+    include_once($_SERVER['DOCUMENT_ROOT'].'/modelo/dinamic/manageGpxServer.php');
+
     function comunicateUpdateInterno($id, $conn, $idInterno, $from = '')
     {
         if (informarAPaxTracker($id, $conn))
@@ -30,7 +34,7 @@
               ));
               $response = curl_exec($curl);                                  
               $json = json_decode($response, true);
-              if (isset($json['success']))
+              if (isset($json['success']))  
               {
                   $result = 1;
                   $message = "Update Orden FROM: ".$from;
@@ -90,6 +94,8 @@
 
                 $resOrdenGen = mysql_query($sql, $conn);
                 $ordenes = array();
+                $isDinamic = 0;
+                $nombre = '';
                 while ($row = mysql_fetch_array($resOrdenGen))
                 {
                   $dataOrden =  array('idServicio' => $row['idServicio'],
@@ -105,7 +111,13 @@
                                       'Horario_Cabecera' => $row['Horario_Cabecera'],
                                       'Horario_Llegada' => $row['hllegada'],
                                       'direction' => $row['direction'],
-                                      'type' => $row['typeServ']);
+                                      'type' => $row['typeServ'],
+                                      'isDinamic'=>$row['isDinamic']);
+                  //agregado el 19/02/2021 para comuciar una orden al server de gpx
+                  $isDinamic = $row['isDinamic'];
+                  $nombre = $row['nombre'];
+                  ///////////////////////////////////
+
                   $ordenes[] = $dataOrden;
                 }
                 if (count($ordenes))
@@ -136,7 +148,7 @@
                       if (isset($json['success']))
                       {
                           $resultado = 1;
-                          $message = "".$from;
+                          $message = "".$from;                          
                       }
                       else
                       {
@@ -147,6 +159,17 @@
                       mysql_query($sql, $conn) or die ($sql);
                     }
                     curl_close($curl);  
+                    try{
+                         if (($resultado) && ($isDinamic))
+                         {
+                               $result = generateOrdenGPX(array('orden' => $id), $entityManager, $nombre);
+                               $result = json_decode($result, true);
+                               $sql = "INSERT INTO dinamic_comunicaciones_ordenes (id_orden, stamp, response, status, mensaje)
+                                                       VALUES ($id, now(), '$result[response]', 1, 'SERVICIO COMUNICADO EXITOSAMENTE - ($result[status])')";
+                               mysql_query($sql, $conn) or die ($sql);
+                         }
+                     }
+                     catch (Exception $e) { throw $e; }
                 }
     }
 
@@ -638,7 +661,8 @@
                                ord.hsalidaplantareal as Horario_Cabecera,
                                ord.hllegadaplantareal as hllegada,
                                s.i_v as direction, 
-                               if (c.tipoServicio is not null, c.tipoServicio, 'company') as typeServ
+                               if (c.tipoServicio is not null, c.tipoServicio, 'company') as typeServ,
+                               isDinamic
                 from (select * from ordenes where id = $id and not suspendida and not borrada and id_servicio is not null) ord
                 inner join servicios s on s.id = ord.id_servicio and s.id_estructura = ord.id_estructura_servicio
                 inner join cronogramas c on s.id_cronograma = c.id and s.id_estructura_cronograma = c.id_estructura

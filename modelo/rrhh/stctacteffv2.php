@@ -17,10 +17,13 @@
   if($accion == 'load')
   {
     
+      ///En septiembre de 2022 cambia el rango de liquidacion, del 26 al 25   pasa a liquidarse del 21 al 20
+
       $aux = new DateTime(); //DateTime::createFromFormat('Y-m-d', "$_POST[anio_d]-$_POST[mes_d]-26");   
 
-      $hasta = DateTime::createFromFormat('Y-m-d', $aux->format('Y').'-'.$aux->format('m').'-26'); //crea la fecha hasta el dia 26 del mes actual
-      if ($aux->format('d') > 25)
+      $hasta = DateTime::createFromFormat('Y-m-d', $aux->format('Y').'-'.$aux->format('m').'-21'); //crea la fecha hasta el dia 26 del mes actual
+
+      if ($aux->format('d') > 20)
       {
           $hasta->add(new DateInterval('P1M'));
       }
@@ -66,9 +69,10 @@
                                             JOIN cc.empleado e
                                             JOIN m.novedad nv
                                             JOIN nv.novedadTexto nt
-                                            WHERE m.activo = :activo AND m.compensable = :comp AND m.compensado = :compensado AND nt.id in (:novedades) AND e.activo = :activo
+                                            WHERE m.fecha > :fecha AND m.activo = :activo AND m.compensable = :comp AND m.compensado = :compensado AND nt.id in (:novedades) AND e.activo = :activo
                                             ORDER BY e.id, m.fecha ASC");
           $ff->setParameter('activo', true)
+             ->setParameter('fecha', '2020-11-20')
              ->setParameter('compensado', false)
              ->setParameter('novedades', [15, 16, 54])
              ->setParameter('comp', true);
@@ -80,10 +84,11 @@
                                                 JOIN cc.empleado e
                                                 JOIN m.novedad nv
                                                 JOIN nv.novedadTexto nt
-                                                WHERE m.activo = :activo AND m.aplicado = :aplicado AND nt.id = :novedad AND e.activo = :activo
+                                                WHERE m.fecha > :fecha AND m.activo = :activo AND m.aplicado = :aplicado AND nt.id = :novedad AND e.activo = :activo
                                                 ORDER BY e.id, m.fecha ASC");
           $fadel->setParameter('activo', true)
                ->setParameter('aplicado', false)
+               ->setParameter('fecha', '2020-11-25')
                ->setParameter('novedad', 49);
           $francoAdelantado = $fadel->getResult();
 
@@ -128,7 +133,19 @@
 
        $select.="</select>";
 
-          $tabla ='<table id="tablitasssss" align="center" width="100%" class="table table-zebra">
+          $tabla ='
+                  <style type="text/css">
+
+
+                      thead { 
+                              position: sticky;
+                              top: 0;
+                              z-index: 10;
+                              background-color: #ffffff;
+                      }
+
+                  </style>
+                   <table id="tablitasssss" align="center" width="100%" class="table table-zebra">
                      <thead>
                             <tr>
                                 <th rowspan="2">Legajo</th>                                
@@ -385,7 +402,7 @@
                       $('.fecha').datepicker();
                        $('.fechaAjuste').datepicker({autoOpen : false});
                       $('.fechaadelante').datepicker({
-                        minDate: new Date($yearFrom,$mesActual, 26)
+                        minDate: new Date($yearFrom,$mesActual, 21)
                         });
                       $('.btn').button().click(function(){
                                                           var btn = $(this);
@@ -489,7 +506,7 @@
         $debito = new MovimientoDebitoFeriado();
 
 
-        if ($fecha->format('d') > 25)
+        if ($fecha->format('d') > 20)
         {
           $fecha->add(new DateInterval('P1M'));
         }
@@ -581,7 +598,7 @@
         $debito = new MovimientoDebitoFeriado();
 
 
-        if ($fecha->format('d') > 25)
+        if ($fecha->format('d') > 20)
         {
           $fecha->add(new DateInterval('P1M'));
         }
@@ -848,11 +865,12 @@
                                                   JOIN cc.empleado e
                                                   JOIN m.novedad nv
                                                   JOIN nv.novedadTexto nt
-                                                  WHERE m.activo = :activo AND m.aplicado = :aplicado AND nt.id = :novedad AND e = :empleado
+                                                  WHERE m.fecha > :fecha AND m.activo = :activo AND m.aplicado = :aplicado AND nt.id = :novedad AND e = :empleado
                                                   ORDER BY m.fecha");
 
           $q->setParameter('activo', true)
             ->setParameter('aplicado', false)
+            ->setParameter('fecha', '2020-11-25')
             ->setParameter('empleado', $empleado);
           $q->setParameter('novedad',  49);
           $movimientos = $q->getResult();
@@ -869,10 +887,11 @@
                                                     JOIN cc.empleado e
                                                     JOIN m.novedad nv
                                                     JOIN nv.novedadTexto nt
-                                                    WHERE m.activo = :activo AND (nt.id IN (:novedad)) AND e = :empleado
+                                                    WHERE m.fecha > :fecha AND m.activo = :activo AND (nt.id IN (:novedad)) AND e = :empleado
                                                     ORDER BY m.fecha");
 
               $q->setParameter('activo', true)
+                ->setParameter('fecha', '2020-11-25')
                 ->setParameter('empleado', $empleado);
               $q->setParameter('novedad', [50, 15, 16, 54, 49, 25]);
               $movimientos = $q->getResult();
@@ -896,10 +915,11 @@
                                                     FROM MovimientoCuentaFeriado m
                                                     JOIN m.ctacte cc
                                                     JOIN cc.empleado e
-                                                    WHERE m.activo = :activo AND e = :empleado
+                                                    WHERE m.fecha > :fecha AND m.activo = :activo AND e = :empleado
                                                     ORDER BY m.fecha");
 
               $q->setParameter('activo', true)
+                ->setParameter('fecha', '2020-11-25')
                 ->setParameter('empleado', $empleado);
               $movimientos = $q->getResult();
 
@@ -989,12 +1009,13 @@
                                             JOIN e.categoria cat
                                             JOIN m.novedad nv
                                             JOIN nv.novedadTexto nt
-                                            WHERE m.fecha <= :hasta AND e = :empleado AND m.activo = :activo AND (nt.id = :novedad OR nt.id = :otra OR nt.id = :otramas)
+                                            WHERE m.fecha BETWEEN :desde AND :hasta AND e = :empleado AND m.activo = :activo AND (nt.id = :novedad OR nt.id = :otra OR nt.id = :otramas)
                                             ORDER BY m.fecha");
           $q->setParameter('activo', true)
             ->setParameter('otra',25)
             ->setParameter('novedad', 15)
             ->setParameter('otramas',50)
+            ->setParameter('desde', '2021-11-26')
             ->setParameter('empleado', $empleado);
           $q->setParameter('hasta',  $_POST['hasta']);
           $movimientos = $q->getResult();
@@ -1106,7 +1127,7 @@
         $debito->setFecha($fec);
         $debito->setFechaCarga(new DateTime());
 
-        if ($fec->format('d') > 25)
+        if ($fec->format('d') > 20)
         {
           $fec->add(new DateInterval('P1M'));
         }
@@ -1226,6 +1247,94 @@
                           return;
       }
 
+  }
+  elseif($accion == 'loadfranco')
+  {
+      try
+      {
+
+          $corte = DateTime::createFromFormat('Y-m-d', "2022-09-01"); // para verificar si debe evualar del 26 al 25 o del 21 al 20 este cambio ocurrio en septiembre 2022
+
+          $fecha = DateTime::createFromFormat('Y-m-d', "$_POST[anio]-$_POST[mes]-01");
+
+          if ($fecha >= $corte)
+          {
+
+            $hasta = DateTime::createFromFormat('Y-m-d', "$_POST[anio]-$_POST[mes]-20");
+            $desde = clone $hasta;
+            $desde->sub(new DateInterval('P1M')); //retrocede un mes
+            $desde->add(new DateInterval('P1D')); //agrega un dia
+            
+          }
+          else
+          {
+            $hasta = DateTime::createFromFormat('Y-m-d', "$_POST[anio]-$_POST[mes]-25");
+            $desde = clone $hasta;
+            $desde->sub(new DateInterval('P1M')); //retrocede un mes
+            $desde->add(new DateInterval('P1D')); //agrega un dia       
+          }
+
+         // return print $desde->format('Y-m-d') . " - " . $hasta->format('Y-m-d');
+
+          $francosCreditos = getFrancosDebitosPorPeriodo($desde->format('Y-m-d'), $hasta->format('Y-m-d'), $_POST['empleador']);    
+
+
+
+          $data='<table align="center" width="100%" class="table table-zebra">
+                  <thead>
+                            <tr>
+                                <th>Legajo</th>                                
+                                <th>Apellido, Nombre</th>
+                                <th>Francos Diagramados</th> 
+                                <th>Saldo</th>
+                            </tr>
+                     </thead>
+                     <tbody>';
+
+          foreach ($francosCreditos as $m)
+          {
+
+              $data.="<tr>
+                          <td>$m[leg]</td>
+                          <td>$m[ape], $m[nom]</td>
+                          <td>$m[cant]</td>
+                          <td>".(6-$m['cant'])."</td>
+                      </tr>";
+
+               /* if (!array_key_exists($m['idE'], $resumen))
+                {
+                  $resumen[$m['idE']] = array('leg' => $m['leg'], 'ide' => $m['idE'],'e' => ($m['ape'].', '.$m['nom']), 'fr' => $m['cant'], 'fe' => 0, 'frt' => 0, 'fet' => 0, 'fac' => 0);
+                }
+                else
+                {
+                  $resumen[$m['idE']]['fr']+= $m['cant'];
+                }*/
+              
+          }
+
+          $data.="</tbody></table>";
+          print $data;
+
+       /*   $francosDebitos = getFrancosDebitos($hasta->format('Y-m-d'), $_POST['empleador']);
+          foreach ($francosDebitos as $m)
+          {
+
+                  if (!array_key_exists($m['idE'], $resumen))
+                  {
+                    $resumen[$m['idE']] = array('leg' => $m['leg'], 'ide' => $m['idE'],'e' => ($m['ape'].', '.$m['nom']), 
+                                                'fr' => 0, 'fe' => 0, 'frt' => $m['cant'], 'fet' => 0, 'fac' => 0);
+                  }
+                  else
+                  {
+                    $resumen[$m['idE']]['frt']+= $m['cant'];
+                  }
+              
+          }*/
+      }
+      catch (Exception $e){
+                          print json_encode(array('ok' => false, 'message' => $e->getMessage()));
+                          return;
+      }
   }
 ?>
 

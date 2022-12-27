@@ -13,6 +13,9 @@ use Doctrine\Common\ClassLoader,
     Doctrine\DBAL\Logging\EchoSqlLogger;
 //use DoctrineExtensions\Query\Mysql\TimeDiff;
 
+use Symfony\Component\Validator\Validation;
+
+
 
 require_once "vendor/autoload.php";
 date_default_timezone_set('America/Argentina/Buenos_Aires');
@@ -20,7 +23,7 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 $isDevMode = false;
 
 
-$config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config/xml", __DIR__."/config/xml/lavadero", __DIR__."/config/xml/rrhh", __DIR__."/config/xml/turismo", __DIR__."/config/xml/facturacion", __DIR__."/config/xml/trafico", __DIR__."/config/xml/segVial"), $isDevMode);
+$config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config/xml",  __DIR__."/config/xml/lavadero", __DIR__."/config/xml/rrhh", __DIR__."/config/xml/turismo", __DIR__."/config/xml/facturacion", __DIR__."/config/xml/trafico", __DIR__."/config/xml/segVial"), $isDevMode);
 
 /*$conn = array(
     'dbname' => 'c0mbexport',
@@ -33,6 +36,10 @@ $config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config/xml", __D
 */
     
 
+/*function getValidator()
+{
+    return Validation::createValidatorBuilder();
+}*/
 
 $config->setAutoGenerateProxyClasses(true);
 $conn = array(

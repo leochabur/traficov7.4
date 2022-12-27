@@ -42,15 +42,16 @@ while ($row = mysqli_fetch_array($result))
 	{
 		print "<option value='$row[id_empleado]'>$row[nombre]</option>";
 	}
-}			
-print "</select>				
-</div>
-<div class='col'>
+}		
+
+print "</select>
+</div><div class='col'>
 		<input type='submit' name='Cargar' id='btnLoad' value='Ver embeddings' class='btn btn-primary'/>
 		<input class='btn btn-danger' type='submit' name='delete-all' id='btn-delete-all' onclick=\"deleteAll(event);\" value='Eliminar todos los embeddings'/>
 		<input class='btn btn-warning' type='submit' name='Last' value='Ultimos Accesos'/>
 		<input class='btn btn-success' type='submit' name='config' value='Configuracion'/>
 		<input class='btn btn-secondary' type='submit' name='ultimosEnvios' value='Ultimos Envios'/>
+		<a class='btn btn-secondary' href='./registros.php'>Registro Paradas</a>
 		<input type='hidden' id='action' name='action'/>
 		</div>
 		</div>

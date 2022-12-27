@@ -1,6 +1,14 @@
 <?php
      session_start();
      include('../controlador/ejecutar_sql.php');
+
+     if (!(isset($_SESSION['isAuth']) && ($_SESSION['isAuth'] == 1)))
+     {
+         session_destroy();
+         header("Location: /");
+         exit;
+     }
+
      if (isset($_GET['v'])){
         $_SESSION['auth'] = '1';
         $_SESSION['userid'] = $_GET['t'];

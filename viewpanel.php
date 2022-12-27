@@ -2,7 +2,7 @@
   include ('../../controlador/bdadmin.php');
 
   function armarSelect ($tabla, $orden, $key, $valor, $estructura){
-           $conn = conexcion();
+           $conn = conexcion(true);
            if ($estructura)
               $cond = "WHERE $estructura";
            $sql = "SELECT * FROM $tabla $cond ORDER BY $orden";

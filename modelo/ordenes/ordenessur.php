@@ -25,9 +25,6 @@ if ($accion == 'load')
    if ($data_cc = $result->fetch_array()){
        $cantTripulacion = $data_cc['cant_cond'];
    }
-
-
-
   
   $sql = "SELECT o.id, o.km, date_format(date(citacion),'%d/%m/%Y') as fservicio, finalizada, date_format(citacion, '%d/%m/%Y %H:%i') as hcitacion,
                 date_format(salida, '%d/%m/%Y %H:%i') as hsalida, date_format(finalizacion, '%d/%m/%Y %H:%i') as hfinserv, date_format(llegada, '%d/%m/%Y %H:%i') as hllegada,
@@ -35,7 +32,8 @@ if ($accion == 'load')
                 concat('(',em1.razon_social,') ', ch1.apellido, ', ',ch1.nombre)) as chofer1, upper(c.razon_social) as razon_social,
                 concat(ch2.apellido, ', ',ch2.nombre) as chofer2, comentario, interno, m.id as id_micro, ch1.id_empleado as id_chofer1, ch2.id_empleado as id_chofer2,
                 ori.id as idOrigen, des.id as idDestino,
-                ori.ciudad as origen, des.ciudad as destino, if (o.borrada, 'checked','') as borrada, if (o.finalizada, 'checked','') as finalizada, vacio, cv.id as id_cli_vac, upper(cv.razon_social) as rsclivac, if(oa.id is null, 0, 1) as tiene_asoc
+                ori.ciudad as origen, des.ciudad as destino, if (o.borrada, 'checked','') as borrada, if (o.finalizada, 'checked','') as finalizada, vacio, cv.id as id_cli_vac, upper(cv.razon_social) as rsclivac, if(oa.id is null, 0, 1) as tiene_asoc, cod_servicio,
+                date_format(citacion_real, '%d/%m/%Y %H:%i') as citacion_real, date_format(salida_real, '%d/%m/%Y %H:%i') as salida_real, date_format(finalizacion_real, '%d/%m/%Y %H:%i') as finalizacion_real, date_format(llegada_real, '%d/%m/%Y %H:%i') as llegada_real, cantpax
           FROM ordenes o
           INNER JOIN horarios_ordenes_sur hhs ON hhs.id_orden = o.id AND hhs.id_estructura_orden = o.id_estructura
           LEFT JOIN empleados ch1 ON (ch1.id_empleado = o.id_chofer_1)
@@ -50,7 +48,29 @@ if ($accion == 'load')
           WHERE o.id = $_POST[orden]";
   $result = $conn->query($sql);
   //die($result);
-  if ($row = $result->fetch_array()){
+  if ($row = $result->fetch_array())
+  {
+
+    $sql = "SELECT date_format(fecha, '%d/%m/%Y') as fecha 
+                FROM estadoDiagramasDiarios 
+                WHERE (fecha = (SELECT date(citacion) FROM horarios_ordenes_sur where id_orden = $_POST[orden])) and (finalizado = 1) and (id_estructura = $_SESSION[structure])";
+    $result = mysqli_query($conn, $sql);
+
+    //return print($sql);
+    $finalizado = mysql_num_rows($result);
+
+    $fieldCita = 'hcitacion';
+    $fieldSale = 'hsalida';
+    $fieldLlega = 'hllegada';
+    $fieldFin = 'hfinserv';
+
+    if ($finalizado)
+    {
+        $fieldCita = 'citacion_real';
+        $fieldSale = 'salida_real';
+        $fieldLlega = 'llegada_real';
+        $fieldFin = 'finalizacion_real';
+    }
 
     $selectCliVac = '';
     if ($row['vacio']) //debe dar la opcion de seleccionar un cliente para afectar el vacio
@@ -110,33 +130,37 @@ if ($accion == 'load')
                   <div class="form-group row">
                         <label for="citacion" class="col-3 col-form-label">H. Citacion</label>
                         <div class="col-3">
-                          <input class="form-control form-control-sm horario" type="text" id="citacion" name="citacion" value="'.$row['hcitacion'].'">
+                          <input class="form-control form-control-sm horario" type="text" id="citacion" name="citacion" value="'.$row[$fieldCita].'">
                         </div>
                         <label for="salida" class="col-2 col-form-label">H. Salida</label>
                         <div class="col-3">
-                          <input class="form-control form-control-sm horario" type="text" id="salida"  value="'.$row['hsalida'].'" name="salida">
+                          <input class="form-control form-control-sm horario" type="text" id="salida"  value="'.$row[$fieldSale].'" name="salida">
                         </div>          
                   </div>    
                   <div class="form-group row">
                         <label for="llegada" class="col-3 col-form-label">H. Llegada</label>
                         <div class="col-3">
-                          <input class="form-control form-control-sm horario" type="text" id="llegada" name="llegada" value="'.$row['hllegada'].'">
+                          <input class="form-control form-control-sm horario" type="text" id="llegada" name="llegada" value="'.$row[$fieldLlega].'">
                         </div>
                         <label for="finalizacion" class="col-2 col-form-label">H. Finalizacion</label>
                         <div class="col-3">
-                          <input class="form-control form-control-sm horario" type="text" id="finalizacion" name="finalizacion" value="'.$row['hfinserv'].'">
+                          <input class="form-control form-control-sm horario" type="text" id="finalizacion" name="finalizacion" value="'.$row[$fieldFin].'">
                         </div>          
                   </div>       
                   <div class="form-group row">
                         <label for="interno" class="col-3 col-form-label">Interno</label>
-                        <div class="col-2">
+                        <div class="col-3">
                           <select class="custom-select custom-select-sm interno" name="interno" id="interno">
                           <option value="'.$row['id_micro'].'">'.$row['interno'].'</option>
                           </select>
-                        </div>        
+                        </div>   
+                        <label for="interno" class="col-2 col-form-label">Codigo Servicio</label>
+                        <div class="col-3">
+                          <input class="form-control form-control-sm" type="text" id="cod_servicio" name="cod_servicio" value="'.$row['cod_servicio'].'">
+                        </div>      
                   </div>                    
                   <div class="form-group row">
-                        <label for="chofer1" class="col-3 col-form-label">Codnuctor 1</label>
+                        <label for="chofer1" class="col-3 col-form-label">Conductor 1</label>
                         <div class="col-4">
                           <select class="custom-select custom-select-sm chofer" name="chofer1" id="chofer1">
                           <option value="'.$row['id_chofer1'].'">'.$row['chofer1'].'</option>
@@ -144,7 +168,7 @@ if ($accion == 'load')
                         </div>        
                   </div>  
                   <div class="form-group row">
-                        <label for="chofer2" class="col-3 col-form-label">Codnuctor 2</label>
+                        <label for="chofer2" class="col-3 col-form-label">Conductor 2</label>
                         <div class="col-4">
                           <select class="custom-select custom-select-sm chofer" name="chofer2" id="chofer2">
                           <option value="'.$row['id_chofer2'].'">'.$row['chofer2'].'</option>
@@ -175,8 +199,12 @@ if ($accion == 'load')
 
     $form.='       <div class="form-group row">
                         <label for="km" class="col-3 col-form-label">Km</label>
-                        <div class="col-2">
+                        <div class="col-3">
                           <input class="form-control form-control-sm" type="text" id="km" name="km" value="'.$row['km'].'" required="true">
+                        </div>
+                        <label for="pax" class="col-2 col-form-label">Pasajeros</label>
+                        <div class="col-2">
+                          <input class="form-control form-control-sm" type="text" id="pax" name="pax" value="'.$row['cantpax'].'" required="true">
                         </div>
                   </div>
                   <div class="form-group row">    
@@ -258,6 +286,21 @@ if ($accion == 'load')
 
   }
 }
+elseif($accion == 'check')
+{
+    $orden = $_POST['ord'];
+    try
+    {
+        ejecutarSQLPDO("UPDATE ordenes SET checkeada = 1 WHERE id = $orden");
+        print json_encode(['ok' => true, 'msge' => "UPDATE ordenes SET checkeada = 1 WHERE id = $orden"]);
+        exit();
+    }
+    catch(Exception $e){
+                          print json_encode(['ok' => false, 'msge' => $e->getMessage()]);
+                          exit();
+    }
+
+}
 elseif($accion == 'update')
 {
   $id = $_POST['orden'];
@@ -284,6 +327,8 @@ elseif($accion == 'update')
   $chofer2 = ($_POST['chofer2']) ? $_POST['chofer2'] : 'NULL';
   $interno = ($_POST['interno']) ? $_POST['interno'] : 'NULL';
 
+  $cantPax = (is_numeric($_POST['pax'])?$_POST['pax']:0);
+
   $conn = conexcion(true);
   try{  
           $conn->autocommit(FALSE);
@@ -297,7 +342,7 @@ elseif($accion == 'update')
           $final = isset($_POST['finalizada']) ? 1 : 0;
           $borra = isset($_POST['borrada']) ? 1 : 0;
 
-          $campos = "id_ciudad_origen = $_POST[origen], id_estructura_ciudad_origen = $_SESSION[structure], id_ciudad_destino = $_POST[destino], id_estructura_ciudad_destino = $_SESSION[structure], id_user = $_SESSION[userid], fecha_accion = now(), fservicio = '$fecha', nombre = '$nombre', km = $km, id_chofer_1 = $chofer1, id_chofer_2 = $chofer2, 
+          $campos = "cantpax = $cantPax, id_ciudad_origen = $_POST[origen], id_estructura_ciudad_origen = $_SESSION[structure], id_ciudad_destino = $_POST[destino], id_estructura_ciudad_destino = $_SESSION[structure], id_user = $_SESSION[userid], fecha_accion = now(), fservicio = '$fecha', nombre = '$nombre', km = $km, id_chofer_1 = $chofer1, id_chofer_2 = $chofer2, 
                      id_micro = $interno, id_cliente_vacio = $clivacio, finalizada = $final, borrada = $borra, comentario = '$_POST[obs]'";
 
           if (isset($_POST['cliVacio']))
@@ -333,13 +378,30 @@ elseif($accion == 'update')
               }
           }  
 
-          /*$updateSur = "UPDATE horarios_ordenes_sur 
-                        SET citacion = '$hcitacion', salida = '$hsalida', llegada = '$hllegada', finalizacion = '$hfinserv' 
-                        WHERE id_orden = $id AND id_estructura_orden = $_SESSION[structure]";*/
+          $sql = "SELECT date_format(fecha, '%d/%m/%Y') as fecha 
+                      FROM estadoDiagramasDiarios 
+                      WHERE (fecha = (SELECT date(citacion) FROM horarios_ordenes_sur where id_orden = $_POST[orden])) and (finalizado = 1) and (id_estructura = $_SESSION[structure])";
+          $result = mysqli_query($conn, $sql);
+
+          //return print($sql);
+          $finalizado = mysql_num_rows($result);
+
+          $fieldCita = 'citacion';
+          $fieldSale = 'salida';
+          $fieldLlega = 'llegada';
+          $fieldFin = 'finalizacion';
+
+          if ($finalizado)
+          {
+              $fieldCita = 'citacion_real';
+              $fieldSale = 'salida_real';
+              $fieldLlega = 'llegada_real';
+              $fieldFin = 'finalizacion_real';
+          }
                     
-          $updateSur = "INSERT INTO horarios_ordenes_sur (citacion, salida, llegada, finalizacion, id_orden, id_estructura_orden, citacion_real, salida_real, llegada_real, finalizacion_real)
-                        VALUES  ('$hcitacion', '$hsalida', '$hllegada', '$hfinserv', $id, $_SESSION[structure], '$hcitacion', '$hsalida', '$hllegada', '$hfinserv') 
-                        ON DUPLICATE KEY UPDATE citacion = '$hcitacion', salida = '$hsalida', llegada = '$hllegada', finalizacion = '$hfinserv'";                        
+          $updateSur = "INSERT INTO horarios_ordenes_sur (citacion, salida, llegada, finalizacion, id_orden, id_estructura_orden, citacion_real, salida_real, llegada_real, finalizacion_real, cod_servicio)
+                        VALUES  ('$hcitacion', '$hsalida', '$hllegada', '$hfinserv', $id, $_SESSION[structure], '$hcitacion', '$hsalida', '$hllegada', '$hfinserv', '$_POST[cod_servicio]') 
+                        ON DUPLICATE KEY UPDATE $fieldCita = '$hcitacion', $fieldSale = '$hsalida', $fieldLlega = '$hllegada', $fieldFin = '$hfinserv', cod_servicio = '$_POST[cod_servicio]'";                        
           if (!$conn->query($updateSur))
               throw new Exception("Error al actualizar los horarios de la orden 236", 1);   
           $conn->commit();

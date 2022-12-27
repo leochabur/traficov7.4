@@ -17,7 +17,7 @@
         $sql="SELECT em.id as id_empleador, upper(es.nombre) as str, e.id_empleado, legajo, upper(concat(apellido, ', ',e.nombre)) as apenom, nrodoc, if(e.activo, 'checked', '') as activo, upper(codigo) as codigo
                 FROM empleados e
                 left join empleadores em on (em.id = e.id_empleador) and (em.id_estructura = e.id_estructura_empleador)
-                left join cargo c on c.id = e.id_cargo
+                left join cargo c on c.id = e.id_cargo and c.id_estructura = e.id_estructura_cargo
                 inner join estructuras es on es.id = e.id_estructura
                 where (e.activo) and (not borrado) and $cargo (e.id_empleador = $_POST[cli]) and (e.id_estructura in (SELECT uxe.id_estructura
                                                                                                  FROM usuarios u

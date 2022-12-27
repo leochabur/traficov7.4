@@ -14,68 +14,73 @@
 
 try
 {
-  $q = $entityManager->createQuery("SELECT m
+  $q = $entityManager->createQuery("SELECT m, nt.texto as codigo
                                     FROM MovimientoDebitoFeriado m
-                                    join m.ctacte cc
-                                    join m.novedad n
+                                    JOIN m.novedad n
                                     JOIN n.novedadTexto nt
-                                    JOIN cc.empleado e
+                                    JOIN m.ctacte c
+                                    JOIN c.empleado e
                                     JOIN e.empleador emp
-                                    WHERE nt.id in (49) AND (emp.id = 1) AND n.activa = :activa")
+                                    WHERE nt.id in (15, 18) AND (emp.id = 51) AND n.activa = :activa AND m.fecha = :fecha")
                     ->setParameter('activa', true)
-                    ->setParameter('fecha', '2021-07-10')
+                    ->setParameter('fecha', '2021-10-11')
                     ->getResult();
 }
-catch (Exception $e){print "error ".$e->getMessage();}
-
-
-$fcomp = find('NovedadTexto', 25);
+catch (Exception $e)
+{
+    print "error ".$e->getMessage();
+}
 
   
   $result = [];
-print "<table>";
+
   foreach ($q as $m)
   {
 
-          $ff = $entityManager->createQuery("SELECT m
-                                            FROM MovimientoDebitoFeriado m
-                                            JOIN m.ctacte cc
-                                            JOIN cc.empleado e
-                                            JOIN m.novedad nv
-                                            JOIN nv.novedadTexto nt
-                                            WHERE m.activo = :activo AND nt.id in (:novedades) AND cc = :cta AND m.fecha = :fecha AND m.compensado = :comp
-                                            ORDER BY e.id, m.fecha ASC");
-          $ff->setParameter('activo', true)
-              ->setParameter('fecha', '2021-06-20')
-              ->setParameter('comp', false)
-              ->setParameter('cta', $m->getCtaCte())
-             ->setParameter('novedades', [15]);
-          $f20 = $ff->getOneOrNullResult();
+    $ctacte = $m[0]->getCtaCte()->getId();
+  //  print $ctacte.'-'.$m['codigo']."<br>";
 
-      $m->setCompensado(true)
-        ->setCompensable(false)
-        ->setAplicado(true);
+    if (!array_key_exists($ctacte, $result))
+    {
+      $result[$ctacte] = [];
+    }
 
-      $m->getNovedad()->setNovedadTexto($fcomp);      
+    $fecha = $m[0]->getFecha()->format('Y-m-d');
 
-      $f20->setCompensado(true)
-          ->setCompensable(true)
-          ->setAplicado(true);
+    if (!array_key_exists($fecha, $result[$ctacte]))
+    {
+        $result[$ctacte][$fecha] = [];
+    }
 
-      $m->setDebitoOrigen($f20);
-      $m->setDescripcion('Compensa Franco de fecha 20/06/2021');
-
-      $entityManager->flush();
-
-
-      print "<tr>
-                <td>".$m->getCtaCte()->getEmpleado()."</td>
-              </tr>";
-    //  $entityManager->flush();
+    $result[$ctacte][$fecha][] = $m;
   }
 
-  
 
-//  print_r($result);
+  foreach ($result as $row)
+  {
+      foreach ($row as $k => $c)
+      {
+        if (count($c) > 1)
+        {
+          print $k."  ";
+          foreach ($c as $x)
+          {
+             // print $m[0]->getCtaCte()->getEmpleado()." - ".$x[0]->getNovedad()->getNovedadTexto()->getTexto()."<br>";
+            if ($x['codigo'] == 'Franco')
+            {
+              $x[0]->setCompensable(true);
+              
+             // print "   ".$x[0]->getCtaCte()->getEmpleado()."  ".$x['codigo'];
+            }
+            $x[0]->setActivo(true);
+            
+          }
+          print "<br>";
+        }
+      }
+  }
+  $entityManager->flush();
+
+  print_r('okakaka');
 
 ?>

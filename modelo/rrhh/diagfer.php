@@ -275,7 +275,7 @@ table thead tr .header {
                                          if (st){
                                             state = 1;
                                          }
-                                         $.post('/modelo/rrhh/diagfer.php', {accion:'update', id_e: emp, fecha: fec, nvda: nvd, estado: state}, function(data){ console.log(data);});
+                                         $.post('/modelo/rrhh/diagfer.php', {accion:'update', id_e: emp, fecha: fec, nvda: nvd, estado: state, emple: $_POST[emple]}, function(data){ console.log(data);});
                                 }";
               $tabla.="</script>";
               mysql_free_result($result);

@@ -11,7 +11,7 @@
       print('<b><p align="center">Su sesion ha expirado!</p></b><meta http-equiv="Refresh" content="2;url=/">');
       exit;
    }
-  define(STRUCTURED, $_SESSION['structure']);
+  define("STRUCTURED", $_SESSION['structure']);
   $accion = $_POST['accion'];
 
   if ($accion == 'sve'){ ///codigo para guardar ////
@@ -115,7 +115,10 @@
                                     <td>
                                     <select id="tipovto">
                                     <option value="0">Seleccione Una Opcion</option>';
-          $sql = "SELECT tv.id, upper(nombre) as vto FROM tipovencimientoporinterno t inner join tipovencimiento tv on tv.id = t.idtipovencimiento where (idunidad = $_POST[unidad])";
+          $sql = "SELECT tv.id, upper(nombre) as vto 
+                  FROM tipovencimientoporinterno t 
+                  inner join tipovencimiento tv on tv.id = t.idtipovencimiento 
+                  where (idunidad = $_POST[unidad])";
           $result = mysql_query($sql, $conn);
           cerrarconexcion($conn);
           while ($row = mysql_fetch_array($result)){
@@ -142,9 +145,10 @@
                                                                      var tivto = $("#tipovto").val();
                                                                      var fecha = $("#fecvto").val();
                                                                      $.post("/modelo/segvial/upvtouda.php", {mic: micro, vtv: tivto, fec: fecha, accion: "savevto"}, function(data){
+                                                                                                                                                                                    console.log(data);
                                                                                                                                                                                     var obj = JSON.parse(data);
                                                                                                                                                                                     var mjetxt;
-                                                                                                                                                                                    if (obj > 0){
+                                                                                                                                                                                    if (obj.ok){
                                                                                                                                                                                        $("#fecvto").val("");
                                                                                                                                                                                        var coche = $("#unidad option:selected").text();
                                                                                                                                                                                        mjetxt = "Se ha grabado con exito el vencimiento correspondiente al interno "+coche;
@@ -193,11 +197,35 @@
           </script>';
           print $tabla;
   }
-  elseif($accion == 'savevto'){
-          $fecha = dateToMysql($_POST['fec'],'/');
-          $campos = "id, id_micro, vencimiento, fechaAlta, usuarioAlta, id_tipovtv, id_estructuratipovtv";
-          $values = "$_POST[mic], '$fecha', now(), $_SESSION[userid], $_POST[vtv], $_SESSION[structure]";
-          print json_encode(insert("vtosinternos", $campos, $values));
+  elseif($accion == 'savevto')
+  {
+          $conn = conexcion();
+          $sql = "SELECT id, nombre, id_estructura FROM tipovencimiento t WHERE id = $_POST[vtv]";
+          $result = ejecutarSQL($sql, $conn);
+          $estructura = null;
+          if ($row = mysql_fetch_array($result))
+          {
+                $estructura = $row['id_estructura'];
+          }
+          else
+          {
+                print json_encode(['ok' => false, 'message' => 'No se encuentra la estructura del tipo e vto']);
+                return;
+          }
+
+          try
+          {
+              $fecha = dateToMysql($_POST['fec'],'/');
+              $campos = "id, id_micro, vencimiento, fechaAlta, usuarioAlta, id_tipovtv, id_estructuratipovtv";
+              $values = "$_POST[mic], '$fecha', now(), $_SESSION[userid], $_POST[vtv], $estructura";
+              insert("vtosinternos", $campos, $values);
+              print json_encode(['ok' => true]);
+              return;
+          }
+          catch (Exception $e){
+                                print json_encode(['ok' => false, 'message' => $e->getMessage]);
+                                return;
+          }
   }
   elseif($accion == 'vervtos'){
           $sql="SELECT v.id, upper(nombre) as vtv, date_format(v.vencimiento, '%d/%m/%Y') as vto, upper(apenom) as usr, date_format(fechaAlta, '%d/%m/%Y - %H:%i') as fup

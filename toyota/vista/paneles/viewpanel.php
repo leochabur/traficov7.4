@@ -5,7 +5,7 @@
   include_once($_SERVER['DOCUMENT_ROOT'].'/modelo/utils/dateutils.php');
   function armarSelect ($tabla, $orden, $key, $valor, $estructura, $return = 0){
 
-           $conn = conexcion();
+           $conn = conexcion(true);
 
            if ($estructura)
               $cond = "WHERE $estructura";

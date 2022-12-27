@@ -6,23 +6,11 @@
 
   $conn = conexcion(true);
 
-  /*$sql = "SELECT s.id as idServ, o.id as idOrden, fservicio as fecha, c.id as idCrono, cl.razon_social as cliente,
-                 o.nombre, o.hsalida, o.hllegada, hfinserv, km,
-                 ciudades_id_origen, ciudades_id_estructura_origen, ciudades_id_destino, ciudades_id_estructura_destino,
-                 id_cliente, id_estructura_cliente, origen.ciudad as origenServ, destino.ciudad as destinoSer, i_v as sentido, interno
-          FROM servicios s
-          inner join cronogramas c on c.id = s.id_cronograma and c.id_estructura = s.id_estructura_cronograma
-          inner join ciudades origen on origen.id = ciudades_id_origen and origen.id_estructura = ciudades_id_estructura_origen
-          inner join ciudades destino on destino.id = ciudades_id_destino and destino.id_estructura = ciudades_id_estructura_destino
-          inner join clientes cl on cl.id = c.id_cliente and cl.id_estructura = c.id_estructura_cliente
-          inner join (select id_servicio, id_estructura_servicio, id, fservicio, id_micro, hsalida, hllegada, nombre
-                     from ordenes
-                     where fservicio between '2020-10-08' AND '2020-10-10' and not borrada and not suspendida) o ON id_servicio = s.id AND id_estructura_servicio = s.id_estructura
-          left join unidades u on u.id = id_micro";*/
+
   $sql = "SELECT s.id as idServ, o.id as idOrden, fservicio as fecha, c.id as idCrono, cl.razon_social as cliente,
                  o.nombre, o.hsalida, o.hllegada, hfinserv, km,
                  ciudades_id_origen, ciudades_id_estructura_origen, ciudades_id_destino, ciudades_id_estructura_destino,
-                 id_cliente, id_estructura_cliente, origen.ciudad as origenServ, destino.ciudad as destinoSer, i_v as sentido, interno
+                 id_cliente, id_estructura_cliente, origen.ciudad as origenServ, destino.ciudad as destinoSer, i_v as sentido, if (interno is null, 49, interno) as interno
           FROM servicios s
           inner join cronogramas c on c.id = s.id_cronograma and c.id_estructura = s.id_estructura_cronograma
           inner join ciudades origen on origen.id = ciudades_id_origen and origen.id_estructura = ciudades_id_estructura_origen
@@ -30,16 +18,16 @@
           inner join clientes cl on cl.id = c.id_cliente and cl.id_estructura = c.id_estructura_cliente
           inner join (select id_servicio, id_estructura_servicio, id, fservicio, id_micro, hsalida, hllegada, nombre
                      from ordenes
-                     where fservicio between '2021-06-16' AND '2021-06-16' and not borrada and not suspendida and id_estructura = 5) o
+                     where fservicio between '2021-08-02' AND '2021-08-16' and not borrada and not suspendida and id_estructura = 1) o
           ON id_servicio = s.id AND id_estructura_servicio = s.id_estructura
           left join unidades u on u.id = id_micro
-where tipoServicio = 'charter'";
+where tipoServicio = 'charter' and c.id = 7946";
   $result = mysqli_query($conn, $sql);
 
   //$row = mysqli_fetch_array($result);   //arma un array con cuya clave es el id de todos los servicios que se deben generar automaticamente, y como valor un array cuya clave es la fecha en la cual esta generada la orden
   $serviciosGenerados = array();
   $dataOrdenes = array(); //almacena la informacion necesaria para generar las ordenes
-  $id = 639; //listo para iniciar
+ // $id = 639; //listo para iniciar
   $fecha = '2020-09-07';
   $export = array();
   while ($row = mysqli_fetch_array($result))
@@ -62,7 +50,7 @@ where tipoServicio = 'charter'";
                         'direction' => $row['sentido'],
                         'type' => 'charter'
                          );
-    $id++;
+ //   $id++;
   }
   mysqli_free_result($result);
 

@@ -1,9 +1,9 @@
 <?php
-  session_start();
+  @session_start();
   include ('../../controlador/bdadmin.php');
   include_once ('../../controlador/ejecutar_sql.php');
   include ('../../modelo/utils/dateutils.php');
-  include ('../../modelo/enviomail/sendordbjafn.php');
+  @include ('../../modelo/enviomail/sendordbjafn.php');
   //include ('../../modelsORM/call.php');  
   //include_once ('../../modelsORM/controller.php');    
 
@@ -62,10 +62,10 @@
   $hllegada = $_POST['hllegada'];
   $hfinserv = $_POST['hfinserv'];
 
-  $hcitacionDiag = $_POST['hcitacionDiagrama'];
+ /* $hcitacionDiag = $_POST['hcitacionDiagrama'];
   $hsalidaDiag = $_POST['hsalidaDiagrama'];
   $hllegadaDiag = $_POST['hllegadaDiagrama'];
-  $hfinservDiag = $_POST['hfinservDiagrama'];  
+  $hfinservDiag = $_POST['hfinservDiagrama'];  */
   
   $km = $_POST['km'];
   $chofer1 = ($_POST['chofer1']) ? $_POST['chofer1'] : 'NULL';
@@ -182,7 +182,7 @@
     }
     else
     {
-        comunicateInsertsWhitId($id, $conn, 'UPDATE FROM: modord.php');
+       // comunicateInsertsWhitId($id, $conn, 'UPDATE FROM: modord.php');
     }  
   }
 

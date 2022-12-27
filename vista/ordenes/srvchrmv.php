@@ -1,4 +1,5 @@
 <?php
+    error_reporting(0);
      session_start();
      include_once('../main.php');
      include_once('../paneles/viewpanel.php');

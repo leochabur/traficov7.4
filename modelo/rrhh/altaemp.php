@@ -1,4 +1,5 @@
-<?
+<?php
+
   session_start();
 
   include ('../../controlador/ejecutar_sql.php');
@@ -29,13 +30,19 @@
      $afectara = $_POST['struct'];
   }
 
-  $campos= "id_empleado, $usr, legajo, domicilio, id_ciudad, telefono, id_nacionalidad, sexo, fechanac, tipodoc, nrodoc, cuil, activo, id_sector, id_cargo, id_empleador, inicio_relacion_laboral, apellido, nombre, fecha_alta, id_estructura, id_estructura_empleador, procesado, id_estructura_cargo, id_estructura_ciudad, afectado_a_estructura, borrado, email";
-  $values= "$_SESSION[userid],$_POST[legajo], '$_POST[dire]', $city, '$_POST[tele]', '$naci', '$_POST[sexo]', '$fnac', '$_POST[tipodoc]', '$_POST[nrodoc]', '$_POST[cuit]', 1, null, $_POST[puesto], $_POST[empleador], '$fini', '$_POST[ape]', '$_POST[nom]', now(), $afectara, $estructura, $procesado, $estructura, $estructura, $afectara, 0, '$_POST[mail]'";
+  $campos= "id_empleado, $usr, legajo, domicilio, id_ciudad, telefono, id_nacionalidad, sexo, fechanac, tipodoc, nrodoc, cuil, activo, id_sector, id_cargo, id_empleador, inicio_relacion_laboral, apellido, nombre, fecha_alta, id_estructura, id_estructura_empleador, procesado, id_estructura_cargo, id_estructura_ciudad, afectado_a_estructura, borrado, email, cbu, banco";
+  $values= "$_SESSION[userid],$_POST[legajo], '$_POST[dire]', $city, '$_POST[tele]', '$naci', '$_POST[sexo]', '$fnac', '$_POST[tipodoc]', '$_POST[nrodoc]', '$_POST[cuit]', 1, null, $_POST[puesto], $_POST[empleador], '$fini', '$_POST[ape]', '$_POST[nom]', now(), $afectara, $estructura, $procesado, $estructura, $estructura, $afectara, 0, '$_POST[mail]', '$_POST[cbu]', '$_POST[banco]'";
 
-
+  try
+  {
   $cliente =  insert("empleados", $campos, $values);
   
   print json_encode($cliente);
+   }
+   catch (Exception $e)
+   {
+       print json_encode($e->getMessage());
+   }
 
 ?>
 

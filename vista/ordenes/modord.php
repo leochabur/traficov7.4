@@ -49,7 +49,9 @@ $tabla='<link type="text/css" href="/vista/css/blue/style.css" rel="stylesheet"/
                                                                                                                                    var datos = $("#upuda").serialize();
 
                                                                                                                                    $.post("/modelo/informes/trafico/diagdia.php", datos, function(data){
+                                                                                                                                                                                                        console.log($("#posy").val());
                                                                                                                                                                                                         $("#data").html(data);
+
                                                                                                                                                                                                         $("body").animate({
                                                                                                                                                                                                                            scrollTop: ($("#posy").val()-100)+"px"
                                                                                                                                                                                                                            },

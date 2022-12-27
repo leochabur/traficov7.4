@@ -20,7 +20,7 @@ if ($accion == 'cpy')
 
      $ordenes = $_POST['orders'];
      $fecha = $_POST['fecha'];
-    // $ordenesAuto = getOrdenesDiagramadas($conn, $fecha, STRUCTURED); //son todas las ordenes automaticas generadas para la fecha destino
+     $ordenesAuto = getOrdenesDiagramadas($conn, $fecha, STRUCTURED); //son todas las ordenes automaticas generadas para la fecha destino
 
      //el 30/05/2020 se modifico para que al copiar el diagrama arrastre el nombre de la orden como consecuencia de los casos de covid en Toyota
      $sql = "SELECT o.nombre as nombre, o.hcitacion, o.hsalida, o.hllegada, o.hfinservicio as hfinservicio, c.km, o.id_micro, o.id_servicio, 
@@ -36,7 +36,7 @@ if ($accion == 'cpy')
                 inner join cronogramas c on c.id = s.id_cronograma and c.id_estructura = s.id_estructura_cronograma
                 inner join ciudades de on (de.id = c.ciudades_id_origen) and (de.id_estructura = c.ciudades_id_estructura_origen)
                 inner join ciudades ha on (ha.id = c.ciudades_id_destino) and (ha.id_estructura = c.ciudades_id_estructura_destino)
-                WHERE (o.id in ($ordenes))";
+                WHERE (o.id in ($ordenes)) or (c.tipoServicio = 'charter')";
 
      $result = mysqli_query($conn, $sql) or die($sql);
 
@@ -44,9 +44,9 @@ if ($accion == 'cpy')
      $ok = 0;
      while ($data = mysqli_fetch_array($result))
      {
-      /*  $keySrv = $data['idServ'];
+        $keySrv = $data['idServ'];
         if (!in_array($keySrv, $ordenesAuto)) //es un servicio de charter debe solo actualizar la orden con id_servicio $keySrv en la fecha destino seleccionada
-        {*/
+        {
            $campos = "id,id_estructura,fservicio,nombre,hcitacion,hsalida,hllegada,hfinservicio,km,id_ciudad_origen,id_estructura_ciudad_origen,id_ciudad_destino,id_estructura_ciudad_destino,id_cliente,id_estructura_cliente,finalizada,borrada,comentario, id_user, vacio";
            $valores = STRUCTURED.", '$fecha', '$data[nombre]','$data[hcitacion]','$data[hsalida]','$data[hllegada]','$data[hfinservicio]','$data[km]',$data[id_ciudad_origen],$data[id_estructura_ciudad_origen],$data[id_ciudad_destino],$data[id_estructura_ciudad_destino],$data[id_cliente],$data[id_estructura_cliente],'0','0','', $_SESSION[userid], $data[vacio]";
            if($data['id_micro'])
@@ -87,8 +87,8 @@ if ($accion == 'cpy')
                    }
            }
            $ok+= insertPDO('ordenes', $campos, $valores, $conn);
-       //  }
-       /*  else
+         }
+         else
          {
             if (!$data['borrada'])
             {
@@ -126,7 +126,7 @@ if ($accion == 'cpy')
                       "(fservicio = '$fecha') and (id_servicio = $keySrv) and (id_estructura_servicio = $_SESSION[structure])", 
                       $conn);
             }
-         }*/
+         }
      }
      
 
@@ -203,7 +203,7 @@ function getOrdenesDiagramadas($conn, $fecha, $str) //recupera para la fecha dad
     $sql = "SELECT s.id as idServ
                 FROM servicios s
                 inner join cronogramas c on c.id = s.id_cronograma and c.id_estructura = s.id_estructura_cronograma
-                where c.activo and s.activo and c.tipoServicio = 'charter' and id_cliente = 10";
+                where c.activo and s.activo and c.tipoServicio = 'charter' and c.id_estructura = $str";
     $result = mysqli_query($conn, $sql);
     $ordenes = array();
     while ($row = mysqli_fetch_array($result))

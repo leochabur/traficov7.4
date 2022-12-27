@@ -23,10 +23,12 @@ if ($accion == 'sml'){
    //$simula=1;
    try{
        $minCorte = ($_POST['mincorte']?$_POST['mincorte']:99999);
+       $turismo = (isset($_POST['turismo'])?1:0);
       // die($minCorte);
        beginV2($conn);
        $fleteros = getConductoresFleteros($conn);
-       $data = simularVacios($fecha, $_SESSION['structure'], $simula, $dias, $conn, $fleteros, 180, 180, $minCorte);
+
+       $data = simularVacios($fecha, $_SESSION['structure'], $simula, $dias, $conn, $fleteros, 180, 180, $minCorte, $turismo);
      //  $tabla = simularVaciosConductor2($fecha, $_SESSION[structure], $simula, $dias, $data[1], $data[2], $conn, $data[3], $data[4], $conds);
        print $data[0]."<br>";//.$tabla;
     //   print $tabla;
@@ -114,7 +116,7 @@ function getConductoresFleteros($conn){
               throw new Exception("NO HAY CONEXCION");
          $sql = "SELECT id_empleado
                  FROM empleados e
-                 WHERE id_empleador not in (1, 51)";
+                 WHERE id_empleador not in (1, 51, 147, 148)";
          $result = mysqli_query($conn, $sql);
          $data = array();
          while ($row = mysqli_fetch_array($result)){
@@ -322,7 +324,8 @@ try{
                        };
 }
 
-function getOrdenesTurismo($str, $fecha, $conn){
+function getOrdenesTurismo($str, $fecha, $conn)
+{
 
       $sql = "SELECT o.id
               FROM ordenes_turismo ot
@@ -441,7 +444,7 @@ function encabezadoTablaConductor($nombre, $apellido, $ciudad, $color){
 }
 
 
-function simularVacios($fec, $st, $simular, $mcita, $conn, $conds, $amplitud = 180, $amplitudCondFijo = 180, $minCorte){
+function simularVacios($fec, $st, $simular, $mcita, $conn, $conds, $amplitud = 180, $amplitudCondFijo = 180, $minCorte, $turismo = 0){
 //throw new Exception(getSQLConductore($fec, $st));
 
 
@@ -472,7 +475,13 @@ try{
     $ordenesProcesadas = array();
 	  $color = "";
     $conductores = getConductoresExcluidos($str, $conn);
-    $ordTur = getOrdenesTurismo($str, $fecha, $conn);
+
+    $ordTur = array(); //Si esta seteado el campo de incluir las ordenes de turismo quiere decir que debe generarle el vacio  a estas incluidas por lo tanto no debe levantar las ordenes de turismo para ver si las ordnes son o no asi
+    if (!$turismo)
+    {
+        $ordTur = getOrdenesTurismo($str, $fecha, $conn);
+    }
+
     $i=0;
     $id_Diag_Vacio = "";
     $conductor = "";

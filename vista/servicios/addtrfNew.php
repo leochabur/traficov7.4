@@ -48,7 +48,7 @@ if ($accion == 'addfact'){
 								<td><a href='#' data-id='cron' class=''>$srvcount</a></td>
 								<td><a href='#' data-id='day' class=''>$daycount</a></td>
 								<td><a href='#' data-id='type' class=''></a></td>
-								<td><a href='/vista/servicios/viewtrf.php?trf=".$tarifa->getId()."&str=' class='view' target='blanck'> Ver Tarifa </a> </td>									
+								<td><a href='/vista/servicios/viewtrf.php?trf=".$tarifa->getId()."&str=$_SESSION[structure]' class='view' target='blanck'> Ver Tarifa </a> </td>									
 								<td><input type='button'value='Elimninar Tarifa' data-fc='$idFact' data-tf='".$tarifa->getId()."' class='delfact'/></td>
 							</tr>";
 
